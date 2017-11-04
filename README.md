@@ -4,6 +4,8 @@ A functional Lua extension library.
 
 [![Build Status](https://travis-ci.org/shakna-israel/f.lua.svg?branch=master)](https://travis-ci.org/shakna-israel/f.lua)
 
+Compatibility: Lua 5.1, 5.2, 5.3, and Luajit.
+
 ---
 
 ## Goal
