@@ -57,7 +57,10 @@ end
 -- e.g. f.fn("(x, y) print(x, y)")(2, 3)
 local fn
 fn = function(s)
-  return assert(load("return function " .. s .. " end"))()
+  if loadstring == nil
+    return assert(load("return function " .. s .. " end"))()
+  else
+    return assert(loadstring("return function " .. s .. " end"))()
 end
 
 return {
