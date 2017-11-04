@@ -1,5 +1,3 @@
-require "deepcopy"
-
 local elif
 elif = function(predicate, a, b)
   assert(type(predicate) == "boolean")
@@ -68,12 +66,29 @@ end
 
 local let
 let = function(values, functor)
-  env = table.deepcopy(_G)
+  -- Preperations
+  backups = {}
   for k, v in pairs(values) do
-    env[k] = v
+    if _G[k] ~= nil then
+      backups[k] = _G[k]
+      _G[k] = v
+    else
+      _G[k] = v
+    end
   end
-  setfenv(functor, env)
-  return pcall(functor)
+
+  -- Capture all values
+  ret = {functor()}
+
+  -- Restore normal values
+  for k, v in pairs(values) do
+    _G[k] = nil
+  end
+  for k, v in pairs(backups) do
+    _G[k] = v
+  end
+
+  return unpack(ret)
 end
 
 return {
