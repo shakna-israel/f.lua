@@ -117,5 +117,6 @@ return {
   cdr = cdr,
   rest = cdr,
   fn = fn,
-  let = let
+  let = let,
+  cond = cond
 }
