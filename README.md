@@ -40,6 +40,19 @@ This API may change without warning, as this project is a work-in-progress.
 * ```f.fn("(args) return x")(calls)```. f.fn takes a string with a certain format, and returns a function. The string must begin with "()", which is a sort of alias for Lua's "function()", and should be a valid Lua program.
 * ```f.let({x = 12}, function() print(x) end)```. f.let takes a table of values, and a function. It binds the values in place, and then calls the function, before unbinding the variables again. Any variables overridden by let get restored.
 
+```.f.cond(condlist)```.
+
+f.cond takes a condlist, an array of two part tables, where the left side is boolean. For the first pair where the left side is true, the right side is returned. If no true value can be found, returns nil.
+
+Example:
+
+```
+f.cond({
+  {x == 2, x},
+  {x < 4, y}
+})
+```
+
 ---
 
 ## License
