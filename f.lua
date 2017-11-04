@@ -91,6 +91,24 @@ let = function(values, functor)
   return unpack(ret)
 end
 
+local cond
+cond = function(condlist)
+  assert(type(condlist) == "table")
+  assert(condlist[1])
+  for k, v in pairs(condlist) do
+    assert(type(v) == "table")
+    assert(#v == 2)
+    assert(type(k) == "number")
+  end
+  
+  for i=1, #condlist do
+    if condlist[i][1] == true then
+      return condlist[i][2]
+    end
+  end
+  return nil
+end
+
 return {
   elif = elif,
   cons = cons,
