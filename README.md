@@ -43,4 +43,6 @@ This API may change without warning, as this project is a work-in-progress.
 
 ## License
 
-See [LICENSE](LICENSE)
+See [LICENSE](LICENSE).
+
+deepcopy.lua has it's own license, which can be found in the file itself. As of writing it is under the MIT License to Declan White.
