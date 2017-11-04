@@ -38,6 +38,7 @@ This API may change without warning, as this project is a work-in-progress.
 * ```f.rest(table)```. f.rest is a simple alias for c.cdr.
 * ```f.elif(predicate, a, b)```. f.elif takes a boolean, and two values. If the boolean is true, for the first value is returned, otherwise the second value is returned.
 * ```f.fn("(args) return x")(calls)```. f.fn takes a string with a certain format, and returns a function. The string must begin with "()", which is a sort of alias for Lua's "function()", and should be a valid Lua program.
+* ```f.let({x = 12}, function() print(x) end)```. f.let takes a table of values, and a function. It binds the values in place, and then calls the function, before unbinding the variables again. Any variables overridden by let get restored.
 
 ---
 
