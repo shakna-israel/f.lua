@@ -54,17 +54,18 @@ cdr = function(tbl)
 end
 
 -- String Lambda!
--- e.g. ("(x, y) print(x, y)")(2, 3)
-getmetatable("").__call = function(s, ...)
-  return assert(load("return function " .. s .. " end"))()(...)
+-- e.g. f.fn("(x, y) print(x, y)")(2, 3)
+local fn
+fn = function(s)
+  return assert(load("return function " .. s .. " end"))()
 end
 
--- String Lambda is also exposed, but not namespaced.
 return {
   elif = elif,
   cons = cons,
   car = car,
   head = car,
   cdr = cdr,
-  rest = cdr
+  rest = cdr,
+  fn = fn
 }
