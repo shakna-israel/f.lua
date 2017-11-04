@@ -2,6 +2,8 @@
 
 A functional Lua extension library.
 
+[![Build Status](https://travis-ci.org/shakna-israel/f.lua.svg?branch=master)](https://travis-ci.org/shakna-israel/f.lua)
+
 ---
 
 ## Goal
