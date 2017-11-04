@@ -1,3 +1,5 @@
+require "deepcopy"
+
 local elif
 elif = function(predicate, a, b)
   assert(type(predicate) == "boolean")
@@ -64,26 +66,9 @@ fn = function(s)
   end
 end
 
--- http://lua-users.org/wiki/CopyTable
--- DeepCopy's a table
-function deepcopy(orig)
-    local orig_type = type(orig)
-    local copy
-    if orig_type == 'table' then
-        copy = {}
-        for orig_key, orig_value in next, orig, nil do
-            copy[deepcopy(orig_key)] = deepcopy(orig_value)
-        end
-        setmetatable(copy, deepcopy(getmetatable(orig)))
-    else -- number, string, boolean, etc
-        copy = orig
-    end
-    return copy
-end
-
 local let
 let = function(values, functor)
-  env = deepcopy(_G)
+  env = table.deepcopy(_G)
   for k, v in pairs(values) do
     env[k] = v
   end
