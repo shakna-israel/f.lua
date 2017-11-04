@@ -25,7 +25,7 @@ car = function(tbl)
   if ix == 0 or ix == 1 then
     return v
   elseif ix == nil then
-    return nil
+    return {}
   else
     return ix, v
   end
@@ -40,7 +40,7 @@ cdr = function(tbl)
     if first then
       first = false
       if ix == nil then
-        return nil
+        return {}
       end
     else
       if type(ix) == "number" then
