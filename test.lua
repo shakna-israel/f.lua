@@ -42,3 +42,7 @@ assert(f.elif(false, 1, 2) == 2)
 -- f.fn("(args) return x")(calls)
 assert(type(f.fn("(x) return x")) == "function")
 assert(f.fn("(x) return x")(1) == 1)
+
+-- f.let(table, functor)
+assert(f.let({x = 22}, function() return x end) == 22)
+assert(f.let({x = 12}, f.fn("() return x")) == 12)

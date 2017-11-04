@@ -64,6 +64,33 @@ fn = function(s)
   end
 end
 
+local let
+let = function(values, functor)
+  -- Preperations
+  backups = {}
+  for k, v in pairs(values) do
+    if _G[k] ~= nil then
+      backups[k] = _G[k]
+      _G[k] = v
+    else
+      _G[k] = v
+    end
+  end
+
+  -- Capture all values
+  ret = {functor()}
+
+  -- Restore normal values
+  for k, v in pairs(values) do
+    _G[k] = nil
+  end
+  for k, v in pairs(backups) do
+    _G[k] = v
+  end
+
+  return unpack(ret)
+end
+
 return {
   elif = elif,
   cons = cons,
@@ -71,5 +98,6 @@ return {
   head = car,
   cdr = cdr,
   rest = cdr,
-  fn = fn
+  fn = fn,
+  let = let
 }
