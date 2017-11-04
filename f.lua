@@ -98,5 +98,6 @@ return {
   head = car,
   cdr = cdr,
   rest = cdr,
-  fn = fn
+  fn = fn,
+  let = let
 }
