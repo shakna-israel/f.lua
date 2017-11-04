@@ -57,10 +57,11 @@ end
 -- e.g. f.fn("(x, y) print(x, y)")(2, 3)
 local fn
 fn = function(s)
-  if loadstring == nil
+  if loadstring == nil then
     return assert(load("return function " .. s .. " end"))()
   else
     return assert(loadstring("return function " .. s .. " end"))()
+  end
 end
 
 return {
