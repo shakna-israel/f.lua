@@ -46,3 +46,8 @@ assert(f.fn("(x) return x")(1) == 1)
 -- f.let(table, functor)
 assert(f.let({x = 22}, function() return x end) == 22)
 assert(f.let({x = 12}, f.fn("() return x")) == 12)
+
+-- f.cond(condlist)
+assert(f.cond({{false, 1}, {true, 2}}) == 2)
+assert(f.cond({{true, 1}, {true, 2}}) == 1)
+assert(f.cond({{false, 1}, {false, 2}}) == nil)
