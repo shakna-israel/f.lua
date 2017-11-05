@@ -158,6 +158,28 @@ f.cond({
 })
 ```
 
+### ```f.apply(functor, table)```
+
+f.apply takes a function, and a table of arguments to call that function with.
+
+Example:
+
+```
+f.apply(math.min, {2, 1, 3})
+> 1
+```
+
+### ```f.map(functor, table)```
+
+f.map takes a function, and a table of arguments. It then runs each argument through the function, storing the result in a table.
+
+Example:
+
+```
+f.map(function(x) return x + 1 end, {1, 2, 3})
+> {2, 3, 4}
+```
+
 ---
 
 ## License
