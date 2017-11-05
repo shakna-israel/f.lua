@@ -1,0 +1,25 @@
+v 1.0.0
+  elif
+  cons
+  car
+  head
+  cdr
+  rest
+  fn
+  let
+  cond
+
+v 1.1.0
+  apply
+  map
+  filter
+  curry
+  eq
+  isstring
+  isnumber
+  isfunction
+  isboolean
+  isnil
+  istable
+  isuserdata
+  isfile
