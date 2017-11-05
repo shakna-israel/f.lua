@@ -1,5 +1,5 @@
 package = "f.lua"
-version = "1.0.0"
+version = "1.0-0"
 source = {
   url = "git://github.com/shakna-israel/f.lua",
   tag = "1.0.0"
@@ -15,7 +15,7 @@ description = {
   license = "MIT"
 }
 dependencies = {
-  "lua >= 5.1
+  "lua >= 5.1"
 }
 build = {
   type = "builtin",
