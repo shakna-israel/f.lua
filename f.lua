@@ -112,6 +112,15 @@ cond = function(condlist)
   return nil
 end
 
+local apply
+apply = function(functor, args)
+  if unpack == nil then
+    return functor(table.unpack(args))
+  else
+    return functor(unpack(args))
+  end
+end
+
 return {
   elif = elif,
   cons = cons,
@@ -121,5 +130,6 @@ return {
   rest = cdr,
   fn = fn,
   let = let,
-  cond = cond
+  cond = cond,
+  apply = apply
 }

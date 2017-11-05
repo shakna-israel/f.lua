@@ -51,3 +51,6 @@ assert(f.let({x = 12}, f.fn("() return x")) == 12)
 assert(f.cond({{false, 1}, {true, 2}}) == 2)
 assert(f.cond({{true, 1}, {true, 2}}) == 1)
 assert(f.cond({{false, 1}, {false, 2}}) == nil)
+
+-- f.apply(functor, args)
+assert(f.apply(math.min, {1, 2, 3}) == 1)
