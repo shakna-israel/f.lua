@@ -134,7 +134,7 @@ end
 
 local eq
 eq = function(a, b)
-  if type(v) == "table" then
+  if type(a) == "table" and type(b) == "table" then
     if #a == #b then
       for key_a, val_a in pairs(a) do
         for key_b, val_b in pairs(b) do
