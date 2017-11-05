@@ -114,11 +114,22 @@ end
 
 local apply
 apply = function(functor, args)
+  assert(type(args) == "table")
   if unpack == nil then
     return functor(table.unpack(args))
   else
     return functor(unpack(args))
   end
+end
+
+local map
+map = function(functor, args)
+  assert(type(args) == "table")
+  ret = {}
+  for k, v in pairs(args) do
+    ret[#ret + 1] = functor(v)
+  end
+  return ret
 end
 
 return {
@@ -131,5 +142,6 @@ return {
   fn = fn,
   let = let,
   cond = cond,
-  apply = apply
+  apply = apply,
+  map = map
 }
