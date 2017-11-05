@@ -148,7 +148,7 @@ curry = function(a, b)
   assert(type(a) == "function")
   assert(type(b) == "function")
   return function(...)
-    return a(b(...)
+    return a(b(...))
   end
 end
 
