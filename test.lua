@@ -60,6 +60,10 @@ assert(type(f.map(function(x) return x*2 end, {2})) == "table")
 assert(f.map(function(x) return x*2 end, {2})[1] == 4)
 assert(#f.map(function(x) return x*2 end, {2}) == 1)
 
+-- f.filter(functor, args)
+assert(f.filter(function(x) if type(x) == "number" then return true else return false end end, {'', '', 2})[1] == 2)
+assert(#f.filter(function(x) if type(x) == "number" then return true else return false end end, {'', '', 2}) == 1)
+
 -- f.eq(a, b) Comparison by value, not reference.
 assert(f.eq(1, 1) == true)
 assert(f.eq(1, 2) == false)

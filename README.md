@@ -180,6 +180,17 @@ f.map(function(x) return x + 1 end, {1, 2, 3})
 > {2, 3, 4}
 ```
 
+### ```f.filter(functor,args)```
+
+f.filter takes a function and a table. Iterating through the table, it removes all values where functor(value) is not true.
+
+Example:
+
+```
+f.filter(function(x) if x > 3 then return true else return false end end, {1, 2, 3, 4, 5})
+> {4, 5}
+```
+
 ### ```f.eq(a, b)```
 
 f.eq checks if two values are the same, returning true if they are, false if they're not.

@@ -132,6 +132,17 @@ map = function(functor, args)
   return ret
 end
 
+local filter
+filter = function(functor, args)
+  ret = {}
+  for _, v in pairs(args) do
+    if functor(v) then
+      ret[#ret + 1] = v
+    end
+  end
+  return ret
+end
+
 local eq
 eq = function(a, b)
   if type(a) == "table" and type(b) == "table" then
@@ -247,6 +258,7 @@ return {
   cond = cond,
   apply = apply,
   map = map,
+  filter = filter,
   eq = eq,
   isstring = isstring,
   isnumber = isnumber,
