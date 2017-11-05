@@ -19,5 +19,7 @@ dependencies = {
 }
 build = {
   type = "builtin",
-  f = "f.lua"
+  modules = {
+    f = "f.lua"
+  }
 }
