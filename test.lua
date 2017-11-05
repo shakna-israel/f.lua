@@ -13,13 +13,13 @@ assert(#f.cons(1, {2}) == 2)
 
 -- f.car(table)
 assert(f.car({2, 3, 4}) == 2)
-assert(type(f.car({})) == "table")
-assert(#f.car({}) == 0)
+assert(f.car({}) == nil)
+assert(type(f.car({x = 1}) == "table"))
 
 -- f.head(table), alias for f.car
 assert(f.head({2, 3, 4}) == 2)
-assert(type(f.head({})) == "table")
-assert(#f.head({}) == 0)
+assert(f.head({}) == nil)
+assert(type(f.head({x = 1}) == "table"))
 
 -- f.cdr(table)
 assert(f.cdr({1, 2, 3})[1] == 2)
