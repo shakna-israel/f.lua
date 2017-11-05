@@ -145,7 +145,7 @@ f.let({x = 3, y = 4}, f.fn("() return x + y"))
 > 7
 ```
 
-### ```.f.cond(condlist)```
+### ```f.cond(condlist)```
 
 f.cond takes a condlist, an array of two part tables, where the left side is boolean. For the first pair where the left side is true, the right side is returned. If no true value can be found, returns nil.
 
@@ -178,6 +178,23 @@ Example:
 ```
 f.map(function(x) return x + 1 end, {1, 2, 3})
 > {2, 3, 4}
+```
+
+### ```f.eq(a, b)```
+
+f.eq checks if two values are the same, returning true if they are, false if they're not.
+
+Note: Though it should short-circuit processing, large tables with identical beginnings can have performance implications.
+
+Example:
+
+```
+f.eq(1, 1)
+> true
+f.eq({1}, {1})
+> true
+f.eq({1}, {1, 2})
+> false
 ```
 
 ### ```f.isstring(x)```
