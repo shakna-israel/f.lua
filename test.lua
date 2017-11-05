@@ -60,6 +60,12 @@ assert(type(f.map(function(x) return x*2 end, {2})) == "table")
 assert(f.map(function(x) return x*2 end, {2})[1] == 4)
 assert(#f.map(function(x) return x*2 end, {2}) == 1)
 
+-- f.eq(a, b) Comparison by value, not reference.
+assert(f.eq(1, 1) == true)
+assert(f.eq(1, 2) == false)
+assert(f.eq({1, 1}, {1, 2}) == false)
+assert(f.eq({1}, {1}) == true)
+
 -- Predicates: predicate(val) -> boolean
 assert(f.isstring("") == true)
 assert(f.isstring(1) == false)

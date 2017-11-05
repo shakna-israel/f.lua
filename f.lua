@@ -132,6 +132,28 @@ map = function(functor, args)
   return ret
 end
 
+local eq
+eq = function(a, b)
+  if type(v) == "table" then
+    if #a == #b then
+      for key_a, val_a in pairs(a) do
+        for key_b, val_b in pairs(b) do
+          if key_a ~= key_b then
+            return false
+          elseif val_a ~= val_b then
+            return false
+          end
+        end
+      end
+      return true
+    else
+      return false
+    end
+  else
+    return a == b
+  end
+end
+
 local isstring
 isstring = function(x)
   if type(x) == "string" then
@@ -225,6 +247,7 @@ return {
   cond = cond,
   apply = apply,
   map = map,
+  eq = eq,
   isstring = isstring,
   isnumber = isnumber,
   isfunction = isfunction,
