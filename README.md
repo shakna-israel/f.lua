@@ -191,6 +191,17 @@ f.filter(function(x) if x > 3 then return true else return false end end, {1, 2,
 > {4, 5}
 ```
 
+### ```f.curry(a, b)```
+
+f.curry takes two functions, and returns a variadic function combining them.
+
+Example:
+
+```
+printf = curry(io.write, string.format)
+> function
+```
+
 ### ```f.eq(a, b)```
 
 f.eq checks if two values are the same, returning true if they are, false if they're not.

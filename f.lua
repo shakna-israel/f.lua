@@ -143,6 +143,13 @@ filter = function(functor, args)
   return ret
 end
 
+local curry
+curry = function(a, b)
+  return function(...)
+    return a(b(...)
+  end
+end
+
 local eq
 eq = function(a, b)
   if type(a) == "table" and type(b) == "table" then
@@ -259,6 +266,7 @@ return {
   apply = apply,
   map = map,
   filter = filter,
+  curry = curry,
   eq = eq,
   isstring = isstring,
   isnumber = isnumber,
