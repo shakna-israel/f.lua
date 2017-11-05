@@ -132,6 +132,87 @@ map = function(functor, args)
   return ret
 end
 
+local isstring
+isstring = function(x)
+  if type(x) == "string" then
+    return true
+  else
+    return false
+  end
+end
+
+local isnumber
+isnumber = function(x)
+  if type(x) == "number" then
+    return true
+  else
+    return false
+  end
+end
+
+local isfunction
+isfunction = function(x)
+  if type(x) == "function" then
+    return true
+  else
+    return false
+  end
+end
+
+local isboolean
+isboolean = function(x)
+  if type(x) == "boolean" then
+    return true
+  else
+    return false
+  end
+end
+
+local isnil
+isnil = function(x)
+  if x == nil then
+    return true
+  else
+    return false
+  end
+end
+
+local istable
+istable = function(x)
+  if type(x) == "table" then
+    return true
+  else
+    return false
+  end
+end
+
+local isthread
+isthread = function(x)
+  if type(x) == "thread" then
+    return true
+  else
+    return false
+  end
+end
+
+local isuserdata
+isuserdata = function(x)
+  if type(x) == "userdata" then
+    return true
+  else
+    return false
+  end
+end
+
+local isfile
+isfile = function(x)
+  if io.type(x) == "file" then
+    return true
+  else
+    return false
+  end
+end
+
 return {
   elif = elif,
   cons = cons,
@@ -143,5 +224,13 @@ return {
   let = let,
   cond = cond,
   apply = apply,
-  map = map
+  map = map,
+  isstring = isstring,
+  isnumber = isnumber,
+  isfunction = isfunction,
+  isboolean = isboolean,
+  isnil = isnil,
+  istable = istable,
+  isuserdata = isuserdata,
+  isfile = isfile,
 }

@@ -59,3 +59,28 @@ assert(f.apply(math.min, {2, 1, 3}) == 1)
 assert(type(f.map(function(x) return x*2 end, {2})) == "table")
 assert(f.map(function(x) return x*2 end, {2})[1] == 4)
 assert(#f.map(function(x) return x*2 end, {2}) == 1)
+
+-- Predicates: predicate(val) -> boolean
+assert(f.isstring("") == true)
+assert(f.isstring(1) == false)
+
+assert(f.isnumber(10) == true)
+assert(f.isnumber('a') == false)
+
+assert(f.isfunction(function() return nil end) == true)
+assert(f.isfunction(nil) == false)
+
+assert(f.isboolean(false) == true)
+assert(f.isboolean(nil) == false)
+
+assert(f.isnil(nil) == true)
+assert(f.isnil({}) == false)
+
+assert(f.istable({}) == true)
+assert(f.istable('') == false)
+
+assert(f.isuserdata(io.stdin) == true)
+assert(f.isuserdata({}) == false)
+
+assert(f.isfile(io.stdin) == true)
+assert(f.isfile('') == false)
