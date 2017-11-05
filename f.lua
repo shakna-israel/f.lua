@@ -25,7 +25,7 @@ car = function(tbl)
   if ix == 0 or ix == 1 then
     return v
   elseif ix == nil then
-    return {}
+    return nil
   else
     return ix, v
   end
