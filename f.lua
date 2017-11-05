@@ -145,6 +145,8 @@ end
 
 local curry
 curry = function(a, b)
+  assert(type(a) == "function")
+  assert(type(b) == "function")
   return function(...)
     return a(b(...)
   end
