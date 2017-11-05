@@ -180,6 +180,110 @@ f.map(function(x) return x + 1 end, {1, 2, 3})
 > {2, 3, 4}
 ```
 
+### ```f.isstring(x)```
+
+Returns true if a given value is a string, otherwise returns false.
+
+Example:
+
+```
+f.isstring('')
+> true
+f.isstring(1)
+> false
+```
+
+### ```f.isnumber(x)```
+
+Returns true if a given value is a number, otherwise returns false.
+
+Example:
+
+```
+f.isnumber('')
+> false
+f.isnumber(1)
+> true
+```
+
+### ```f.isfunction(x)```
+
+Returns true if a given value is a function, otherwise returns false.
+
+Example:
+
+```
+f.isfunction(print)
+> true
+f.isfunction(1)
+> false
+```
+
+### ```f.isboolean(x)```
+
+Returns true if a given value is a boolean, otherwise returns false.
+
+Example:
+
+```
+f.isboolean('')
+> false
+f.isboolean(false)
+> true
+```
+
+### ```f.isnil(x)```
+
+Returns true if a given value is nil, otherwise returns false.
+
+Example:
+
+```
+f.isnil('')
+> false
+f.isnil(nil)
+> true
+```
+
+### ```f.istable(x)```
+
+Returns true if a given value is a table, otherwise returns false.
+
+Example:
+
+```
+f.istable('')
+> false
+f.istable({})
+> true
+```
+
+### ```f.isuserdata(x)```
+
+Returns true if a given value is userdata (Lua's C-type), otherwise returns false.
+
+Example:
+
+```
+f.isuserdata('')
+> false
+f.isuserdata(io.input)
+> true
+```
+
+### ```f.isfile(x)```
+
+Returns true if a given value is an open file handle, otherwise returns false.
+
+Example:
+
+```
+f.isfile('')
+> false
+f.isfile(io.input)
+> true
+```
+
 ---
 
 ## License
