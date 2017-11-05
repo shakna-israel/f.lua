@@ -87,8 +87,11 @@ let = function(values, functor)
   for k, v in pairs(backups) do
     _G[k] = v
   end
-
-  return unpack(ret)
+  if unpack == nil then
+    return table.unpack(ret)
+  else
+    return unpack(ret)
+  end
 end
 
 local cond
