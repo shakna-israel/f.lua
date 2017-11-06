@@ -1,6 +1,6 @@
 local elif
 elif = function(predicate, a, b)
-  assert(type(predicate) == "boolean")
+  assert(type(predicate) == "boolean", "elif expects predicate to be boolean, but received " .. type(predicate))
   if predicate then
     return a
   else
@@ -13,14 +13,14 @@ cons = function(val, tbl)
   if tbl == nil then
     tbl = {}
   end
-  assert(type(tbl) == "table")
+  assert(type(tbl) == "table", "cons expects tbl to be a table, but received a " .. type(tbl))
   table.insert(tbl, 1, val)
   return tbl
 end
 
 local car
 car = function(tbl)
-  assert(type(tbl) == "table")
+  assert(type(tbl) == "table", "car expects tbl to be a table, but received a " .. type(tbl))
   local ix, v = next(tbl)
   if ix == 0 or ix == 1 then
     return v
@@ -33,7 +33,7 @@ end
 
 local cdr
 cdr = function(tbl)
-  assert(type(tbl) == "table")
+  assert(type(tbl) == "table", "cdr expects tbl to be a table, but received a " .. type(tbl))
   local first = true
   local ret = {}
   for ix, v in pairs(tbl) do
@@ -58,9 +58,9 @@ end
 local fn
 fn = function(s)
   if loadstring == nil then
-    return assert(load("return function " .. s .. " end"))()
+    return assert(load("return function " .. s .. " end"), "fn was unable to build a valid function.")()
   else
-    return assert(loadstring("return function " .. s .. " end"))()
+    return assert(loadstring("return function " .. s .. " end"), "fn was unable to build a valid function.")()
   end
 end
 
@@ -96,12 +96,12 @@ end
 
 local cond
 cond = function(condlist)
-  assert(type(condlist) == "table")
+  assert(type(condlist) == "table", "cond expects condlist to be a table, but received a " .. type(condlist))
   assert(condlist[1])
   for k, v in pairs(condlist) do
-    assert(type(v) == "table")
-    assert(#v == 2)
-    assert(type(k) == "number")
+    assert(type(v) == "table", "cond expects a table of tables. However an item was not a table it was a " .. type(v))
+    assert(#v == 2, "cond expects a table of pairs, but an item didn't have two items, it had " .. tostring(#v))
+    assert(type(k) == "number", "cond expects the enclosing table to act like an array, but found key " .. tostring(k))
   end
   
   for i=1, #condlist do
@@ -114,7 +114,7 @@ end
 
 local apply
 apply = function(functor, args)
-  assert(type(args) == "table")
+  assert(type(args) == "table", "apply expects args to be a table, but received " .. type(args))
   if unpack == nil then
     return functor(table.unpack(args))
   else
@@ -124,7 +124,7 @@ end
 
 local map
 map = function(functor, args)
-  assert(type(args) == "table")
+  assert(type(args) == "table", "map expects args to be a table, but received a " .. type(args))
   ret = {}
   for k, v in pairs(args) do
     ret[#ret + 1] = functor(v)
@@ -134,6 +134,7 @@ end
 
 local filter
 filter = function(functor, args)
+  assert(type(args) == "table", "filter expects args to be a table, but received a " .. type(args))
   ret = {}
   for _, v in pairs(args) do
     if functor(v) then
@@ -145,8 +146,8 @@ end
 
 local curry
 curry = function(a, b)
-  assert(type(a) == "function")
-  assert(type(b) == "function")
+  assert(type(a) == "function", "curry expects a to be a function, but received a " .. type(a))
+  assert(type(b) == "function", "curry expects b to be a function, but received a " .. type(b))
   return function(...)
     return a(b(...))
   end
