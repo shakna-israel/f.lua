@@ -175,6 +175,11 @@ eq = function(a, b)
   end
 end
 
+local recur
+recur = function()
+  return debug.getinfo(2, "f").func
+end
+
 local isstring
 isstring = function(x)
   if type(x) == "string" then
@@ -271,6 +276,7 @@ return {
   filter = filter,
   curry = curry,
   eq = eq,
+  recur = recur,
   isstring = isstring,
   isnumber = isnumber,
   isfunction = isfunction,

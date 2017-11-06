@@ -219,6 +219,21 @@ f.eq({1}, {1, 2})
 > false
 ```
 
+### ```f.recur()```
+
+f.recur is a function, that when called, returns the calling function in a tail-call safe way.
+
+Example:
+
+```
+fibonacci = function(x, acc)
+  if x <= 1 then
+    return acc
+  else
+    return f.recur()(x - 1, x * acc)
+end
+```
+
 ### ```f.isstring(x)```
 
 Returns true if a given value is a string, otherwise returns false.

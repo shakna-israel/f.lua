@@ -73,6 +73,17 @@ assert(f.eq(1, 2) == false)
 assert(f.eq({1, 1}, {1, 2}) == false)
 assert(f.eq({1}, {1}) == true)
 
+--f.recur() Tail-call safe anonymouse recursion.
+local tmp = function(x)
+  if x == 0 then
+    return true
+  else
+    return f.recur()(x - 1)
+  end
+end
+assert(tmp(20) == true)
+tmp = nil
+
 -- Predicates: predicate(val) -> boolean
 assert(f.isstring("") == true)
 assert(f.isstring(1) == false)
