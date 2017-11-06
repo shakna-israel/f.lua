@@ -145,7 +145,7 @@ f.let({x = 3, y = 4}, f.fn("() return x + y"))
 > 7
 ```
 
-### ```.f.cond(condlist)```
+### ```f.cond(condlist)```
 
 f.cond takes a condlist, an array of two part tables, where the left side is boolean. For the first pair where the left side is true, the right side is returned. If no true value can be found, returns nil.
 
@@ -156,6 +156,186 @@ f.cond({
   {x == 2, x},
   {x < 4, y}
 })
+```
+
+### ```f.apply(functor, table)```
+
+f.apply takes a function, and a table of arguments to call that function with.
+
+Example:
+
+```
+f.apply(math.min, {2, 1, 3})
+> 1
+```
+
+### ```f.map(functor, table)```
+
+f.map takes a function, and a table of arguments. It then runs each argument through the function, storing the result in a table.
+
+Example:
+
+```
+f.map(function(x) return x + 1 end, {1, 2, 3})
+> {2, 3, 4}
+```
+
+### ```f.filter(functor,args)```
+
+f.filter takes a function and a table. Iterating through the table, it removes all values where functor(value) is not true.
+
+Example:
+
+```
+f.filter(function(x) if x > 3 then return true else return false end end, {1, 2, 3, 4, 5})
+> {4, 5}
+```
+
+### ```f.curry(a, b)```
+
+f.curry takes two functions, and returns a variadic function combining them.
+
+Example:
+
+```
+printf = curry(io.write, string.format)
+> function
+```
+
+### ```f.eq(a, b)```
+
+f.eq checks if two values are the same, returning true if they are, false if they're not.
+
+Note: Though it should short-circuit processing, large tables with identical beginnings can have performance implications.
+
+Example:
+
+```
+f.eq(1, 1)
+> true
+f.eq({1}, {1})
+> true
+f.eq({1}, {1, 2})
+> false
+```
+
+### ```f.recur()```
+
+f.recur is a function, that when called, returns the calling function in a tail-call safe way.
+
+Example:
+
+```
+fibonacci = function(x, acc)
+  if x <= 1 then
+    return acc
+  else
+    return f.recur()(x - 1, x * acc)
+end
+```
+
+### ```f.isstring(x)```
+
+Returns true if a given value is a string, otherwise returns false.
+
+Example:
+
+```
+f.isstring('')
+> true
+f.isstring(1)
+> false
+```
+
+### ```f.isnumber(x)```
+
+Returns true if a given value is a number, otherwise returns false.
+
+Example:
+
+```
+f.isnumber('')
+> false
+f.isnumber(1)
+> true
+```
+
+### ```f.isfunction(x)```
+
+Returns true if a given value is a function, otherwise returns false.
+
+Example:
+
+```
+f.isfunction(print)
+> true
+f.isfunction(1)
+> false
+```
+
+### ```f.isboolean(x)```
+
+Returns true if a given value is a boolean, otherwise returns false.
+
+Example:
+
+```
+f.isboolean('')
+> false
+f.isboolean(false)
+> true
+```
+
+### ```f.isnil(x)```
+
+Returns true if a given value is nil, otherwise returns false.
+
+Example:
+
+```
+f.isnil('')
+> false
+f.isnil(nil)
+> true
+```
+
+### ```f.istable(x)```
+
+Returns true if a given value is a table, otherwise returns false.
+
+Example:
+
+```
+f.istable('')
+> false
+f.istable({})
+> true
+```
+
+### ```f.isuserdata(x)```
+
+Returns true if a given value is userdata (Lua's C-type), otherwise returns false.
+
+Example:
+
+```
+f.isuserdata('')
+> false
+f.isuserdata(io.input)
+> true
+```
+
+### ```f.isfile(x)```
+
+Returns true if a given value is an open file handle, otherwise returns false.
+
+Example:
+
+```
+f.isfile('')
+> false
+f.isfile(io.input)
+> true
 ```
 
 ---

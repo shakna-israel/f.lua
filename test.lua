@@ -51,3 +51,60 @@ assert(f.let({x = 12}, f.fn("() return x")) == 12)
 assert(f.cond({{false, 1}, {true, 2}}) == 2)
 assert(f.cond({{true, 1}, {true, 2}}) == 1)
 assert(f.cond({{false, 1}, {false, 2}}) == nil)
+
+-- f.apply(functor, args)
+assert(f.apply(math.min, {2, 1, 3}) == 1)
+
+-- f.map(functor, args)
+assert(type(f.map(function(x) return x*2 end, {2})) == "table")
+assert(f.map(function(x) return x*2 end, {2})[1] == 4)
+assert(#f.map(function(x) return x*2 end, {2}) == 1)
+
+-- f.filter(functor, args)
+assert(f.filter(function(x) if type(x) == "number" then return true else return false end end, {'', '', 2})[1] == 2)
+assert(#f.filter(function(x) if type(x) == "number" then return true else return false end end, {'', '', 2}) == 1)
+
+-- f.curry(a, b)
+assert(type(f.curry(io.write, string.format) == "function"))
+
+-- f.eq(a, b) Comparison by value, not reference.
+assert(f.eq(1, 1) == true)
+assert(f.eq(1, 2) == false)
+assert(f.eq({1, 1}, {1, 2}) == false)
+assert(f.eq({1}, {1}) == true)
+
+--f.recur() Tail-call safe anonymouse recursion.
+local tmp = function(x)
+  if x == 0 then
+    return true
+  else
+    return f.recur()(x - 1)
+  end
+end
+assert(tmp(20) == true)
+tmp = nil
+
+-- Predicates: predicate(val) -> boolean
+assert(f.isstring("") == true)
+assert(f.isstring(1) == false)
+
+assert(f.isnumber(10) == true)
+assert(f.isnumber('a') == false)
+
+assert(f.isfunction(function() return nil end) == true)
+assert(f.isfunction(nil) == false)
+
+assert(f.isboolean(false) == true)
+assert(f.isboolean(nil) == false)
+
+assert(f.isnil(nil) == true)
+assert(f.isnil({}) == false)
+
+assert(f.istable({}) == true)
+assert(f.istable('') == false)
+
+assert(f.isuserdata(io.stdin) == true)
+assert(f.isuserdata({}) == false)
+
+assert(f.isfile(io.stdin) == true)
+assert(f.isfile('') == false)

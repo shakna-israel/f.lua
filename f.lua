@@ -1,6 +1,6 @@
 local elif
 elif = function(predicate, a, b)
-  assert(type(predicate) == "boolean")
+  assert(type(predicate) == "boolean", "elif expects predicate to be boolean, but received " .. type(predicate))
   if predicate then
     return a
   else
@@ -13,14 +13,14 @@ cons = function(val, tbl)
   if tbl == nil then
     tbl = {}
   end
-  assert(type(tbl) == "table")
+  assert(type(tbl) == "table", "cons expects tbl to be a table, but received a " .. type(tbl))
   table.insert(tbl, 1, val)
   return tbl
 end
 
 local car
 car = function(tbl)
-  assert(type(tbl) == "table")
+  assert(type(tbl) == "table", "car expects tbl to be a table, but received a " .. type(tbl))
   local ix, v = next(tbl)
   if ix == 0 or ix == 1 then
     return v
@@ -33,7 +33,7 @@ end
 
 local cdr
 cdr = function(tbl)
-  assert(type(tbl) == "table")
+  assert(type(tbl) == "table", "cdr expects tbl to be a table, but received a " .. type(tbl))
   local first = true
   local ret = {}
   for ix, v in pairs(tbl) do
@@ -58,9 +58,9 @@ end
 local fn
 fn = function(s)
   if loadstring == nil then
-    return assert(load("return function " .. s .. " end"))()
+    return assert(load("return function " .. s .. " end"), "fn was unable to build a valid function.")()
   else
-    return assert(loadstring("return function " .. s .. " end"))()
+    return assert(loadstring("return function " .. s .. " end"), "fn was unable to build a valid function.")()
   end
 end
 
@@ -96,12 +96,12 @@ end
 
 local cond
 cond = function(condlist)
-  assert(type(condlist) == "table")
+  assert(type(condlist) == "table", "cond expects condlist to be a table, but received a " .. type(condlist))
   assert(condlist[1])
   for k, v in pairs(condlist) do
-    assert(type(v) == "table")
-    assert(#v == 2)
-    assert(type(k) == "number")
+    assert(type(v) == "table", "cond expects a table of tables. However an item was not a table it was a " .. type(v))
+    assert(#v == 2, "cond expects a table of pairs, but an item didn't have two items, it had " .. tostring(#v))
+    assert(type(k) == "number", "cond expects the enclosing table to act like an array, but found key " .. tostring(k))
   end
   
   for i=1, #condlist do
@@ -110,6 +110,155 @@ cond = function(condlist)
     end
   end
   return nil
+end
+
+local apply
+apply = function(functor, args)
+  assert(type(args) == "table", "apply expects args to be a table, but received " .. type(args))
+  if unpack == nil then
+    return functor(table.unpack(args))
+  else
+    return functor(unpack(args))
+  end
+end
+
+local map
+map = function(functor, args)
+  assert(type(args) == "table", "map expects args to be a table, but received a " .. type(args))
+  ret = {}
+  for k, v in pairs(args) do
+    ret[#ret + 1] = functor(v)
+  end
+  return ret
+end
+
+local filter
+filter = function(functor, args)
+  assert(type(args) == "table", "filter expects args to be a table, but received a " .. type(args))
+  ret = {}
+  for _, v in pairs(args) do
+    if functor(v) then
+      ret[#ret + 1] = v
+    end
+  end
+  return ret
+end
+
+local curry
+curry = function(a, b)
+  assert(type(a) == "function", "curry expects a to be a function, but received a " .. type(a))
+  assert(type(b) == "function", "curry expects b to be a function, but received a " .. type(b))
+  return function(...)
+    return a(b(...))
+  end
+end
+
+local eq
+eq = function(a, b)
+  if type(a) == "table" and type(b) == "table" then
+    if #a == #b then
+      for key_a, val_a in pairs(a) do
+        for key_b, val_b in pairs(b) do
+          if key_a ~= key_b then
+            return false
+          elseif val_a ~= val_b then
+            return false
+          end
+        end
+      end
+      return true
+    else
+      return false
+    end
+  else
+    return a == b
+  end
+end
+
+local recur
+recur = function()
+  return debug.getinfo(2, "f").func
+end
+
+local isstring
+isstring = function(x)
+  if type(x) == "string" then
+    return true
+  else
+    return false
+  end
+end
+
+local isnumber
+isnumber = function(x)
+  if type(x) == "number" then
+    return true
+  else
+    return false
+  end
+end
+
+local isfunction
+isfunction = function(x)
+  if type(x) == "function" then
+    return true
+  else
+    return false
+  end
+end
+
+local isboolean
+isboolean = function(x)
+  if type(x) == "boolean" then
+    return true
+  else
+    return false
+  end
+end
+
+local isnil
+isnil = function(x)
+  if x == nil then
+    return true
+  else
+    return false
+  end
+end
+
+local istable
+istable = function(x)
+  if type(x) == "table" then
+    return true
+  else
+    return false
+  end
+end
+
+local isthread
+isthread = function(x)
+  if type(x) == "thread" then
+    return true
+  else
+    return false
+  end
+end
+
+local isuserdata
+isuserdata = function(x)
+  if type(x) == "userdata" then
+    return true
+  else
+    return false
+  end
+end
+
+local isfile
+isfile = function(x)
+  if io.type(x) == "file" then
+    return true
+  else
+    return false
+  end
 end
 
 return {
@@ -121,5 +270,19 @@ return {
   rest = cdr,
   fn = fn,
   let = let,
-  cond = cond
+  cond = cond,
+  apply = apply,
+  map = map,
+  filter = filter,
+  curry = curry,
+  eq = eq,
+  recur = recur,
+  isstring = isstring,
+  isnumber = isnumber,
+  isfunction = isfunction,
+  isboolean = isboolean,
+  isnil = isnil,
+  istable = istable,
+  isuserdata = isuserdata,
+  isfile = isfile,
 }
