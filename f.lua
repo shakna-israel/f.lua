@@ -220,6 +220,25 @@ isfile = function(x)
   return io.type(x) == "file"
 end
 
+-- Operators
+local add = function(a,b) return a + b end
+local sub = function(a, b) return a - b end
+local mul = function(a, b) return a * b end
+
+-- We want div(a, b) and div.true(a, b) for integer division.
+local div = {}
+setmetatable(div,
+    {
+      __call = function(self, a, b) return a / b end
+    })
+div.int = function(a, b) return math.floor(a/b) end
+
+local gt = function(a,b) return a > b end
+local gte = function(a,b) return a >= b end
+local lt = function(a,b) return a < b end
+local lte = function(a,b) return a <= b end
+local ne = function(a,b) return a ~= b end
+
 return {
   elif = elif,
   cons = cons,
@@ -244,4 +263,13 @@ return {
   istable = istable,
   isuserdata = isuserdata,
   isfile = isfile,
+  add = add,
+  sub = sub,
+  mul = mul,
+  div = div,
+  gt = gt,
+  gte = gte,
+  lt = lt,
+  lte = lte,
+  ne = ne
 }

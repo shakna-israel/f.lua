@@ -108,3 +108,21 @@ assert(f.isuserdata({}) == false)
 
 assert(f.isfile(io.stdin) == true)
 assert(f.isfile('') == false)
+
+-- Operators
+-- Almost all of these have so simple an implementation
+-- that testing them seems somewhat ridiculous.
+-- It's here for:
+-- * API compatibility.
+-- * Testing the called function runs at all.
+
+assert(f.add(2, 4) == 2 + 4)
+assert(f.sub(6, 4) == 6 - 4)
+assert(f.mul(2, 2) == 2 * 2)
+assert(f.div(2, 3) == 2 / 3, "f.div failed. Ignore the questionmark in traceback, probably to do with the metatable. Look there for the bug.")
+assert(f.div.int(2, 3) == math.floor(2 / 3)) -- Note the overload!
+assert(f.gt(1, 2) == (1 > 2))
+assert(f.gte(1, 1) == (1 >= 1))
+assert(f.lt(1, 2) == (1 < 2))
+assert(f.lte(1, 1) == (1 <= 1))
+assert(f.ne(1, 2) == (1 ~= 2))
