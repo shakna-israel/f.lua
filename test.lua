@@ -84,6 +84,10 @@ end
 assert(tmp(20000) == true)
 tmp = nil
 
+-- f.with(filepath, permissions, functor)
+-- This API may change in later major versions, to support more than just files.
+-- TODO: Test tmp file?
+
 -- Predicates: predicate(val) -> boolean
 assert(f.isstring("") == true)
 assert(f.isstring(1) == false)

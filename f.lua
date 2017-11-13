@@ -175,6 +175,19 @@ recur = function()
   return debug.getinfo(2, "f").func
 end
 
+local with
+with = function(filepath, permissions, functor)
+  assert(type(filepath) == "string")
+  assert(type(permissions) == "string")
+  assert(type(functor) == "function")  
+  local file = io.open(filepath, permissions)
+  ret = functor(file)
+  if file then file:close() end
+  return ret
+end
+
+-- Predicates
+
 local isstring
 isstring = function(x)
   return type(x) == "string"
@@ -255,6 +268,7 @@ return {
   curry = curry,
   eq = eq,
   recur = recur,
+  with = with,
   isstring = isstring,
   isnumber = isnumber,
   isfunction = isfunction,
