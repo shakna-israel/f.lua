@@ -81,7 +81,7 @@ local tmp = function(x)
     return f.recur()(x - 1)
   end
 end
-assert(tmp(20) == true)
+assert(tmp(20000) == true)
 tmp = nil
 
 -- Predicates: predicate(val) -> boolean

@@ -23,3 +23,8 @@ v 1.1.0
   istable
   isuserdata
   isfile
+
+v 1.1.1
+  More assertions to catch some
+    previously uncaught API requirements
+  More effecient code

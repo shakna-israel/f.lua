@@ -1,3 +1,6 @@
+local load = loadstring or load
+local unpack = unpack or table.unpack
+
 local elif
 elif = function(predicate, a, b)
   assert(type(predicate) == "boolean", "elif expects predicate to be boolean, but received " .. type(predicate))
@@ -57,15 +60,12 @@ end
 -- e.g. f.fn("(x, y) print(x, y)")(2, 3)
 local fn
 fn = function(s)
-  if loadstring == nil then
-    return assert(load("return function " .. s .. " end"), "fn was unable to build a valid function.")()
-  else
-    return assert(loadstring("return function " .. s .. " end"), "fn was unable to build a valid function.")()
-  end
+  return assert(load("return function " .. tostring(s) .. " end"), "fn was unable to build a valid function from: " .. tostring(s))()
 end
 
 local let
 let = function(values, functor)
+  assert(type(functor) == "function")
   -- Preperations
   backups = {}
   for k, v in pairs(values) do
@@ -87,11 +87,7 @@ let = function(values, functor)
   for k, v in pairs(backups) do
     _G[k] = v
   end
-  if unpack == nil then
-    return table.unpack(ret)
-  else
-    return unpack(ret)
-  end
+  return unpack(ret)
 end
 
 local cond
@@ -115,16 +111,14 @@ end
 local apply
 apply = function(functor, args)
   assert(type(args) == "table", "apply expects args to be a table, but received " .. type(args))
-  if unpack == nil then
-    return functor(table.unpack(args))
-  else
-    return functor(unpack(args))
-  end
+  assert(type(functor) == "function", "apply expects functor to be a function")
+  return functor(unpack(args))
 end
 
 local map
 map = function(functor, args)
   assert(type(args) == "table", "map expects args to be a table, but received a " .. type(args))
+  assert(type(functor) == "function", "map expects functor to be a function")
   ret = {}
   for k, v in pairs(args) do
     ret[#ret + 1] = functor(v)
@@ -135,6 +129,7 @@ end
 local filter
 filter = function(functor, args)
   assert(type(args) == "table", "filter expects args to be a table, but received a " .. type(args))
+  assert(type(functor) == "function", "filter expects functor to be a function")
   ret = {}
   for _, v in pairs(args) do
     if functor(v) then
@@ -182,83 +177,47 @@ end
 
 local isstring
 isstring = function(x)
-  if type(x) == "string" then
-    return true
-  else
-    return false
-  end
+  return type(x) == "string"
 end
 
 local isnumber
 isnumber = function(x)
-  if type(x) == "number" then
-    return true
-  else
-    return false
-  end
+  return type(x) == "number"
 end
 
 local isfunction
 isfunction = function(x)
-  if type(x) == "function" then
-    return true
-  else
-    return false
-  end
+  return type(x) == "function"
 end
 
 local isboolean
 isboolean = function(x)
-  if type(x) == "boolean" then
-    return true
-  else
-    return false
-  end
+  return type(x) == "boolean"
 end
 
 local isnil
 isnil = function(x)
-  if x == nil then
-    return true
-  else
-    return false
-  end
+  return x == nil
 end
 
 local istable
 istable = function(x)
-  if type(x) == "table" then
-    return true
-  else
-    return false
-  end
+  return type(x) == "table"
 end
 
 local isthread
 isthread = function(x)
-  if type(x) == "thread" then
-    return true
-  else
-    return false
-  end
+  return type(x) == "thread"
 end
 
 local isuserdata
 isuserdata = function(x)
-  if type(x) == "userdata" then
-    return true
-  else
-    return false
-  end
+  return type(x) == "userdata"
 end
 
 local isfile
 isfile = function(x)
-  if io.type(x) == "file" then
-    return true
-  else
-    return false
-  end
+  return io.type(x) == "file"
 end
 
 return {
