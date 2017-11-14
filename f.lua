@@ -74,23 +74,7 @@ end
 local cdr
 cdr = function(tbl)
   assert(type(tbl) == "table", "cdr expects tbl to be a table, but received a " .. type(tbl))
-  local first = true
-  local ret = {}
-  for ix, v in pairs(tbl) do
-    if first then
-      first = false
-      if ix == nil then
-        return {}
-      end
-    else
-      if type(ix) == "number" then
-        ret[#ret + 1] = v
-      else
-        ret[ix] = v
-      end
-    end
-  end
-  return ret
+  return { unpack(tbl, 2) }
 end
 
 -- String Lambda!
