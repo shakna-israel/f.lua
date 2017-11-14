@@ -250,6 +250,13 @@ end
 
 Finally, with closes out the file, and returns the functor's return values.
 
+Example:
+
+```
+with("test.lua", function(f) return f:read() end)
+> "...lots of stuff..."
+```
+
 ### ```f.add(a, b)```
 
 Basically returns ```a + b```, but as a function, is able to be fed to other functions, unlike the + operator.
