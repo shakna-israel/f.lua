@@ -1,6 +1,43 @@
 local load = loadstring or load
 local unpack = unpack or table.unpack
 
+local prettyprint
+prettyprint = function(val, outstring)
+  local msg = ""
+  if type(val) == "table" then
+    msg = msg .. "{"
+    for k, v in pairs(val) do
+      if v == val then
+        msg = msg .. "\t<self-reference>,\n"
+      else
+        msg = msg .. "\t" .. prettyprint(k, true) .. " = " .. prettyprint(v, true) .. ",\n"
+      end
+    end
+    msg = msg .. "}"
+  else
+    if type(val) == "function" then
+      msg = msg .. "<function>: " .. tostring(val)
+    elseif type(val) == "string" then
+      msg = msg .. '"' .. val .. '"'
+    elseif type(val) == "number" then
+      msg = msg .. tostring(val)
+    elseif val == nil then
+      msg = msg .. "nil"
+    elseif type(val) == "boolean" then
+      msg = msg .. tostring(val)
+    elseif type(val) == "userdata" then
+      msg = msg .. "<userdata>: " .. tostring(val)
+    elseif type(val) == "thread" then
+      msg = msg .. "<thread>: " .. tostring(val)
+    end
+  end
+  if outstring == nil then
+    print(msg)
+  else
+    return msg
+  end
+end
+
 local elif
 elif = function(predicate, a, b)
   assert(type(predicate) == "boolean", "elif expects predicate to be boolean, but received " .. type(predicate))
@@ -253,6 +290,7 @@ local lte = function(a,b) return a <= b end
 local ne = function(a,b) return a ~= b end
 
 return {
+  prettyprint = prettyprint,
   elif = elif,
   cons = cons,
   car = car,

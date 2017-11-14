@@ -1,5 +1,10 @@
 f = require "f"
 
+-- f.prettyprint
+assert(f.prettyprint(10, true) == "10")
+assert(f.prettyprint("10", true) == '"10"')
+assert(f.prettyprint(true, true) == "true")
+
 -- f.cons(1, nil)
 assert(type(f.cons(1)) == "table")
 assert(f.cons(1)[1] == 1)
