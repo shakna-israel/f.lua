@@ -218,9 +218,9 @@ with = function(filepath, permissions, functor)
   assert(type(permissions) == "string")
   assert(type(functor) == "function")  
   local file = io.open(filepath, permissions)
-  ret = functor(file)
+  ret = {functor(file)}
   if file then file:close() end
-  return ret
+  return unpack(ret)
 end
 
 -- Predicates

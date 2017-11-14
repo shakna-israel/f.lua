@@ -28,3 +28,17 @@ v 1.1.1
   More assertions to catch some
     previously uncaught API requirements
   More effecient code
+
+v 1.2.0
+  prettyprint
+  add
+  sub
+  div
+  div.int
+  mul
+  gt
+  gte
+  lt
+  lte
+  ne
+  with
