@@ -1,6 +1,43 @@
 local load = loadstring or load
 local unpack = unpack or table.unpack
 
+local prettyprint
+prettyprint = function(val, outstring)
+  local msg = ""
+  if type(val) == "table" then
+    msg = msg .. "{"
+    for k, v in pairs(val) do
+      if v == val then
+        msg = msg .. "\t<self-reference>,\n"
+      else
+        msg = msg .. "\t" .. prettyprint(k, true) .. " = " .. prettyprint(v, true) .. ",\n"
+      end
+    end
+    msg = msg .. "}"
+  else
+    if type(val) == "function" then
+      msg = msg .. "<function>: " .. tostring(val)
+    elseif type(val) == "string" then
+      msg = msg .. '"' .. val .. '"'
+    elseif type(val) == "number" then
+      msg = msg .. tostring(val)
+    elseif val == nil then
+      msg = msg .. "nil"
+    elseif type(val) == "boolean" then
+      msg = msg .. tostring(val)
+    elseif type(val) == "userdata" then
+      msg = msg .. "<userdata>: " .. tostring(val)
+    elseif type(val) == "thread" then
+      msg = msg .. "<thread>: " .. tostring(val)
+    end
+  end
+  if outstring == nil then
+    print(msg)
+  else
+    return msg
+  end
+end
+
 local elif
 elif = function(predicate, a, b)
   assert(type(predicate) == "boolean", "elif expects predicate to be boolean, but received " .. type(predicate))
@@ -175,6 +212,19 @@ recur = function()
   return debug.getinfo(2, "f").func
 end
 
+local with
+with = function(filepath, permissions, functor)
+  assert(type(filepath) == "string")
+  assert(type(permissions) == "string")
+  assert(type(functor) == "function")  
+  local file = io.open(filepath, permissions)
+  ret = {functor(file)}
+  if file then file:close() end
+  return unpack(ret)
+end
+
+-- Predicates
+
 local isstring
 isstring = function(x)
   return type(x) == "string"
@@ -220,7 +270,27 @@ isfile = function(x)
   return io.type(x) == "file"
 end
 
+-- Operators
+local add = function(a,b) return a + b end
+local sub = function(a, b) return a - b end
+local mul = function(a, b) return a * b end
+
+-- We want div(a, b) and div.true(a, b) for integer division.
+local div = {}
+setmetatable(div,
+    {
+      __call = function(self, a, b) return a / b end
+    })
+div.int = function(a, b) return math.floor(a/b) end
+
+local gt = function(a,b) return a > b end
+local gte = function(a,b) return a >= b end
+local lt = function(a,b) return a < b end
+local lte = function(a,b) return a <= b end
+local ne = function(a,b) return a ~= b end
+
 return {
+  prettyprint = prettyprint,
   elif = elif,
   cons = cons,
   car = car,
@@ -236,6 +306,7 @@ return {
   curry = curry,
   eq = eq,
   recur = recur,
+  with = with,
   isstring = isstring,
   isnumber = isnumber,
   isfunction = isfunction,
@@ -244,4 +315,13 @@ return {
   istable = istable,
   isuserdata = isuserdata,
   isfile = isfile,
+  add = add,
+  sub = sub,
+  mul = mul,
+  div = div,
+  gt = gt,
+  gte = gte,
+  lt = lt,
+  lte = lte,
+  ne = ne
 }

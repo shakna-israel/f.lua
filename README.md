@@ -28,6 +28,8 @@ Be aware that the API is still unstable and may change.
 
 ## Usage
 
+A brief look:
+
 ```
 f = require "f"
 
@@ -43,9 +45,17 @@ f.fn("(x, y) return x, y")(1, 2)
 
 ---
 
-This API may change without warning, as this project is a work-in-progress.
+## Semantic API
 
-However, I have tried to opt for "least surprising behaviour" for as much as I can. If you find something to behave differently than you expect, please open an issue so we can discuss how best to handle it.
+I have tried to opt for "least surprising behaviour" for as much as I can. If you find something to behave differently than you expect, please open an issue so we can discuss how best to handle it.
+
+This API is guaranteed by [semantic versioning](https://semver.org), according to how it is laid out below.
+
+### ```f.prettyprint(x)```
+
+Prettyprint is a convenience function, to dumo a value to stdout.
+
+The format of said output, or if it even prints to stdout, is not guaranteed by this API.
 
 ### ```f.cons(1, table=nil)```
 
@@ -232,6 +242,122 @@ fibonacci = function(x, acc)
   else
     return f.recur()(x - 1, x * acc)
 end
+```
+
+### ```f.with(filepath, functor)```
+
+```with``` takes a string containing a filepath, which it then uses to open a file handle, and then calls the functor, using the file handle as an argument.
+
+Finally, with closes out the file, and returns the functor's return values.
+
+### ```f.add(a, b)```
+
+Basically returns ```a + b```, but as a function, is able to be fed to other functions, unlike the + operator.
+
+Example:
+
+```
+f.add(1, 2)
+> 3
+```
+
+### ```f.sub(a, b)```
+
+Basically returns ```a - b```, but as a function, is able to be fed to other functions, unlike the - operator.
+
+Example:
+
+```
+f.sub(5, 1)
+> 4
+```
+
+### ```f.mul(a, b)```
+
+Basically returns ```a * b```, but as a function, is able to be fed to other functions, unlike the * operator.
+
+Example:
+
+```
+f.mul(2, 2)
+> 4
+```
+
+### ```f.div(a, b)```
+
+Basically returns ```a / b```, but as a function, is able to be fed to other functions, unlike the / operator.
+
+Example:
+
+```
+f.div(2, 3)
+> 0.66666666667
+```
+
+### ```f.div.int(a, b)```
+
+For integer division. Acts the same as ```math.floor(a / b)```.
+
+Example:
+
+```
+f.div.int(2, 3)
+> 0
+```
+
+### ```f.gt(a, b)```
+
+Basically returns ```a > b```, but as a function, is able to be fed to other functions, unlike the > operator.
+
+Example:
+
+```
+f.gt(2, 1)
+> true
+```
+
+### ```f.gte(a, b)```
+
+Basically returns ```a >= b```, but as a function, is able to be fed to other functions, unlike the >= operator.
+
+Example:
+
+```
+f.gte(1, 1)
+> true
+```
+
+### ```f.lt(a, b)```
+
+Basically returns ```a < b```, but as a function, is able to be fed to other functions, unlike the < operator.
+
+Example:
+
+```
+f.lt(1, 2)
+> true
+```
+
+### ```f.lte(a, b)```
+
+Basically returns ```a <= b```, but as a function, is able to be fed to other functions, unlike the <= operator.
+
+Example:
+
+```
+f.lte(1, 1)
+> true
+```
+
+### ```f.ne(a, b)```
+
+Basically returns ```a ~= b```, but as a function, is able to be fed to other functions, unlike the ~= operator.
+
+Example:
+
+```
+f.ne(1, 1)
+> false
 ```
 
 ### ```f.isstring(x)```
