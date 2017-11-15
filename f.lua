@@ -132,14 +132,14 @@ end
 local apply
 apply = function(functor, args)
   assert(type(args) == "table", "apply expects args to be a table, but received " .. type(args))
-  assert(type(functor) == "function", "apply expects functor to be a function")
+  assert(type(functor) == "function" or type(getmetatable(functor).__call) == "function", "apply expects functor to be a function")
   return functor(unpack(args))
 end
 
 local map
 map = function(functor, args)
   assert(type(args) == "table", "map expects args to be a table, but received a " .. type(args))
-  assert(type(functor) == "function", "map expects functor to be a function")
+  assert(type(functor) == "function" or type(getmetatable(functor).__call) == "function", "map expects functor to be a function")
   ret = {}
   for k, v in pairs(args) do
     ret[#ret + 1] = functor(v)
