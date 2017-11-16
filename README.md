@@ -22,8 +22,6 @@ You can either copy the f.lua file whever you want it, or install via luarocks:
 luarocks install f.lua
 ```
 
-Be aware that the API is still unstable and may change.
-
 ---
 
 ## Usage
