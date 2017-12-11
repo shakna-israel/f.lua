@@ -207,6 +207,32 @@ with = function(filepath, permissions, functor)
   return unpack(ret)
 end
 
+-- Coroutines
+
+local co = {}
+setmetatable(co, {
+  __call = function(functor)
+    return coroutine.wrap(functor)
+  end
+})
+
+co.c = function(functor)
+  return coroutine.create(functor)
+end
+
+co.t = function(thread)
+  assert(type(thread) == "thread", "co.t expects a thread, but received a " .. type(thread))
+  if coroutine.status(thread) == "suspended" then
+    return coroutine.resume(thread)
+  elseif coroutine.status(thread) == "dead" then
+    return nil
+  end
+end
+
+co.r = function()
+  return coroutine.running()
+end
+
 -- Predicates
 
 local isstring
@@ -287,10 +313,12 @@ return {
   apply = apply,
   map = map,
   filter = filter,
+  reduce = filter,
   curry = curry,
   eq = eq,
   recur = recur,
   with = with,
+  co = co,
   isstring = isstring,
   isnumber = isnumber,
   isfunction = isfunction,
