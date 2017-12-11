@@ -259,7 +259,7 @@ local add = function(a,b) return a + b end
 local sub = function(a, b) return a - b end
 local mul = function(a, b) return a * b end
 
--- We want div(a, b) and div.true(a, b) for integer division.
+-- We want div(a, b) and div.int(a, b) for integer division.
 local div = {}
 setmetatable(div,
     {
