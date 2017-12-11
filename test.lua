@@ -89,6 +89,9 @@ end
 assert(tmp(20000) == true)
 tmp = nil
 
+-- Coroutines are just wrappers, so equivalence is good enough.
+assert(type(f.co.c(function() return end)) == "thread", "f.co.c didn't create a thread.")
+
 -- f.with(filepath, permissions, functor)
 -- This API may change in later major versions, to support more than just files.
 -- TODO: Test tmp file?
