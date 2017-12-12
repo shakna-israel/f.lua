@@ -321,6 +321,26 @@ f.gt(2, 1)
 > true
 ```
 
+### ```f.co(thread)```
+
+```f.co(thread)``` is semantically identical to [coroutine.wrap](https://www.lua.org/manual/5.3/manual.html#pdf-coroutine.wrap).
+
+### ```f.co.c(functor)```
+
+```f.co.c(functor)``` is semantically identical to [coroutine.create](https://www.lua.org/manual/5.3/manual.html#pdf-coroutine.create).
+
+### ```f.co.r()```
+
+```f.co.r()``` is semantically identical to [coroutine.running](https://www.lua.org/manual/5.3/manual.html#pdf-coroutine.running).
+
+### ```f.co.t(thread)```
+
+```f.co.t(thread)``` checks the thread to see if it's suspended.
+
+If so, it calls and returns coroutine.resume.
+
+If not, returns nil.
+
 ### ```f.gte(a, b)```
 
 Basically returns ```a >= b```, but as a function, is able to be fed to other functions, unlike the >= operator.
