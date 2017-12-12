@@ -199,6 +199,10 @@ f.filter(function(x) if x > 3 then return true else return false end end, {1, 2,
 > {4, 5}
 ```
 
+### ```f.reduce(functor, args)```
+
+```f.reduce``` is a simple alias for ```f.filter```.
+
 ### ```f.curry(a, b)```
 
 f.curry takes two functions, and returns a variadic function combining them.
