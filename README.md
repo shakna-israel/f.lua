@@ -99,6 +99,22 @@ f.reverse("Hello")
 > "olleH"
 ```
 
+### ```f.iter```
+
+```f.iter``` converts a string or table into a coroutine that will yield the next in line with each call.
+
+Example:
+
+```
+a = f.iter("Hello")
+coroutine.resume(a)
+> "H"
+coroutine.resume(a)
+> "e"
+coroutine.resume(a)
+"l"
+```
+
 ### ```f.foldr```
 
 A classic implementation of foldr, taking a functor, a table, and then a seed value.

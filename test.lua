@@ -1,5 +1,8 @@
 f = require "f"
 
+-- f.iter
+assert(type(f.iter("Hello")) == "thread")
+
 -- f.reverse
 assert(f.reverse("Hello") == "olleH")
 assert(f.reverse({"Hello", "Peeps"})[1] == "Peeps")

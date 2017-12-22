@@ -1,6 +1,24 @@
 local load = loadstring or load
 local unpack = unpack or table.unpack
 
+local iter
+iter = function(obj)
+  assert(type(obj) == "table" or type(obj) == "string")
+  if type(obj) == "table" then
+    return coroutine.create(function()
+      for k, v in pairs(table) do
+        coroutine.yield(v)
+      end
+    end)
+  else
+    return coroutine.create(function()
+      for c in obj:gmatch(".") do
+        coroutine.yield(c)
+      end
+    end)
+  end
+end
+
 local foldr
 foldr = function(functor, tbl, val)
   assert(type(functor) == "function", "Functor must be a function.")
@@ -395,6 +413,7 @@ local lte = function(a,b) return a <= b end
 local ne = function(a,b) return a ~= b end
 
 return {
+  iter = iter,
   foldr = foldr,
   reverse = reverse,
   nth = nth,
