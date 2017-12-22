@@ -109,3 +109,18 @@ James Milne (4):
       Merge pull request #23 from shakna-israel/v1.3.0-dev
       1.3.1 BUGFIX: luarocks still failing.
       1.3.1 BUGFIX: luarocks still failing.
+
+1.4.0
+James Milne (11):
+      Update CHANGE.log
+      Added information on f.co
+      Update README.md
+      Update README.md
+      New git shortlog based CHANGE.log
+      #25, with can now handle coroutines.
+      #26, f.nth a range slicer.
+      #29, f.reverse implemented
+      #29, f.reverse documented
+      #30, f.foldr implemented.
+      #33, iter implemented.
+
