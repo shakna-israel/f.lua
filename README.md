@@ -62,6 +62,70 @@ I have tried to opt for "least surprising behaviour" for as much as I can. If yo
 
 This API is guaranteed by [semantic versioning](https://semver.org), according to how it is laid out below.
 
+### ```f.nth(iterable, begin, fin)```
+
+```f.nth``` takes a table or a string, and a number for where to start collecting a range, and optionally a number of where to finish (which may be represented by a negative number, counting from the end.)
+
+It then returns the result.
+
+Example:
+
+```
+f.nth({1, 2, 3}, 1, -1)
+> {1, 2}
+f.nth("Hello, World!", 8)
+> "World!"
+```
+
+### ```f.clone(obj)```
+
+Generates a copy of any object given to it. If the object has a metatable, that is also cloned, without becoming a reference to the old metatable.
+
+Example:
+
+```
+f.clone({1, 2, 3})
+> {1, 2, 3}
+```
+
+### ```f.reverse(obj)```
+
+Takes either a string or table, and returns a copy that has the order reversed.
+
+Example:
+
+```
+f.reverse("Hello")
+> "olleH"
+```
+
+### ```f.iter```
+
+```f.iter``` converts a string or table into a coroutine that will yield the next in line with each call.
+
+Example:
+
+```
+a = f.iter("Hello")
+coroutine.resume(a)
+> "H"
+coroutine.resume(a)
+> "e"
+coroutine.resume(a)
+"l"
+```
+
+### ```f.foldr```
+
+A classic implementation of foldr, taking a functor, a table, and then a seed value.
+
+Example:
+
+```
+f.foldr(f.mul, {1, 2, 3, 4, 5}, 1)
+> 120
+```
+
 ### ```f.prettyprint(x)```
 
 Prettyprint is a convenience function, to dumo a value to stdout.
@@ -259,11 +323,17 @@ fibonacci = function(x, acc)
 end
 ```
 
-### ```f.with(filepath, functor)```
+### ```f.with(entry, functor)```
 
 ```with``` takes a string containing a filepath, which it then uses to open a file handle, and then calls the functor, using the file handle as an argument.
 
 Finally, with closes out the file, and returns the functor's return values.
+
+OR
+
+```with``` takes a thread, with it then resumes and passes the yielded object to the functor, and captures the response, continuing till the thread is dead.
+
+The final captured result, a table of results, is passed back to the caller.
 
 Example:
 

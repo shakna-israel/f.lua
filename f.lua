@@ -1,6 +1,103 @@
 local load = loadstring or load
 local unpack = unpack or table.unpack
 
+local iter
+iter = function(obj)
+  assert(type(obj) == "table" or type(obj) == "string")
+  if type(obj) == "table" then
+    return coroutine.create(function()
+      for k, v in pairs(table) do
+        coroutine.yield(v)
+      end
+    end)
+  else
+    return coroutine.create(function()
+      for c in obj:gmatch(".") do
+        coroutine.yield(c)
+      end
+    end)
+  end
+end
+
+local foldr
+foldr = function(functor, tbl, val)
+  assert(type(functor) == "function", "Functor must be a function.")
+  assert(type(tbl) == "table", "foldr expects a table.")
+  for k, v in pairs(tbl) do
+    val = functor(v, val)
+  end
+  return val
+end
+
+local reverse
+reverse = function(obj)
+  assert(type(obj) == "string" or type(obj) == "table", "Can only reverse strings or tables.")
+  if type(obj) == "string" then
+    return obj:reverse()
+  else
+    local ret = {}
+    for i = 1, math.floor(#obj / 2) do
+      ret[i], ret[#obj - i + 1] = obj[#obj - i + 1], obj[i]
+    end
+    return ret
+  end
+end
+
+local nth
+nth = function(iterable, begin, fin)
+  assert(type(begin) == "number" and math.ceil(begin) == begin, "nth needs a valid range number.")
+  if fin ~= nil then
+    assert(type(fin) == "number" and math.ceil(fin) == fin, "nth needs a valid range number.")
+  end
+
+  local toString = false
+  -- Convert string to table
+  if type(iterable) == "string" then
+    local tmp = {}
+    for c in iterable:gmatch(".") do tmp[#tmp + 1] = c end
+    iterable = tmp
+    toString = true
+  end
+
+  if fin == nil then
+    fin = #iterable
+  end
+
+  if fin < 0 then
+    fin = #iterable + fin
+  end
+
+  local result = {}
+  for i=begin, fin do
+    result[#result + 1] = iterable[i]
+  end
+  
+  if toString then
+    return table.concat(result)
+  else
+    return result
+  end
+end
+
+local clone
+clone = function(o)
+  if type(o) == "function" then
+    return load(string.dump(o))
+  elseif type(o) == "table" then
+    local ret = {}
+    if getmetatable(o) ~= nil then
+      local mt = clone(getmetatable(o))
+      setmetatable(ret, mt)
+    end
+    for k, v in pairs(o) do
+      ret[k] = clone(v) -- Should handle recursive copies.
+    end
+    return ret
+  else
+    return o
+  end
+end
+
 local prettyprint
 prettyprint = function(val, outstring)
   local msg = ""
@@ -197,14 +294,30 @@ recur = function()
 end
 
 local with
-with = function(filepath, permissions, functor)
-  assert(type(filepath) == "string")
+with = function(entry, permissions, functor)
+  assert(type(entry) == "string" or type(entry) == "thread")
   assert(type(permissions) == "string")
-  assert(type(functor) == "function")  
-  local file = io.open(filepath, permissions)
-  ret = {functor(file)}
-  if file then file:close() end
-  return unpack(ret)
+  assert(type(functor) == "function")
+
+  -- With can close over a file.
+  if type(entry) == "string" then
+    local file = io.open(filepath, permissions)
+    ret = {functor(file)}
+    if file then file:close() end
+    return unpack(ret)
+  else
+    -- With can iterate over a coroutine.
+    local results = {}
+    while coroutine.status(entry) == "suspended" do
+      local res = {functor(coroutine.resume(entry))}
+      if #res > 1 then
+        results[#results + 1] = res
+      else
+        results[#results + 1] = res[1] or nil
+      end
+    end
+    return results
+  end
 end
 
 -- Coroutines
@@ -300,6 +413,11 @@ local lte = function(a,b) return a <= b end
 local ne = function(a,b) return a ~= b end
 
 return {
+  iter = iter,
+  foldr = foldr,
+  reverse = reverse,
+  nth = nth,
+  clone = clone,
   prettyprint = prettyprint,
   elif = elif,
   cons = cons,

@@ -1,5 +1,25 @@
 f = require "f"
 
+-- f.iter
+assert(type(f.iter("Hello")) == "thread")
+
+-- f.reverse
+assert(f.reverse("Hello") == "olleH")
+assert(f.reverse({"Hello", "Peeps"})[1] == "Peeps")
+assert(f.reverse(f.reverse({"Hello", "Peeps"}))[1] == "Hello")
+
+-- f.nth
+assert(f.nth("Hello, World!", 1) == "Hello, World!")
+assert(f.nth("Hello, World!", 1, -1) == "Hello, World")
+
+-- f.clone
+local tmp = function() return 14 end
+assert(tmp ~= f.clone(tmp))
+assert(tmp() == f.clone(tmp)())
+
+-- f.foldr
+assert(f.foldr(f.mul, {1, 2, 3, 4, 5}, 1) == 120)
+
 -- f.prettyprint
 assert(f.prettyprint(10, true) == "10")
 assert(f.prettyprint("10", true) == '"10"')
@@ -92,9 +112,7 @@ tmp = nil
 -- Coroutines are just wrappers, so equivalence is good enough.
 assert(type(f.co.c(function() return end)) == "thread", "f.co.c didn't create a thread.")
 
--- f.with(filepath, permissions, functor)
--- This API may change in later major versions, to support more than just files.
--- TODO: Test tmp file?
+-- f.with(entry, permissions, functor)
 
 -- Predicates: predicate(val) -> boolean
 assert(f.isstring("") == true)

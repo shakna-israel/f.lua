@@ -1,50 +1,126 @@
-v 1.0.0
-  elif
-  cons
-  car
-  head
-  cdr
-  rest
-  fn
-  let
-  cond
+1.0.0
+James Milne (42):
+      Initial commit
+      Create README.md
+      Create f.lua
+      Namespace for string lambda
+      Reflect f.fn changes.
+      Merge pull request #1 from shakna-israel/shakna-israel-string-lambda
+      Allow lambda to use loadstring if available, else use 5.2's load.
+      Add Travis CI badge.
+      Create .travis.yml
+      Update .travis.yml
+      Create test.lua
+      Update .travis.yml
+      Update f.lua
+      Merge pull request #2 from shakna-israel/shakna-israel-travis
+      f.cons tests
+      Tests for current API. README updated with unstable API.
+      Compat note added to README
+      Initial thoughts on fn.let
+      Added f.let tests for function and f.fn
+      Expose let
+      Added Declan White's nonrecursive deepcopy.
+      Added deepcopy licensing to README.
+      Removed deepcopy, switched to Declan White's nonrecursive deepcopy.
+      Simpler copying of values for f.let
+      Add API.
+      Merge pull request #3 from shakna-israel/shakna-israel-let
+      Basic cond implementation
+      Add cond tests
+      Expose cond
+      Added API details for f.cond
+      Merge pull request #4 from shakna-israel/shakna-israel-cond
+      Fix f.let under Lua5.3
+      Merge pull request #5 from shakna-israel/shakna-israel-bugfix
+      Return nil if table empty on f.car and f.head.
+      Merge pull request #6 from shakna-israel/shakna-israel-car
+      Expand API details.
+      Merge branch 'master' into shakna-israel-documentation
+      Merge pull request #7 from shakna-israel/shakna-israel-documentation
+      Create rockspec
+      Add luajit to tests
+      Fixed rockspec
+      Merge pull request #8 from shakna-israel/shakna-israel-luarocks
 
-v 1.1.0
-  apply
-  map
-  filter
-  curry
-  eq
-  isstring
-  isnumber
-  isfunction
-  isboolean
-  isnil
-  istable
-  isuserdata
-  isfile
+1.0.1
+James Milne (5):
+      Add luarocks install.
+      rockspec error
+      Rename f.lua-1.0-0.rockspec to f.lua-1.0-1.rockspec
+      Update f.lua-1.0-1.rockspec
+      Update f.lua-1.0-1.rockspec
 
-v 1.1.1
-  More assertions to catch some
-    previously uncaught API requirements
-  More effecient code
+1.1.0
+James Milne (17):
+      Implemented apply
+      Prepared rockspec
+      Implemented map
+      map and applydocumentation
+      implemented predicates
+      documentation for predicates
+      began implementing eq
+      implemented eq
+      documented eq
+      implemented and documented f.filter
+      implemented and documented f.curry
+      added guards to f.curry
+      added basic changelog
+      fixed f.curry syntax error
+      Added guard messages
+      Implemented and documented recur
+      Merge pull request #9 from shakna-israel/1.1.0-dev
 
-v 1.2.0
-  prettyprint
-  add
-  sub
-  div
-  div.int
-  mul
-  gt
-  gte
-  lt
-  lte
-  ne
-  with
+1.1.1
+James Milne (2):
+      v1.1.1: minor bug fixes, more effecient
+      v1.1.1: minor bug fixes, more effecient
 
-v 1.2.2
-  cdr performance improved.
-  
-v 1.3.0
-  co - coroutine wrappers.
+1.2.0
+James Milne (5):
+      Implemented first-class operators.
+      Implemented with for files.
+      Minimal prettyprint implementation
+      Minor fixes, and documentation.
+      Merge pull request #17 from shakna-israel/1.2.0-dev
+
+1.2.1
+James Milne (3):
+      Added example for with destructor.
+      MAJOR BUG: Luarocks rockspec didn't actually install anything.
+      MAJOR BUG: Luarocks rockspec didn't actually install anything.
+
+1.3.0
+James Milne (10):
+      Make cdr faster
+      Removed API stability reference.
+      Minor Bug: f.div isn't a function, but apply and map checked for that. Now they also check metatables.
+      Merge branch 'master' into v1.2.2-dev
+      Fixed comment
+      Merge pull request #20 from shakna-israel/v1.2.2-dev
+      Added basic coroutine wrappers
+      Added a coroutine test
+      1.3.0
+      1.3.0
+
+1.3.1
+James Milne (4):
+      Merge pull request #22 from shakna-israel/v1.3.0-dev
+      Merge pull request #23 from shakna-israel/v1.3.0-dev
+      1.3.1 BUGFIX: luarocks still failing.
+      1.3.1 BUGFIX: luarocks still failing.
+
+1.4.0
+James Milne (11):
+      Update CHANGE.log
+      Added information on f.co
+      Update README.md
+      Update README.md
+      New git shortlog based CHANGE.log
+      #25, with can now handle coroutines.
+      #26, f.nth a range slicer.
+      #29, f.reverse implemented
+      #29, f.reverse documented
+      #30, f.foldr implemented.
+      #33, iter implemented.
+
