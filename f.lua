@@ -189,9 +189,9 @@ let = function(values, functor)
   for k, v in pairs(values) do
     if _G[k] ~= nil then
       backups[k] = _G[k]
-      _G[k] = v
+      _G[k] = clone(v)
     else
-      _G[k] = v
+      _G[k] = clone(v)
     end
   end
 
