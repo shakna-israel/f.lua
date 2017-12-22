@@ -259,11 +259,17 @@ fibonacci = function(x, acc)
 end
 ```
 
-### ```f.with(filepath, functor)```
+### ```f.with(entry, functor)```
 
 ```with``` takes a string containing a filepath, which it then uses to open a file handle, and then calls the functor, using the file handle as an argument.
 
 Finally, with closes out the file, and returns the functor's return values.
+
+OR
+
+```with``` takes a thread, with it then resumes and passes the yielded object to the functor, and captures the response, continuing till the thread is dead.
+
+The final captured result, a table of results, is passed back to the caller.
 
 Example:
 

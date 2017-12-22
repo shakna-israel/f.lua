@@ -197,14 +197,30 @@ recur = function()
 end
 
 local with
-with = function(filepath, permissions, functor)
-  assert(type(filepath) == "string")
+with = function(entry, permissions, functor)
+  assert(type(entry) == "string" or type(entry) == "thread")
   assert(type(permissions) == "string")
-  assert(type(functor) == "function")  
-  local file = io.open(filepath, permissions)
-  ret = {functor(file)}
-  if file then file:close() end
-  return unpack(ret)
+  assert(type(functor) == "function")
+
+  -- With can close over a file.
+  if type(entry) == "string" then
+    local file = io.open(filepath, permissions)
+    ret = {functor(file)}
+    if file then file:close() end
+    return unpack(ret)
+  else
+    -- With can iterate over a coroutine.
+    local results = {}
+    while coroutine.status(entry) == "suspended" do
+      local res = {functor(coroutine.resume(entry))}
+      if #res > 1 then
+        results[#results + 1] = res
+      else
+        results[#results + 1] = res[1] or nil
+      end
+    end
+    return results
+  end
 end
 
 -- Coroutines
