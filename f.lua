@@ -1,6 +1,16 @@
 local load = loadstring or load
 local unpack = unpack or table.unpack
 
+local foldr
+foldr = function(functor, tbl, val)
+  assert(type(functor) == "function", "Functor must be a function.")
+  assert(type(tbl) == "table", "foldr expects a table.")
+  for k, v in pairs(tbl) do
+    val = functor(v, val)
+  end
+  return val
+end
+
 local reverse
 reverse = function(obj)
   assert(type(obj) == "string" or type(obj) == "table", "Can only reverse strings or tables.")
@@ -385,6 +395,7 @@ local lte = function(a,b) return a <= b end
 local ne = function(a,b) return a ~= b end
 
 return {
+  foldr = foldr,
   reverse = reverse,
   nth = nth,
   clone = clone,

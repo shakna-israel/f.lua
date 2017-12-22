@@ -14,6 +14,9 @@ local tmp = function() return 14 end
 assert(tmp ~= f.clone(tmp))
 assert(tmp() == f.clone(tmp)())
 
+-- f.foldr
+assert(f.foldr(f.mul, {1, 2, 3, 4, 5}, 1) == 120)
+
 -- f.prettyprint
 assert(f.prettyprint(10, true) == "10")
 assert(f.prettyprint("10", true) == '"10"')

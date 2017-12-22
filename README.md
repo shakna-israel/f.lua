@@ -99,6 +99,17 @@ f.reverse("Hello")
 > "olleH"
 ```
 
+### ```f.foldr```
+
+A classic implementation of foldr, taking a functor, a table, and then a seed value.
+
+Example:
+
+```
+f.foldr(f.mul, {1, 2, 3, 4, 5}, 1)
+> 120
+```
+
 ### ```f.prettyprint(x)```
 
 Prettyprint is a convenience function, to dumo a value to stdout.
