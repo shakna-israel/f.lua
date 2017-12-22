@@ -77,6 +77,17 @@ f.nth("Hello, World!", 8)
 > "World!"
 ```
 
+### ```f.clone(obj)```
+
+Generates a copy of any object given to it. If the object has a metatable, that is also cloned, without becoming a reference to the old metatable.
+
+Example:
+
+```
+f.clone({1, 2, 3})
+> {1, 2, 3}
+```
+
 ### ```f.prettyprint(x)```
 
 Prettyprint is a convenience function, to dumo a value to stdout.

@@ -1,6 +1,20 @@
 local load = loadstring or load
 local unpack = unpack or table.unpack
 
+local reverse
+reverse = function(obj)
+  assert(type(obj) == "string" or type(obj) == "table", "Can only reverse strings or tables.")
+  if type(obj) == "string" then
+    return obj:reverse()
+  else
+    local ret = {}
+    for i = 1, math.floor(#obj / 2) do
+      ret[i], ret[#obj - i + 1] = obj[#obj - i + 1], obj[i]
+    end
+    return ret
+  end
+end
+
 local nth
 nth = function(iterable, begin, fin)
   assert(type(begin) == "number" and math.ceil(begin) == begin, "nth needs a valid range number.")
@@ -34,6 +48,25 @@ nth = function(iterable, begin, fin)
     return table.concat(result)
   else
     return result
+  end
+end
+
+local clone
+clone = function(o)
+  if type(o) == "function" then
+    return load(string.dump(o))
+  elseif type(o) == "table" then
+    local ret = {}
+    if getmetatable(o) ~= nil then
+      local mt = clone(getmetatable(o))
+      setmetatable(ret, mt)
+    end
+    for k, v in pairs(o) do
+      ret[k] = clone(v) -- Should handle recursive copies.
+    end
+    return ret
+  else
+    return o
   end
 end
 
@@ -352,7 +385,9 @@ local lte = function(a,b) return a <= b end
 local ne = function(a,b) return a ~= b end
 
 return {
+  reverse = reverse,
   nth = nth,
+  clone = clone,
   prettyprint = prettyprint,
   elif = elif,
   cons = cons,

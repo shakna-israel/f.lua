@@ -1,8 +1,18 @@
 f = require "f"
 
+-- f.reverse
+assert(f.reverse("Hello") == "olleH")
+assert(f.reverse({"Hello", "Peeps"})[1] == "Peeps")
+assert(f.reverse(f.reverse({"Hello", "Peeps"}))[1] == "Hello")
+
 -- f.nth
 assert(f.nth("Hello, World!", 1) == "Hello, World!")
 assert(f.nth("Hello, World!", 1, -1) == "Hello, World")
+
+-- f.clone
+local tmp = function() return 14 end
+assert(tmp ~= f.clone(tmp))
+assert(tmp() == f.clone(tmp)())
 
 -- f.prettyprint
 assert(f.prettyprint(10, true) == "10")
