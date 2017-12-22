@@ -1,5 +1,9 @@
 f = require "f"
 
+-- f.nth
+assert(f.nth("Hello, World!", 1) == "Hello, World!")
+assert(f.nth("Hello, World!", 1, -1) == "Hello, World")
+
 -- f.prettyprint
 assert(f.prettyprint(10, true) == "10")
 assert(f.prettyprint("10", true) == '"10"')

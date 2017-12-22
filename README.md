@@ -62,6 +62,21 @@ I have tried to opt for "least surprising behaviour" for as much as I can. If yo
 
 This API is guaranteed by [semantic versioning](https://semver.org), according to how it is laid out below.
 
+### ```f.nth(iterable, begin, fin)```
+
+```f.nth``` takes a table or a string, and a number for where to start collecting a range, and optionally a number of where to finish (which may be represented by a negative number, counting from the end.)
+
+It then returns the result.
+
+Example:
+
+```
+f.nth({1, 2, 3}, 1, -1)
+> {1, 2}
+f.nth("Hello, World!", 8)
+> "World!"
+```
+
 ### ```f.prettyprint(x)```
 
 Prettyprint is a convenience function, to dumo a value to stdout.

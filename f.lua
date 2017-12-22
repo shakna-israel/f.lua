@@ -1,6 +1,42 @@
 local load = loadstring or load
 local unpack = unpack or table.unpack
 
+local nth
+nth = function(iterable, begin, fin)
+  assert(type(begin) == "number" and math.ceil(begin) == begin, "nth needs a valid range number.")
+  if fin ~= nil then
+    assert(type(fin) == "number" and math.ceil(fin) == fin, "nth needs a valid range number.")
+  end
+
+  local toString = false
+  -- Convert string to table
+  if type(iterable) == "string" then
+    local tmp = {}
+    for c in iterable:gmatch(".") do tmp[#tmp + 1] = c end
+    iterable = tmp
+    toString = true
+  end
+
+  if fin == nil then
+    fin = #iterable
+  end
+
+  if fin < 0 then
+    fin = #iterable + fin
+  end
+
+  local result = {}
+  for i=begin, fin do
+    result[#result + 1] = iterable[i]
+  end
+  
+  if toString then
+    return table.concat(result)
+  else
+    return result
+  end
+end
+
 local prettyprint
 prettyprint = function(val, outstring)
   local msg = ""
@@ -316,6 +352,7 @@ local lte = function(a,b) return a <= b end
 local ne = function(a,b) return a ~= b end
 
 return {
+  nth = nth,
   prettyprint = prettyprint,
   elif = elif,
   cons = cons,
