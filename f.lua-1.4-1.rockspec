@@ -1,8 +1,8 @@
 package = "f.lua"
-version = "1.4-0"
+version = "1.4-1"
 source = {
   url = "git://github.com/shakna-israel/f.lua",
-  tag = "1.4.0"
+  tag = "1.4.1"
 }
 description = {
   summary = "The most complete functional library for Lua",
