@@ -88,6 +88,17 @@ f.clone({1, 2, 3})
 > {1, 2, 3}
 ```
 
+### ```f.reverse(obj)```
+
+Takes either a string or table, and returns a copy that has the order reversed.
+
+Example:
+
+```
+f.reverse("Hello")
+> "olleH"
+```
+
 ### ```f.prettyprint(x)```
 
 Prettyprint is a convenience function, to dumo a value to stdout.
