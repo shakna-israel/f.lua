@@ -8,9 +8,11 @@ Compatibility: Lua 5.1, 5.2, 5.3, and Luajit.
 
 ---
 
-## Goal
+## Why?
 
-An extension library to make Lua more useful for functional programming, whilst remaining functionally Lua.
+f.lua aims to be the most complete functional extension library for Lua, whilst remaining fundamentally Lua.
+
+It's fast, safe, unsurprising and fully-featured, with let statements, string lambdas, and currying. Whether you miss LISP or Haskell whilst working with Lua, this should scratch your itch, without making Lua's VM come to a screeching halt.
 
 ---
 
@@ -29,7 +31,7 @@ luarocks install f.lua
 A brief look:
 
 ```
-f = require "f"
+local f = require "f"
 
 f.car(f.cons(2, f.cons(1)))
 > 2
@@ -39,6 +41,17 @@ f.cdr(f.cons(2, f.cons(1)))
 
 f.fn("(x, y) return x, y")(1, 2)
 > {1, 2}
+
+f.let({x = 12}, function()
+  print(x)
+  f.let({x = 24}, function()
+    print(x)
+  end)
+end)
+print(x)
+> 12
+> 24
+> nil
 ```
 
 ---
