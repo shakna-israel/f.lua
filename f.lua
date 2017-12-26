@@ -1,6 +1,14 @@
 local load = loadstring or load
 local unpack = unpack or table.unpack
 
+local vend
+vend = function(vendor)
+  local vendor = vendor or "vendor"
+  local version = _VERSION:match("%d+%.%d+")
+  package.path = vendor .. '/share/lua/' .. version .. '/?.lua;' .. vendor .. '/share/lua/' .. version .. '/?/init.lua;' .. package.path
+  package.cpath = vendor .. '/lib/lua/' .. version .. '/?.so;' .. package.cpath
+end
+
 local guard
 guard = function(...)
   local args = {...}
@@ -443,6 +451,7 @@ local lte = function(a,b) return a <= b end
 local ne = function(a,b) return a ~= b end
 
 return {
+  vend = vend,
   guard = guard,
   iter = iter,
   foldr = foldr,

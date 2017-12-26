@@ -155,6 +155,19 @@ f.foldr(f.mul, {1, 2, 3, 4, 5}, 1)
 > 120
 ```
 
+### ```f.vend()```
+
+When run, allows you to require from a local luarocks tree.
+
+*CAUTION: Modifies globals, package.path and package.cpath.*
+
+Example:
+
+```
+f.vend("vendor")
+local lib = require "lib"
+```
+
 ### ```f.prettyprint(x)```
 
 Prettyprint is a convenience function, to dumo a value to stdout.
