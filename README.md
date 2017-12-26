@@ -450,6 +450,71 @@ f.gt(2, 1)
 > true
 ```
 
+### ```f.mod(a, b)```
+
+```f.mod``` is basically an alias of the modulus operator.
+
+Example:
+
+```
+f.mod(1, 2)
+> 1
+```
+
+### ```f.unary(a)```
+
+```f.unary``` is basically an alias of the unary operator.
+
+Example:
+
+```
+f.unary(20)
+> -20
+```
+
+### ```f.pow(a, b)```
+
+```f.pow``` is basically an alias of the powerof operator.
+
+Example:
+
+```
+f.pow(1, 2)
+> 1.0
+```
+
+### ```xor(a, b)```
+
+An alias for Lua's or operator.
+
+Example:
+
+```
+local b = "Hi"
+f.xor(a, b)
+> "Hi"
+```
+
+### ```xnd(a, b)```
+
+An alias for Lua's and operator.
+
+Example:
+
+```
+1 and 2 == xnd(1, 2)
+```
+
+### ```xnt(a)```
+
+An alias for Lua's not operator.
+
+Example:
+
+```
+not a == xnt(a)
+```
+
 ### ```f.co(thread)```
 
 ```f.co(thread)``` is semantically identical to [coroutine.wrap](https://www.lua.org/manual/5.3/manual.html#pdf-coroutine.wrap).
