@@ -3,6 +3,8 @@
 A functional Lua extension library.
 
 [![Build Status](https://travis-ci.org/shakna-israel/f.lua.svg?branch=master)](https://travis-ci.org/shakna-israel/f.lua)
+[![License](http://img.shields.io/badge/Licence-MIT-brightgreen.svg)](LICENSE)
+ [![Krihelimeter](http://krihelinator.xyz/badge/shakna-israel/f.lua)](http://krihelinator.xyz/repositories/shakna-israel/f.lua) 
 
 Compatibility: Lua 5.1, 5.2, 5.3, and Luajit.
 
