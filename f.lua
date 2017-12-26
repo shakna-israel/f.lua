@@ -449,8 +449,20 @@ local gte = function(a,b) return a >= b end
 local lt = function(a,b) return a < b end
 local lte = function(a,b) return a <= b end
 local ne = function(a,b) return a ~= b end
+local mod = function(a, b) return a % b end
+local unary = function(a) return -a end
+local pow = function(a, b) return a^b end
+local xor = function(a, b) return a or b end
+local xnd = function(a, b) return a and b end
+local xnt = function(a) return not a end
 
 return {
+  mod = mod,
+  unary = unary,
+  pow = pow,
+  xor = xor,
+  xnd = xnd,
+  xnt = xnt,
   vend = vend,
   guard = guard,
   iter = iter,
