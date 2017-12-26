@@ -1,5 +1,18 @@
 f = require "f"
 
+-- f.guard
+local status, err = pcall(f.guard("string", "string", "->string", function(a, b) return a .. b end), 1, 2)
+assert(status == false, "Guard failed to catch bad call.")
+
+status, err = pcall(f.guard("string", "string", "->string", function(a, b) return a .. b end), 1, 2)
+assert(status == false, "Guard failed to catch bad call.")
+
+status, err = pcall(f.guard("string", "string", "->string", function(a, b) return a .. b end), "a", "b")
+assert(status == true, "Guard failed to ignore good call.")
+
+status = nil
+err = nil
+
 -- f.iter
 assert(type(f.iter("Hello")) == "thread")
 

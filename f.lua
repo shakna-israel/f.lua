@@ -1,6 +1,36 @@
 local load = loadstring or load
 local unpack = unpack or table.unpack
 
+local guard
+guard = function(...)
+  local args = {...}
+  local functor = table.remove(args)
+  local ret = nil
+  for ix, val in ipairs(args) do
+    if val:sub(1, 2) == "->" then
+      if ret == nil then
+        ret = table.remove(args, ix)
+      else
+        assert(false, "GuardError: Multiple return types given, expected 1.")
+      end
+    end
+  end
+  return function(...)
+    local arglist = {...}
+    for ix, kind in ipairs(args) do
+      local val = arglist[ix]
+      assert(type(val) == kind, string.format("GuardError: Expected argument number %d to be of type %s, but received %s(%s).", ix, kind, type(val), val))
+    end
+    if ret ~= nil then
+      local r = functor(unpack(arglist))
+      assert(type(r) == ret:sub(3), string.format("GuardError: Expected return value to be of type %s, but received %s(%s)", ret:sub(3), type(r), r))
+      return r
+    else
+      return functor(unpack(arglist))
+    end
+  end
+end
+
 local iter
 iter = function(obj)
   assert(type(obj) == "table" or type(obj) == "string")
@@ -413,6 +443,7 @@ local lte = function(a,b) return a <= b end
 local ne = function(a,b) return a ~= b end
 
 return {
+  guard = guard,
   iter = iter,
   foldr = foldr,
   reverse = reverse,

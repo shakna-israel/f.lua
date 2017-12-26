@@ -79,6 +79,33 @@ f.nth("Hello, World!", 8)
 > "World!"
 ```
 
+### ```f.guard(...)```
+
+f.guard is a runtime type-guard system.
+
+It takes a series of strings, that should be types, in the order the function being guarded would receive them.
+
+Then it optionally takes another string prepended with "->" for the return type.
+
+Finally it must receive a function to guard.
+
+It returns a function guarded by assertions.
+
+Example:
+
+```
+local add = guard("number", "number", "->number",
+  function (a, b)
+    return a + b
+  end)
+
+add("Hello", "you")
+> GuardError
+
+add(1, 2)
+> 3
+```
+
 ### ```f.clone(obj)```
 
 Generates a copy of any object given to it. If the object has a metatable, that is also cloned, without becoming a reference to the old metatable.
