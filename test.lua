@@ -1,5 +1,23 @@
 f = require "f"
 
+-- f.mod
+assert(f.mod(21, 22) == 21 % 22)
+
+-- f.unary
+assert(f.unary(21) == -21)
+
+-- f.pow
+assert(f.pow(27, 26) == 27^26)
+
+-- f.xor
+assert(f.xor(nil, true) == nil or true)
+
+-- f.xnd
+assert(f.xnd(true, true) == true and true)
+
+-- f.xnt
+assert(f.xnt(true) == not true)
+
 -- f.guard
 local status, err = pcall(f.guard("string", "string", "->string", function(a, b) return a .. b end), 1, 2)
 assert(status == false, "Guard failed to catch bad call.")
