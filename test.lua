@@ -1,5 +1,36 @@
 f = require "f"
 
+-- f.mod
+assert(f.mod(21, 22) == 21 % 22)
+
+-- f.unary
+assert(f.unary(21) == -21)
+
+-- f.pow
+assert(f.pow(27, 26) == 27^26)
+
+-- f.xor
+assert(f.xor(nil, true) == nil or true)
+
+-- f.xnd
+assert(f.xnd(true, true) == true and true)
+
+-- f.xnt
+assert(f.xnt(true) == not true)
+
+-- f.guard
+local status, err = pcall(f.guard("string", "string", "->string", function(a, b) return a .. b end), 1, 2)
+assert(status == false, "Guard failed to catch bad call.")
+
+status, err = pcall(f.guard("string", "string", "->string", function(a, b) return a .. b end), 1, 2)
+assert(status == false, "Guard failed to catch bad call.")
+
+status, err = pcall(f.guard("string", "string", "->string", function(a, b) return a .. b end), "a", "b")
+assert(status == true, "Guard failed to ignore good call.")
+
+status = nil
+err = nil
+
 -- f.iter
 assert(type(f.iter("Hello")) == "thread")
 
@@ -156,3 +187,36 @@ assert(f.gte(1, 1) == (1 >= 1))
 assert(f.lt(1, 2) == (1 < 2))
 assert(f.lte(1, 1) == (1 <= 1))
 assert(f.ne(1, 2) == (1 ~= 2))
+
+-- Ports
+-- f.port.make_input
+local tmp = f.port.make_input(function() return "reader" end, function() return "closer" end)
+assert(tmp:read() == "reader")
+assert(tmp:close() == "closer")
+tmp = nil
+
+--f.port.make_output
+local tmp = f.port.make_output(function() return "writer" end, function() return "reader" end, function() return "closer" end)
+assert(tmp:write() == "writer")
+assert(tmp:read() == "reader")
+assert(tmp:close() == "closer")
+tmp = nil
+
+--f.port.with_output
+local tmp = f.port.make_output(function(self, data) self.data = data end, function() end, function() end)
+f.port.with_output(tmp, function() print "Hello" end)
+assert(tmp.data == "Hello\n")
+tmp = nil
+
+--f.port.with_input
+local tmp = f.port.make_input(function(self) return "Hello" end, function() end)
+assert(f.port.with_input(tmp, function() return io.read() end) == "Hello")
+tmp = nil
+
+--f.port.iter
+local tmp = f.port.make_input(function(self) end, function() end)
+tmp.data = "Hello"
+for ix, v in f.port.iter, tmp do
+	assert(v == tmp.data:sub(ix - 1, ix - 1), tostring(v) .. "~=" .. tostring(tmp.data:sub(ix, ix)))
+end
+tmp = nil

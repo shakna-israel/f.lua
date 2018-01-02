@@ -79,6 +79,33 @@ f.nth("Hello, World!", 8)
 > "World!"
 ```
 
+### ```f.guard(...)```
+
+f.guard is a runtime type-guard system.
+
+It takes a series of strings, that should be types, in the order the function being guarded would receive them.
+
+Then it optionally takes another string prepended with "->" for the return type.
+
+Finally it must receive a function to guard.
+
+It returns a function guarded by assertions.
+
+Example:
+
+```
+local add = guard("number", "number", "->number",
+  function (a, b)
+    return a + b
+  end)
+
+add("Hello", "you")
+> GuardError
+
+add(1, 2)
+> 3
+```
+
 ### ```f.clone(obj)```
 
 Generates a copy of any object given to it. If the object has a metatable, that is also cloned, without becoming a reference to the old metatable.
@@ -126,6 +153,19 @@ Example:
 ```
 f.foldr(f.mul, {1, 2, 3, 4, 5}, 1)
 > 120
+```
+
+### ```f.vend()```
+
+When run, allows you to require from a local luarocks tree.
+
+*CAUTION: Modifies globals, package.path and package.cpath.*
+
+Example:
+
+```
+f.vend("vendor")
+local lib = require "lib"
 ```
 
 ### ```f.prettyprint(x)```
@@ -344,6 +384,62 @@ with("test.lua", function(f) return f:read() end)
 > "...lots of stuff..."
 ```
 
+### ```f.port.make_input(functor, functor)```
+
+This takes two functions, firstly a reader, and second a function to close the port. It returns a table, that fits the API for a port-like object.
+
+```
+local tmp = f.port.make_input(function() return "reader" end, function() return "closer" end)
+assert(tmp:read() == "reader")
+assert(tmp:close() == "closer")
+```
+
+### ```f.port.make_output(functor, functor, functor)```
+
+This takes three functions, firstly a function to write to the object, then a reader, and finally a closer. It returns a table, that fits the API for a port-like object.
+
+```
+local tmp = f.port.make_output(function() return "writer" end, function() return "reader" end, function() return "closer" end)
+assert(tmp:write() == "writer")
+assert(tmp:read() == "reader")
+assert(tmp:close() == "closer")
+tmp = nil
+```
+
+### ```f.port.with_output(port, functor)```
+
+Takes a port-like object, and a function. Any calls to ```print``` or ```io.write``` within the function will get overridden to ```port:write```, whilst trying to maintain some sensibility about formatting. Such as ```print``` appends a newline string, and ```io.write``` won't add a seperator usually. The exact details of the formatting can be messy, so look at the definition of ```f.port.with_output``` to be certain.
+
+The return value of the functor is returned.
+
+```
+local tmp = f.port.make_output(function(self, data) self.data = data end, function() end, function() end)
+f.port.with_output(tmp, function() print "Hello" end)
+assert(tmp.data == "Hello\n")
+```
+
+
+### ```f.port.with_input(port, functor)```
+
+Takes a port-like object, and a function. Any calls to ```io.read``` are overridden with ```port:read```. The return value is the return value of the functor.
+
+```
+local tmp = f.port.make_input(function(self) return "Hello" end, function() end)
+assert(f.port.with_input(tmp, function() return io.read() end) == "Hello")
+```
+
+### ```f.port.iter```
+
+A simple iterator designed for use with for loops. It defaults to iterator over ```port.data```, which can be overridden, however it expects to be iterator over a string. Anything more complicated, and you'll need to make your own iterator.
+
+```
+local tmp = f.port.make_input(function(self) end, function() end)
+tmp.data = "Hello"
+for ix, v in f.port.iter, tmp do
+  assert(v == tmp.data:sub(ix - 1, ix - 1), tostring(v) .. "~=" .. tostring(tmp.data:sub(ix, ix)))
+end
+```
+
 ### ```f.add(a, b)```
 
 Basically returns ```a + b```, but as a function, is able to be fed to other functions, unlike the + operator.
@@ -408,6 +504,71 @@ Example:
 ```
 f.gt(2, 1)
 > true
+```
+
+### ```f.mod(a, b)```
+
+```f.mod``` is basically an alias of the modulus operator.
+
+Example:
+
+```
+f.mod(1, 2)
+> 1
+```
+
+### ```f.unary(a)```
+
+```f.unary``` is basically an alias of the unary operator.
+
+Example:
+
+```
+f.unary(20)
+> -20
+```
+
+### ```f.pow(a, b)```
+
+```f.pow``` is basically an alias of the powerof operator.
+
+Example:
+
+```
+f.pow(1, 2)
+> 1.0
+```
+
+### ```xor(a, b)```
+
+An alias for Lua's or operator.
+
+Example:
+
+```
+local b = "Hi"
+f.xor(a, b)
+> "Hi"
+```
+
+### ```xnd(a, b)```
+
+An alias for Lua's and operator.
+
+Example:
+
+```
+1 and 2 == xnd(1, 2)
+```
+
+### ```xnt(a)```
+
+An alias for Lua's not operator.
+
+Example:
+
+```
+not a == xnt(a)
 ```
 
 ### ```f.co(thread)```

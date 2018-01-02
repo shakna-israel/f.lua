@@ -1,6 +1,123 @@
 local load = loadstring or load
 local unpack = unpack or table.unpack
 
+local port = {}
+port.with_output = function(port, functor)
+  local printer = function(nl, sep, ...)
+    msg = port:read() or ""
+    local args = {...}
+    for i, v in ipairs(args) do
+      if #msg > 0 and msg:sub(-1, -1) ~= "\n" then
+        msg = msg .. sep .. tostring(v)
+      else
+        msg = msg .. tostring(v)
+      end
+    end
+    if nl then
+      port:write(msg .. "\n")
+    else
+      port:write(msg)
+    end
+  end
+  giowrite = io.write
+  io.write = function(...)
+    printer(false, "", ...)
+  end
+  local gprint = print
+  print = function(...)
+    printer(true, "\t", ...)
+  end
+  local ret = {functor()}
+  print = gprint
+  io.write = giowrite
+  port:close()
+  return unpack(ret)
+end
+
+port.with_input = function(port, functor)
+  local ginput = io.read
+  io.read = function(...)
+    return port:read(...)
+  end
+  local ret = {functor()}
+  io.read = ginput
+  port:close()
+  return unpack(ret)
+end
+
+port.make_input = function(read_func, close_func)
+  local port = {}
+  port.read = read_func
+  port.close = close_func
+  return port
+end
+
+port.make_output = function(write_func, read_func, close_func)
+  local port = {}
+  port.write = write_func
+  port.read = read_func
+  port.close = close_func
+  return port
+end
+
+port.from_string = function(str, functor)
+  local ginput = io.read
+  io.read = function()
+    return str
+  end
+  local ret = {functor()}
+  io.read = ginput
+  return unpack(ret)
+end
+
+port.iter = function(port, n, data)
+  if data == nil then data = "data" end
+  if n == nil then n = 1 end
+  if n <= #port[data] then
+    local d = port[data]:sub(n, n)
+    n = n + 1
+    return n, d, data
+  end
+end
+
+local vend
+vend = function(vendor)
+  local vendor = vendor or "vendor"
+  local version = _VERSION:match("%d+%.%d+")
+  package.path = vendor .. '/share/lua/' .. version .. '/?.lua;' .. vendor .. '/share/lua/' .. version .. '/?/init.lua;' .. package.path
+  package.cpath = vendor .. '/lib/lua/' .. version .. '/?.so;' .. package.cpath
+end
+
+local guard
+guard = function(...)
+  local args = {...}
+  local functor = table.remove(args)
+  local ret = nil
+  for ix, val in ipairs(args) do
+    if val:sub(1, 2) == "->" then
+      if ret == nil then
+        ret = table.remove(args, ix)
+      else
+        assert(false, "GuardError: Multiple return types given, expected 1.")
+      end
+    end
+  end
+  return function(...)
+    local arglist = {...}
+    for ix, kind in ipairs(args) do
+      local val = arglist[ix]
+      assert(type(val) == kind, string.format("GuardError: Expected argument number %d to be of type %s, but received %s(%s).", ix, kind, type(val), val))
+    end
+    if ret ~= nil then
+      local r = functor(unpack(arglist))
+      assert(type(r) == ret:sub(3), string.format("GuardError: Expected return value to be of type %s, but received %s(%s)", ret:sub(3), type(r), r))
+      return r
+    else
+      return functor(unpack(arglist))
+    end
+  end
+end
+
 local iter
 iter = function(obj)
   assert(type(obj) == "table" or type(obj) == "string")
@@ -411,8 +528,22 @@ local gte = function(a,b) return a >= b end
 local lt = function(a,b) return a < b end
 local lte = function(a,b) return a <= b end
 local ne = function(a,b) return a ~= b end
+local mod = function(a, b) return a % b end
+local unary = function(a) return -a end
+local pow = function(a, b) return a^b end
+local xor = function(a, b) return a or b end
+local xnd = function(a, b) return a and b end
+local xnt = function(a) return not a end
 
 return {
+  mod = mod,
+  unary = unary,
+  pow = pow,
+  xor = xor,
+  xnd = xnd,
+  xnt = xnt,
+  vend = vend,
+  guard = guard,
   iter = iter,
   foldr = foldr,
   reverse = reverse,
@@ -453,5 +584,6 @@ return {
   gte = gte,
   lt = lt,
   lte = lte,
-  ne = ne
+  ne = ne,
+  port = port,
 }
