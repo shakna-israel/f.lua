@@ -187,3 +187,36 @@ assert(f.gte(1, 1) == (1 >= 1))
 assert(f.lt(1, 2) == (1 < 2))
 assert(f.lte(1, 1) == (1 <= 1))
 assert(f.ne(1, 2) == (1 ~= 2))
+
+-- Ports
+-- f.port.make_input
+local tmp = f.port.make_input(function() return "reader" end, function() return "closer" end)
+assert(tmp:read() == "reader")
+assert(tmp:close() == "closer")
+tmp = nil
+
+--f.port.make_output
+local tmp = f.port.make_output(function() return "writer" end, function() return "reader" end, function() return "closer" end)
+assert(tmp:write() == "writer")
+assert(tmp:read() == "reader")
+assert(tmp:close() == "closer")
+tmp = nil
+
+--f.port.with_output
+local tmp = f.port.make_output(function(self, data) self.data = data end, function() end, function() end)
+f.port.with_output(tmp, function() print "Hello" end)
+assert(tmp.data == "Hello\n")
+tmp = nil
+
+--f.port.with_input
+local tmp = f.port.make_input(function(self) return "Hello" end, function() end)
+assert(f.port.with_input(tmp, function() return io.read() end) == "Hello")
+tmp = nil
+
+--f.port.iter
+local tmp = f.port.make_input(function(self) end, function() end)
+tmp.data = "Hello"
+for ix, v in f.port.iter, tmp do
+	assert(v == tmp.data:sub(ix - 1, ix - 1), tostring(v) .. "~=" .. tostring(tmp.data:sub(ix, ix)))
+end
+tmp = nil

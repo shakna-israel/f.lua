@@ -1,6 +1,85 @@
 local load = loadstring or load
 local unpack = unpack or table.unpack
 
+local port = {}
+port.with_output = function(port, functor)
+  local printer = function(nl, sep, ...)
+    msg = port:read() or ""
+    local args = {...}
+    for i, v in ipairs(args) do
+      if #msg > 0 and msg:sub(-1, -1) ~= "\n" then
+        msg = msg .. sep .. tostring(v)
+      else
+        msg = msg .. tostring(v)
+      end
+    end
+    if nl then
+      port:write(msg .. "\n")
+    else
+      port:write(msg)
+    end
+  end
+  giowrite = io.write
+  io.write = function(...)
+    printer(false, "", ...)
+  end
+  local gprint = print
+  print = function(...)
+    printer(true, "\t", ...)
+  end
+  local ret = {functor()}
+  print = gprint
+  io.write = giowrite
+  port:close()
+  return unpack(ret)
+end
+
+port.with_input = function(port, functor)
+  local ginput = io.read
+  io.read = function(...)
+    return port:read(...)
+  end
+  local ret = {functor()}
+  io.read = ginput
+  port:close()
+  return unpack(ret)
+end
+
+port.make_input = function(read_func, close_func)
+  local port = {}
+  port.read = read_func
+  port.close = close_func
+  return port
+end
+
+port.make_output = function(write_func, read_func, close_func)
+  local port = {}
+  port.write = write_func
+  port.read = read_func
+  port.close = close_func
+  return port
+end
+
+port.from_string = function(str, functor)
+  local ginput = io.read
+  io.read = function()
+    return str
+  end
+  local ret = {functor()}
+  io.read = ginput
+  return unpack(ret)
+end
+
+port.iter = function(port, n, data)
+  if data == nil then data = "data" end
+  if n == nil then n = 1 end
+  if n <= #port[data] then
+    local d = port[data]:sub(n, n)
+    n = n + 1
+    return n, d, data
+  end
+end
+
 local vend
 vend = function(vendor)
   local vendor = vendor or "vendor"
@@ -505,5 +584,6 @@ return {
   gte = gte,
   lt = lt,
   lte = lte,
-  ne = ne
+  ne = ne,
+  port = port,
 }
