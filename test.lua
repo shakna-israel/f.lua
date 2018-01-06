@@ -22,6 +22,14 @@ tmp = nil
 -- f.ktov
 assert(f.ktov({hello = "world"})["world"] == "hello")
 
+-- f.inarray
+assert(f.inarray({"a", "b"}, "b") == true)
+assert(f.inarray({"a", "b"}, "c") == false)
+
+-- f.exclude
+assert(f.inarray(f.exclude({1, 2}, {1, 2, 3}), 3) == true)
+assert(f.inarray(f.exclude({1, 2}, {1, 2, 3}), 2) == false)
+
 -- f.ispositive
 
 assert(f.ispositive(0) == false)

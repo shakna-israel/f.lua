@@ -525,6 +525,22 @@ local ktov = function(tbl)
   return r
 end
 
+--- Remove a set of values from a table
+-- @function exclude
+-- @tparam table ex_tbl The values to remove e.g. {1, 2, 3}
+-- @tparam table tbl The table being processed e.g. {1, 2, 3, 4, 5}
+-- @treturn table The new table, e.g. {4, 5}
+local inarray -- depends on this, which is in the Predicates section
+local exclude = function(ex_tbl, tbl)
+  local r = {}
+  for _, v in ipairs(tbl) do
+    if not inarray(ex_tbl, v) then
+      r[#r + 1] = v
+    end
+  end
+  return r
+end
+
 --- Mathematical Operators
 -- @section maths
 
@@ -859,6 +875,18 @@ eq = function(a, b)
   end
 end
 
+--- Check if a value occurs in a list
+-- @function inarray
+-- @tparam table tbl Table to process
+-- @param v Value to check for
+-- @treturn boolean
+inarray = function(tbl, v)
+  for _, val in ipairs(tbl) do
+    if v == val then return true end
+  end
+  return false
+end
+
 --- Predicate to test string type
 -- @function isstring
 -- @param x The object to test if is a string
@@ -1040,4 +1068,6 @@ return {
   shuffle = shuffle,
   set = set,
   ktov = ktov,
+  inarray = inarray,
+  exclude = exclude,
 }
