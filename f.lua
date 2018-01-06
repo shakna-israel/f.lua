@@ -60,6 +60,9 @@ local timeit = function(functor, ...)
   return (fin - start) / 100
 end
 
+local memoize = function(functor)
+end
+
 --- Add a vendor path to Lua
 -- @function vend
 -- @tparam string vendor
