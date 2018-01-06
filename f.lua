@@ -6,84 +6,45 @@
 local load = loadstring or load
 local unpack = unpack or table.unpack
 
-local port = {}
-port.with_output = function(port, functor)
-  local printer = function(nl, sep, ...)
-    msg = port:read() or ""
-    local args = {...}
-    for i, v in ipairs(args) do
-      if #msg > 0 and msg:sub(-1, -1) ~= "\n" then
-        msg = msg .. sep .. tostring(v)
+local prettyprint
+prettyprint = function(val, outstring)
+  local msg = ""
+  if type(val) == "table" then
+    msg = msg .. "{"
+    for k, v in pairs(val) do
+      if v == val then
+        msg = msg .. "\t<self-reference>,\n"
       else
-        msg = msg .. tostring(v)
+        msg = msg .. "\t" .. prettyprint(k, true) .. " = " .. prettyprint(v, true) .. ",\n"
       end
     end
-    if nl then
-      port:write(msg .. "\n")
-    else
-      port:write(msg)
+    msg = msg .. "}"
+  else
+    if type(val) == "function" then
+      msg = msg .. "<function>: " .. tostring(val)
+    elseif type(val) == "string" then
+      msg = msg .. '"' .. val .. '"'
+    elseif type(val) == "number" then
+      msg = msg .. tostring(val)
+    elseif val == nil then
+      msg = msg .. "nil"
+    elseif type(val) == "boolean" then
+      msg = msg .. tostring(val)
+    elseif type(val) == "userdata" then
+      msg = msg .. "<userdata>: " .. tostring(val)
+    elseif type(val) == "thread" then
+      msg = msg .. "<thread>: " .. tostring(val)
     end
   end
-  giowrite = io.write
-  io.write = function(...)
-    printer(false, "", ...)
-  end
-  local gprint = print
-  print = function(...)
-    printer(true, "\t", ...)
-  end
-  local ret = {functor()}
-  print = gprint
-  io.write = giowrite
-  port:close()
-  return unpack(ret)
-end
-
-port.with_input = function(port, functor)
-  local ginput = io.read
-  io.read = function(...)
-    return port:read(...)
-  end
-  local ret = {functor()}
-  io.read = ginput
-  port:close()
-  return unpack(ret)
-end
-
-port.make_input = function(read_func, close_func)
-  local port = {}
-  port.read = read_func
-  port.close = close_func
-  return port
-end
-
-port.make_output = function(write_func, read_func, close_func)
-  local port = {}
-  port.write = write_func
-  port.read = read_func
-  port.close = close_func
-  return port
-end
-
-port.from_string = function(str, functor)
-  local ginput = io.read
-  io.read = function()
-    return str
-  end
-  local ret = {functor()}
-  io.read = ginput
-  return unpack(ret)
-end
-
-port.iter = function(port, n, data)
-  if data == nil then data = "data" end
-  if n == nil then n = 1 end
-  if n <= #port[data] then
-    local d = port[data]:sub(n, n)
-    n = n + 1
-    return n, d, data
+  if outstring == nil then
+    print(msg)
+  else
+    return msg
   end
 end
+
+--- Convenience
+-- @section convenience
 
 --- Add a vendor path to Lua
 -- @function vend
@@ -155,76 +116,6 @@ iter = function(obj)
   end
 end
 
-local foldr
-foldr = function(functor, tbl, val)
-  assert(type(functor) == "function", "Functor must be a function.")
-  assert(type(tbl) == "table", "foldr expects a table.")
-  for k, v in pairs(tbl) do
-    val = functor(v, val)
-  end
-  return val
-end
-
---- Reverses an iterable
--- @function reverse
--- @param obj string or table
--- @return The reverse string or table
-local reverse
-reverse = function(obj)
-  assert(type(obj) == "string" or type(obj) == "table", "Can only reverse strings or tables.")
-  if type(obj) == "string" then
-    return obj:reverse()
-  else
-    local ret = {}
-    for i = 1, math.floor(#obj / 2) do
-      ret[i], ret[#obj - i + 1] = obj[#obj - i + 1], obj[i]
-    end
-    return ret
-  end
-end
-
---- Access a range from an interable
--- @function nth
--- @param iterable An iterable, such as a string or table.
--- @tparam number begin
--- @tparam number fin
--- @return A selection of the iterable
-local nth
-nth = function(iterable, begin, fin)
-  assert(type(begin) == "number" and math.ceil(begin) == begin, "nth needs a valid range number.")
-  if fin ~= nil then
-    assert(type(fin) == "number" and math.ceil(fin) == fin, "nth needs a valid range number.")
-  end
-
-  local toString = false
-  -- Convert string to table
-  if type(iterable) == "string" then
-    local tmp = {}
-    for c in iterable:gmatch(".") do tmp[#tmp + 1] = c end
-    iterable = tmp
-    toString = true
-  end
-
-  if fin == nil then
-    fin = #iterable
-  end
-
-  if fin < 0 then
-    fin = #iterable + fin
-  end
-
-  local result = {}
-  for i=begin, fin do
-    result[#result + 1] = iterable[i]
-  end
-  
-  if toString then
-    return table.concat(result)
-  else
-    return result
-  end
-end
-
 --- Clones an object & its metatable
 -- @function clone
 -- @param o An object
@@ -248,101 +139,6 @@ clone = function(o)
   end
 end
 
-local prettyprint
-prettyprint = function(val, outstring)
-  local msg = ""
-  if type(val) == "table" then
-    msg = msg .. "{"
-    for k, v in pairs(val) do
-      if v == val then
-        msg = msg .. "\t<self-reference>,\n"
-      else
-        msg = msg .. "\t" .. prettyprint(k, true) .. " = " .. prettyprint(v, true) .. ",\n"
-      end
-    end
-    msg = msg .. "}"
-  else
-    if type(val) == "function" then
-      msg = msg .. "<function>: " .. tostring(val)
-    elseif type(val) == "string" then
-      msg = msg .. '"' .. val .. '"'
-    elseif type(val) == "number" then
-      msg = msg .. tostring(val)
-    elseif val == nil then
-      msg = msg .. "nil"
-    elseif type(val) == "boolean" then
-      msg = msg .. tostring(val)
-    elseif type(val) == "userdata" then
-      msg = msg .. "<userdata>: " .. tostring(val)
-    elseif type(val) == "thread" then
-      msg = msg .. "<thread>: " .. tostring(val)
-    end
-  end
-  if outstring == nil then
-    print(msg)
-  else
-    return msg
-  end
-end
-
---- A functional else-if construct
--- @function elif
--- @tparam boolean predicate
--- @param a Returned if predicate is true
--- @param b Returned if predicate is false
--- @return Either a or b
-local elif
-elif = function(predicate, a, b)
-  assert(type(predicate) == "boolean", "elif expects predicate to be boolean, but received " .. type(predicate))
-  if predicate then
-    return a
-  else
-    return b
-  end
-end
-
---- A list-creation tool
--- @function cons
--- @param val Any value
--- @tparam[opt] table tbl The list to join to. If one doesn't exist, it will be created.
--- @treturn table The list that is generated.
-local cons
-cons = function(val, tbl)
-  if tbl == nil then
-    tbl = {}
-  end
-  assert(type(tbl) == "table", "cons expects tbl to be a table, but received a " .. type(tbl))
-  table.insert(tbl, 1, val)
-  return tbl
-end
-
---- Access the first value of an array.
--- @function car
--- @tparam table tbl The list to be accessed
--- @return The first element of the list.
-local car
-car = function(tbl)
-  assert(type(tbl) == "table", "car expects tbl to be a table, but received a " .. type(tbl))
-  local ix, v = next(tbl)
-  if ix == 0 or ix == 1 then
-    return v
-  elseif ix == nil then
-    return nil
-  else
-    return ix, v
-  end
-end
-
---- Access the "tail" of a list
--- @function cdr
--- @tparam table tbl The list to be accessed
--- @treturn table Returns all but the first element in the list.
-local cdr
-cdr = function(tbl)
-  assert(type(tbl) == "table", "cdr expects tbl to be a table, but received a " .. type(tbl))
-  return { unpack(tbl, 2) }
-end
-
 --- String Lambda!
 -- e.g. f.fn("(x, y) print(x, y)")(2, 3)
 -- @function fn
@@ -351,6 +147,106 @@ end
 local fn
 fn = function(s)
   return assert(load("return function " .. tostring(s) .. " end"), "fn was unable to build a valid function from: " .. tostring(s))()
+end
+
+--- Autoclosing files and threads
+-- @function with
+-- @param entry Filenme string or thread object
+-- @tparam string permissions
+-- @tparam function functor
+local with
+with = function(entry, permissions, functor)
+  assert(type(entry) == "string" or type(entry) == "thread")
+  assert(type(permissions) == "string")
+  assert(type(functor) == "function")
+
+  -- With can close over a file.
+  if type(entry) == "string" then
+    local file = io.open(filepath, permissions)
+    ret = {functor(file)}
+    if file then file:close() end
+    return unpack(ret)
+  else
+    -- With can iterate over a coroutine.
+    local results = {}
+    while coroutine.status(entry) == "suspended" do
+      local res = {functor(coroutine.resume(entry))}
+      if #res > 1 then
+        results[#results + 1] = res
+      else
+        results[#results + 1] = res[1] or nil
+      end
+    end
+    return results
+  end
+end
+
+--- Coroutines
+-- @section coroutines
+
+--- Wrap a function in a coroutine
+-- @function co
+-- @tparam function functor
+-- @treturn thread Returns coroutine.wrap(functor)
+local co = {}
+setmetatable(co, {
+  __call = function(functor)
+    return coroutine.wrap(functor)
+  end
+})
+
+--- Create a coroutine
+-- @function co.c
+-- @tparam function functor
+-- @treturn thread Returns coroutine.create(functor)
+co.c = function(functor)
+  return coroutine.create(functor)
+end
+
+--- Toggle a coroutine's resume
+-- @function co.t
+-- @tparam thread functor
+-- @return Either returns the coroutine.resume of functor, or nil if the thread is dead.
+co.t = function(thread)
+  assert(type(thread) == "thread", "co.t expects a thread, but received a " .. type(thread))
+  if coroutine.status(thread) == "suspended" then
+    return coroutine.resume(thread)
+  elseif coroutine.status(thread) == "dead" then
+    return nil
+  end
+end
+
+--- Check a corutine is running
+-- @function co.r
+-- @treturn boolean Returns coroutine.running()
+co.r = function()
+  return coroutine.running()
+end
+
+--- Functional Essentials
+-- @section essentials
+
+--- A tail-call elimination safe way of calling the calling function.
+-- e.g. "function() recur()() end" is a infinitely recursive function.
+-- @function recur
+-- @treturn function Returns the containing function.
+local recur
+recur = function()
+  return debug.getinfo(2, "f").func
+end
+
+--- A currying function
+-- @function curry
+-- @tparam function a
+-- @tparam function b
+-- @treturn function A function that merges a around b, returning a new function. e.g. curry(print, string.format) is a kind of printf.
+local curry
+curry = function(a, b)
+  assert(type(a) == "function", "curry expects a to be a function, but received a " .. type(a))
+  assert(type(b) == "function", "curry expects b to be a function, but received a " .. type(b))
+  return function(...)
+    return a(b(...))
+  end
 end
 
 --- A localised value binding function
@@ -453,19 +349,378 @@ filter = function(functor, args)
   return ret
 end
 
---- A currying function
--- @function curry
--- @tparam function a
--- @tparam function b
--- @treturn function A function that merges a around b, returning a new function. e.g. curry(print, string.format) is a kind of printf.
-local curry
-curry = function(a, b)
-  assert(type(a) == "function", "curry expects a to be a function, but received a " .. type(a))
-  assert(type(b) == "function", "curry expects b to be a function, but received a " .. type(b))
-  return function(...)
-    return a(b(...))
+--- A functional else-if construct
+-- @function elif
+-- @tparam boolean predicate
+-- @param a Returned if predicate is true
+-- @param b Returned if predicate is false
+-- @return Either a or b
+local elif
+elif = function(predicate, a, b)
+  assert(type(predicate) == "boolean", "elif expects predicate to be boolean, but received " .. type(predicate))
+  if predicate then
+    return a
+  else
+    return b
   end
 end
+
+--- A list-creation tool
+-- @function cons
+-- @param val Any value
+-- @tparam[opt] table tbl The list to join to. If one doesn't exist, it will be created.
+-- @treturn table The list that is generated.
+local cons
+cons = function(val, tbl)
+  if tbl == nil then
+    tbl = {}
+  end
+  assert(type(tbl) == "table", "cons expects tbl to be a table, but received a " .. type(tbl))
+  table.insert(tbl, 1, val)
+  return tbl
+end
+
+--- Access the first value of an array.
+-- @function car
+-- @tparam table tbl The list to be accessed
+-- @return The first element of the list.
+local car
+car = function(tbl)
+  assert(type(tbl) == "table", "car expects tbl to be a table, but received a " .. type(tbl))
+  local ix, v = next(tbl)
+  if ix == 0 or ix == 1 then
+    return v
+  elseif ix == nil then
+    return nil
+  else
+    return ix, v
+  end
+end
+
+--- Access the "tail" of a list
+-- @function cdr
+-- @tparam table tbl The list to be accessed
+-- @treturn table Returns all but the first element in the list.
+local cdr
+cdr = function(tbl)
+  assert(type(tbl) == "table", "cdr expects tbl to be a table, but received a " .. type(tbl))
+  return { unpack(tbl, 2) }
+end
+
+--- Reverses an iterable
+-- @function reverse
+-- @param obj string or table
+-- @return The reverse string or table
+local reverse
+reverse = function(obj)
+  assert(type(obj) == "string" or type(obj) == "table", "Can only reverse strings or tables.")
+  if type(obj) == "string" then
+    return obj:reverse()
+  else
+    local ret = {}
+    for i = 1, math.floor(#obj / 2) do
+      ret[i], ret[#obj - i + 1] = obj[#obj - i + 1], obj[i]
+    end
+    return ret
+  end
+end
+
+--- Access a range from an interable
+-- @function nth
+-- @param iterable An iterable, such as a string or table.
+-- @tparam number begin
+-- @tparam number fin
+-- @return A selection of the iterable
+local nth
+nth = function(iterable, begin, fin)
+  assert(type(begin) == "number" and math.ceil(begin) == begin, "nth needs a valid range number.")
+  if fin ~= nil then
+    assert(type(fin) == "number" and math.ceil(fin) == fin, "nth needs a valid range number.")
+  end
+
+  local toString = false
+  -- Convert string to table
+  if type(iterable) == "string" then
+    local tmp = {}
+    for c in iterable:gmatch(".") do tmp[#tmp + 1] = c end
+    iterable = tmp
+    toString = true
+  end
+
+  if fin == nil then
+    fin = #iterable
+  end
+
+  if fin < 0 then
+    fin = #iterable + fin
+  end
+
+  local result = {}
+  for i=begin, fin do
+    result[#result + 1] = iterable[i]
+  end
+  
+  if toString then
+    return table.concat(result)
+  else
+    return result
+  end
+end
+
+--- foldr
+-- @function foldr
+-- @tparam function functor
+-- @tparam table tbl
+-- @param val The seed value
+-- @return The folded value
+local foldr
+foldr = function(functor, tbl, val)
+  assert(type(functor) == "function", "Functor must be a function.")
+  assert(type(tbl) == "table", "foldr expects a table.")
+  for k, v in pairs(tbl) do
+    val = functor(v, val)
+  end
+  return val
+end
+
+--- Mathematical Operators
+-- @section maths
+
+--- Addition operator
+-- @function add
+-- @tparam number a
+-- @tparam number b
+-- @treturn number Return a + b
+local add = function(a,b) return a + b end
+
+--- Subtraction operator
+-- @function sub
+-- @tparam number a
+-- @tparam number b
+-- @treturn number Return a - b
+local sub = function(a, b) return a - b end
+
+--- Multiplication operator
+-- @function mul
+-- @tparam number a
+-- @tparam number b
+-- @treturn number Return a * b
+local mul = function(a, b) return a * b end
+
+-- We want div(a, b) and div.int(a, b) for integer division.
+local div = {}
+setmetatable(div,
+    {
+      __call = function(self, a, b) return a / b end
+    })
+
+--- Division operator
+-- @function div
+-- @tparam number a
+-- @tparam number b
+-- @treturn number Returns a / b
+
+--- Integer division operator
+-- @function div.int
+-- @tparam number a
+-- @tparam number b
+-- @treturn number Returns math.floor(a/b)
+div.int = function(a, b) return math.floor(a/b) end
+
+--- Operators
+-- @section operators
+
+--- Greater Than operator
+-- @function gt
+-- @param a
+-- @param b
+-- @treturn boolean
+local gt = function(a,b) return a > b end
+
+--- Great Than or Equal operator
+-- @function gte
+-- @param a
+-- @param b
+-- @treturn boolean
+local gte = function(a,b) return a >= b end
+
+--- Less Than operator
+-- @function lt
+-- @param a
+-- @param b
+-- @treturn boolean
+local lt = function(a,b) return a < b end
+
+--- Less Than or Equal operator
+-- @function lte
+-- @param a
+-- @param b
+-- @treturn boolean
+local lte = function(a,b) return a <= b end
+
+--- Not Equal operator
+-- @function ne
+-- @param a
+-- @param b
+-- @treturn boolean
+local ne = function(a,b) return a ~= b end
+
+--- Mod Operator
+-- @function mod
+-- @param a
+-- @param b
+-- @treturn number Returns a % b
+local mod = function(a, b) return a % b end
+
+--- Unary operator
+-- @function unary
+-- @param a
+-- @return Returns -a
+local unary = function(a) return -a end
+
+--- Powerto operator
+-- @function pow
+-- @param a
+-- @param b
+-- @return Returns a^b
+local pow = function(a, b) return a^b end
+
+--- Or operator
+-- @function xor
+-- @param a
+-- @param b
+-- @return Returns a or b
+local xor = function(a, b) return a or b end
+
+--- And operator
+-- @function xnd
+-- @param a
+-- @param b
+-- @return Returns a and b
+local xnd = function(a, b) return a and b end
+
+--- Not operator
+-- @function xnt
+-- @param a
+-- @return Returns not a
+local xnt = function(a) return not a end
+
+--- Ports
+-- @section ports
+
+local port = {}
+
+--- Override print and io.write with port:write for a given port
+-- @function port.with_output
+-- @param port A port-like object
+-- @tparam function functor
+-- @return Returns functor's return value.
+port.with_output = function(port, functor)
+  local printer = function(nl, sep, ...)
+    msg = port:read() or ""
+    local args = {...}
+    for i, v in ipairs(args) do
+      if #msg > 0 and msg:sub(-1, -1) ~= "\n" then
+        msg = msg .. sep .. tostring(v)
+      else
+        msg = msg .. tostring(v)
+      end
+    end
+    if nl then
+      port:write(msg .. "\n")
+    else
+      port:write(msg)
+    end
+  end
+  giowrite = io.write
+  io.write = function(...)
+    printer(false, "", ...)
+  end
+  local gprint = print
+  print = function(...)
+    printer(true, "\t", ...)
+  end
+  local ret = {functor()}
+  print = gprint
+  io.write = giowrite
+  port:close()
+  return unpack(ret)
+end
+
+--- Override io.read with port:read for a given port
+-- @function port.with_input
+-- @param port A port-like object
+-- @tparam function functor
+-- @return Returns functor's return value.
+port.with_input = function(port, functor)
+  local ginput = io.read
+  io.read = function(...)
+    return port:read(...)
+  end
+  local ret = {functor()}
+  io.read = ginput
+  port:close()
+  return unpack(ret)
+end
+
+--- Create a port that can be read from
+-- @function port.make_input
+-- @tparam function read_func
+-- @tparam function close_func
+-- @return Returns port-like object for reading
+port.make_input = function(read_func, close_func)
+  local port = {}
+  port.read = read_func
+  port.close = close_func
+  return port
+end
+
+--- Create a port that can read and write
+-- @function port.make_output
+-- @tparam function write_func
+-- @tparam function read_func
+-- @tparam function close_func
+-- @return Retuns port-like object for writing and reading
+port.make_output = function(write_func, read_func, close_func)
+  local port = {}
+  port.write = write_func
+  port.read = read_func
+  port.close = close_func
+  return port
+end
+
+--- Override io.read with a string
+-- @function port.from_string
+-- @tparam string str
+-- @tparam function functor
+-- @return Returns the output of functor
+port.from_string = function(str, functor)
+  local ginput = io.read
+  io.read = function()
+    return str
+  end
+  local ret = {functor()}
+  io.read = ginput
+  return unpack(ret)
+end
+
+--- An iterator that can be used in for-loops to read over a port-like object
+-- @function port.iter
+-- @param port A port-like object
+-- @param n Position of iteration
+-- @param data Where the data is stored in the port-like object
+port.iter = function(port, n, data)
+  if data == nil then data = "data" end
+  if n == nil then n = 1 end
+  if n <= #port[data] then
+    local d = port[data]:sub(n, n)
+    n = n + 1
+    return n, d, data
+  end
+end
+
+--- Predicates
+-- @section predicates
 
 --- Test equivalence
 -- @function eq
@@ -493,75 +748,6 @@ eq = function(a, b)
     return a == b
   end
 end
-
---- A tail-call elimination safe way of calling the calling function.
--- e.g. "function() recur()() end" is a infinitely recursive function.
--- @function recur
--- @treturn function Returns the containing function.
-local recur
-recur = function()
-  return debug.getinfo(2, "f").func
-end
-
---- Autoclosing files and threads
--- @function with
--- @param entry Filenme string or thread object
--- @tparam string permissions
--- @tparam function functor
-local with
-with = function(entry, permissions, functor)
-  assert(type(entry) == "string" or type(entry) == "thread")
-  assert(type(permissions) == "string")
-  assert(type(functor) == "function")
-
-  -- With can close over a file.
-  if type(entry) == "string" then
-    local file = io.open(filepath, permissions)
-    ret = {functor(file)}
-    if file then file:close() end
-    return unpack(ret)
-  else
-    -- With can iterate over a coroutine.
-    local results = {}
-    while coroutine.status(entry) == "suspended" do
-      local res = {functor(coroutine.resume(entry))}
-      if #res > 1 then
-        results[#results + 1] = res
-      else
-        results[#results + 1] = res[1] or nil
-      end
-    end
-    return results
-  end
-end
-
--- Coroutines
-
-local co = {}
-setmetatable(co, {
-  __call = function(functor)
-    return coroutine.wrap(functor)
-  end
-})
-
-co.c = function(functor)
-  return coroutine.create(functor)
-end
-
-co.t = function(thread)
-  assert(type(thread) == "thread", "co.t expects a thread, but received a " .. type(thread))
-  if coroutine.status(thread) == "suspended" then
-    return coroutine.resume(thread)
-  elseif coroutine.status(thread) == "dead" then
-    return nil
-  end
-end
-
-co.r = function()
-  return coroutine.running()
-end
-
--- Predicates
 
 --- Predicate to test string type
 -- @function isstring
@@ -643,61 +829,6 @@ local isfile
 isfile = function(x)
   return io.type(x) == "file"
 end
-
--- Operators
-
---- Addition operator
--- @function add
--- @tparam number a
--- @tparam number b
--- @treturn number Return a + b
-local add = function(a,b) return a + b end
-
---- Subtraction operator
--- @function sub
--- @tparam number a
--- @tparam number b
--- @treturn number Return a - b
-local sub = function(a, b) return a - b end
-
---- Multiplication operator
--- @function mul
--- @tparam number a
--- @tparam number b
--- @treturn number Return a * b
-local mul = function(a, b) return a * b end
-
--- We want div(a, b) and div.int(a, b) for integer division.
-local div = {}
-setmetatable(div,
-    {
-      __call = function(self, a, b) return a / b end
-    })
-
---- Divsion operator
--- @function div
--- @tparam number a
--- @tparam number b
--- @treturn number Returns a / b
-
---- Integer division operator
--- @function div.int
--- @tparam number a
--- @tparam number b
--- @treturn number Returns math.floor(a/b)
-div.int = function(a, b) return math.floor(a/b) end
-
-local gt = function(a,b) return a > b end
-local gte = function(a,b) return a >= b end
-local lt = function(a,b) return a < b end
-local lte = function(a,b) return a <= b end
-local ne = function(a,b) return a ~= b end
-local mod = function(a, b) return a % b end
-local unary = function(a) return -a end
-local pow = function(a, b) return a^b end
-local xor = function(a, b) return a or b end
-local xnd = function(a, b) return a and b end
-local xnt = function(a) return not a end
 
 return {
   mod = mod,
