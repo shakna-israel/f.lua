@@ -1,5 +1,29 @@
 f = require "f"
 
+-- f.ispositive
+
+assert(f.ispositive(0) == false)
+assert(f.ispositive(-1) == false)
+assert(f.ispositive("hi") == false)
+assert(f.ispositive({}) == false)
+assert(f.ispositive(1) == true)
+
+-- f.isnegative
+
+assert(f.isnegative(0) == false)
+assert(f.isnegative(-1) == true)
+assert(f.isnegative("hi") == false)
+assert(f.isnegative({}) == false)
+assert(f.isnegative(1) == false)
+
+-- f.iszero
+
+assert(f.iszero(0) == true)
+assert(f.iszero(-1) == false)
+assert(f.iszero("hi") == false)
+assert(f.iszero({}) == false)
+assert(f.iszero(1) == false)
+
 -- f.round
 assert(f.round(10.2222) == 10.22)
 assert(f.round(10.2222, 3) == 10.222)

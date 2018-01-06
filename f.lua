@@ -789,6 +789,42 @@ isnumber = function(x)
   return type(x) == "number"
 end
 
+--- Returns true or false, given any object, if it is a positive number
+-- @function ispositive
+-- @param x
+-- @treturn boolean
+local ispositive = function(x)
+  if isnumber(x) and x > 0 then
+    return true
+  else
+    return false
+  end
+end
+
+--- Returns true or false, given any object, if it is a negative number
+-- @function isnegative
+-- @param x
+-- @treturn boolean
+local isnegative = function(x)
+  if isnumber(x) and x < 0 then
+    return true
+  else
+    return false
+  end
+end
+
+--- Returns true or false, given any object, if it is 0
+-- @function iszero
+-- @param x
+-- @treturn boolean
+local iszero = function(x)
+  if x == 0 then
+    return true
+  else
+    return false
+  end
+end
+
 --- Predicate to test function type
 -- @function isfunction
 -- @param x The object to test if is a function
@@ -905,4 +941,7 @@ return {
   port = port,
   clamp = clamp,
   round = round,
+  ispositive = ispositive,
+  isnegative = isnegative,
+  iszero = iszero,
 }
