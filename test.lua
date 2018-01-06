@@ -1,5 +1,16 @@
 f = require "f"
 
+-- f.random
+-- Testing randomness is difficult.
+for i=1,1000 do
+  assert(f.random() == 0 or 1)
+  assert(f.random(2) < 3)
+  assert(f.random({"a", "b"}) == "a" or "b")
+end
+
+-- f.random.weighted
+assert(f.random.weighted({hello = 2, dog = 1}) == "hello" or "dog")
+
 -- f.ispositive
 
 assert(f.ispositive(0) == false)

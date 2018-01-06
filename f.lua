@@ -486,6 +486,52 @@ end
 --- Mathematical Operators
 -- @section maths
 
+--- Wraps math.random, unless x is a table, in which case it gives a
+-- random item from that table.
+-- @function random
+-- @param[opt] x
+-- @param[opt] y
+-- @return object
+local random = {}
+setmetatable(random, {
+  __call = function(self, x, y)
+  if x == nil and y == nil then
+    return math.random()
+  end
+  if type(x) == "table" then
+    if y == nil then
+      return x[math.random(#x)]
+    else
+      return x[math.random(y)]
+    end
+  else
+    if y == nil then
+      return math.random(x)
+    else
+      return math.random(x, y)
+    end
+  end
+end})
+
+--- Given a weighted table, (e.g. {"hello" = 2, "cat" = 1, "dog" = 3}), returns a random item (e.g. "dog"), whilst respecting the weighted chance.
+-- @function random.weighted
+-- @tparam table tbl
+-- @return Returns one key from the table.
+random.weighted = function(tbl)
+  assert(type(tbl) == "table", "random.weighted expected a weighted table. But received a: " .. type(tbl))
+  for k, v in pairs(tbl) do
+    assert(type(v) == "number", "random.weighted expected values in table to be numbers for weight. But received: " .. type(v))
+  end
+  local weighted = {}
+  for k, v in pairs(tbl) do
+    for i=1, v do
+      weighted[#weighted + 1] = k
+    end
+  end
+  local ret = weighted[math.random(#weighted)]
+  return ret
+end
+
 --- Clamp a number between two others
 -- @function clamp
 -- @tparam number x
@@ -944,4 +990,5 @@ return {
   ispositive = ispositive,
   isnegative = isnegative,
   iszero = iszero,
+  random = random,
 }
