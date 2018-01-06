@@ -1,5 +1,8 @@
 f = require "f"
 
+-- f.timeit
+assert(type(f.timeit(function() return true end)) == "number")
+
 -- f.random
 -- Testing randomness is difficult.
 for i=1,1000 do

@@ -46,6 +46,20 @@ end
 --- Convenience
 -- @section convenience
 
+--- A benchmarking tool, it is highly not recommended to run impure functions through it.
+-- @function timeit
+-- @tparam function functor The function to benchmark. It should be pure.
+-- @param ... Arguments to parse to functor
+-- @treturn number Seconds taken on average across 100 runs.
+local timeit = function(functor, ...)
+  local start = os.clock()
+  for i=1, 100 do
+    functor(...)
+  end
+  local fin = os.clock()
+  return (start - fin) / 100
+end
+
 --- Add a vendor path to Lua
 -- @function vend
 -- @tparam string vendor
@@ -1070,4 +1084,5 @@ return {
   ktov = ktov,
   inarray = inarray,
   exclude = exclude,
+  timeit = timeit,
 }
