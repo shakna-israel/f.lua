@@ -486,6 +486,18 @@ end
 --- Mathematical Operators
 -- @section maths
 
+--- Clamp a number between two others
+-- @function clamp
+-- @tparam number x
+-- @tparam number n
+-- @tparam number y
+-- @treturn number Returns the number in the "middle" after sorting. e.g. clamp(5, 0, 10) == 5
+local clamp = function(x, n, y)
+  local t = {x, n, y}
+  table.sort(t)
+  return t[2]
+end
+
 --- Addition operator
 -- @function add
 -- @tparam number a
@@ -881,4 +893,5 @@ return {
   lte = lte,
   ne = ne,
   port = port,
+  clamp = clamp,
 }

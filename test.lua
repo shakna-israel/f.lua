@@ -1,5 +1,10 @@
 f = require "f"
 
+-- f.clamp
+assert(f.clamp(5, 0, 10) == 5)
+assert(f.clamp(5, 10, 0) == 5)
+assert(f.clamp(0, 10, 5) == 5)
+
 -- f.mod
 assert(f.mod(21, 22) == 21 % 22)
 
