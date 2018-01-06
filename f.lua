@@ -498,6 +498,16 @@ local clamp = function(x, n, y)
   return t[2]
 end
 
+--- Round a number to a certain number of places
+-- @function round
+-- @tparam number num The number to round
+-- @tparam number depth The number of decimal places to round to
+-- @treturn number The rounded number is returned
+local round = function(num, depth)
+  depth = depth or 2
+  return tonumber(string.format("%." .. tostring(depth) .. "f", num))
+end
+
 --- Addition operator
 -- @function add
 -- @tparam number a
@@ -894,4 +904,5 @@ return {
   ne = ne,
   port = port,
   clamp = clamp,
+  round = round,
 }

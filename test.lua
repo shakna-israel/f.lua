@@ -1,5 +1,9 @@
 f = require "f"
 
+-- f.round
+assert(f.round(10.2222) == 10.22)
+assert(f.round(10.2222, 3) == 10.222)
+
 -- f.clamp
 assert(f.clamp(5, 0, 10) == 5)
 assert(f.clamp(5, 10, 0) == 5)
