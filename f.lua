@@ -513,6 +513,18 @@ local set = function(tbl)
   return ret
 end
 
+--- Swap key and values in a table.
+-- @function ktov
+-- @tparam table tbl
+-- @treturn table A key-value swapped table
+local ktov = function(tbl)
+  local r = {}
+    for k, v in pairs(tbl) do
+      r[v] = k
+    end
+  return r
+end
+
 --- Mathematical Operators
 -- @section maths
 
@@ -1026,5 +1038,6 @@ return {
   iszero = iszero,
   random = random,
   shuffle = shuffle,
-  set = set, 
+  set = set,
+  ktov = ktov,
 }

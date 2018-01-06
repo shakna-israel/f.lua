@@ -19,6 +19,9 @@ local tmp = f.set({1, 2, 3, 4, 5, 1, 2, 3, 4, 5})
 assert(#tmp == 5)
 tmp = nil
 
+-- f.ktov
+assert(f.ktov({hello = "world"})["world"] == "hello")
+
 -- f.ispositive
 
 assert(f.ispositive(0) == false)
