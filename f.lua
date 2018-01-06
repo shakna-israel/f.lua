@@ -57,7 +57,7 @@ local timeit = function(functor, ...)
     functor(...)
   end
   local fin = os.clock()
-  return (start - fin) / 100
+  return (fin - start) / 100
 end
 
 --- Add a vendor path to Lua
