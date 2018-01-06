@@ -66,13 +66,13 @@ print(x)
 > nil
 ```
 
-Refer to the [documentation](http://shakna-israel.github.io/f.lua) for more.
+Refer to the [documentation](https://shakna-israel.github.io/f.lua) for more.
 
 ---
 
 ## Semantic API
 
-[Semantic versioning](https://semver.org/) is used to guarantee certain things. Whatever you find in the [documentation](http://shakna-israel.github.io/f.lua) is guaranteed.
+[Semantic versioning](https://semver.org/) is used to guarantee certain things. Whatever you find in the [documentation](https://shakna-israel.github.io/f.lua) is guaranteed.
 
 Any breaking changes will increment the first number.
 
