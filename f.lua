@@ -216,7 +216,7 @@ co.t = function(thread)
   end
 end
 
---- Check a corutine is running
+--- Check a coroutine is running
 -- @function co.r
 -- @treturn boolean Returns coroutine.running()
 co.r = function()
@@ -225,6 +225,19 @@ end
 
 --- Functional Essentials
 -- @section essentials
+
+--- Shuffles a given table, using Fisher-Yates, a simple swapping algo.
+-- @function shuffle
+-- @tparam table tbl
+-- @treturn table A shuffled table
+local shuffle = function(tbl)
+  assert(type(tbl) == "table", "shuffle expected a table, but received: " .. type(tbl))
+  for i = #tbl, 1, -1 do
+    local r = math.random(#tbl)
+    tbl[i], tbl[r] = tbl[r], tbl[i]
+  end
+  return tbl
+end
 
 --- A tail-call elimination safe way of calling the calling function.
 -- e.g. "function() recur()() end" is a infinitely recursive function.
@@ -934,6 +947,10 @@ isfile = function(x)
   return io.type(x) == "file"
 end
 
+-- Because we have so many functions that rely on math.random,
+-- we seed it upon require.
+math.randomseed(os.time())
+
 return {
   mod = mod,
   unary = unary,
@@ -991,4 +1008,5 @@ return {
   isnegative = isnegative,
   iszero = iszero,
   random = random,
+  shuffle = shuffle,
 }

@@ -11,6 +11,9 @@ end
 -- f.random.weighted
 assert(f.random.weighted({hello = 2, dog = 1}) == "hello" or "dog")
 
+-- f.shuffle
+assert(f.shuffle({1, 2})[1] == 1 or 2)
+
 -- f.ispositive
 
 assert(f.ispositive(0) == false)
