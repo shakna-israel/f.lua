@@ -496,6 +496,23 @@ foldr = function(functor, tbl, val)
   return val
 end
 
+--- Reduce a table to a set, that is, every item must be unique.
+-- @function set
+-- @tparam table tbl A simple array e.g. {"Hello", "World", "Hello", "World"}
+-- @treturn table A simple array, with only unique items. e.g. {"Hello", "World"}
+local set = function(tbl)
+  assert(type(tbl) == "table", "Set only works on tables, but received: " .. type(tbl))
+  local tmp = {}
+  for _, v in ipairs(tbl) do
+    tmp[v] = true
+  end
+  local ret = {}
+  for k, _ in pairs(tmp) do
+    ret[#ret + 1] = k
+  end
+  return ret
+end
+
 --- Mathematical Operators
 -- @section maths
 
@@ -1009,4 +1026,5 @@ return {
   iszero = iszero,
   random = random,
   shuffle = shuffle,
+  set = set, 
 }
