@@ -1,3 +1,8 @@
+--- f.lua aims to be the most complete functional extension library for Lua, whilst remaining fundamentally Lua.
+-- It's fast, safe, unsurprising and fully-featured, with let statements, string lambdas, and currying. Whether you miss LISP or Haskell whilst working with Lua, this should scratch your itch, without making Lua's VM come to a screeching halt.
+-- @module f.lua
+-- @set sort=true
+
 local load = loadstring or load
 local unpack = unpack or table.unpack
 
@@ -80,6 +85,10 @@ port.iter = function(port, n, data)
   end
 end
 
+--- Add a vendor path to Lua
+-- @function vend
+-- @tparam string vendor
+-- @treturn nil
 local vend
 vend = function(vendor)
   local vendor = vendor or "vendor"
@@ -88,6 +97,12 @@ vend = function(vendor)
   package.cpath = vendor .. '/lib/lua/' .. version .. '/?.so;' .. package.cpath
 end
 
+--- A simple type-guard system
+-- Takes a series of strings, that should be types, in the order the function being guarded would receive them.
+-- Then it optionally takes another string prepended with "->" for the return type.
+-- Finally it must receive a function to guard.
+-- @function guard
+-- @treturn function
 local guard
 guard = function(...)
   local args = {...}
@@ -118,6 +133,10 @@ guard = function(...)
   end
 end
 
+--- Converts an iterable into a coroutine
+-- @function iter
+-- @param iter string or table iterable
+-- @treturn thread
 local iter
 iter = function(obj)
   assert(type(obj) == "table" or type(obj) == "string")
@@ -146,6 +165,10 @@ foldr = function(functor, tbl, val)
   return val
 end
 
+--- Reverses an iterable
+-- @function reverse
+-- @param obj string or table
+-- @return The reverse string or table
 local reverse
 reverse = function(obj)
   assert(type(obj) == "string" or type(obj) == "table", "Can only reverse strings or tables.")
@@ -160,6 +183,12 @@ reverse = function(obj)
   end
 end
 
+--- Access a range from an interable
+-- @function nth
+-- @param iterable An iterable, such as a string or table.
+-- @tparam number begin
+-- @tparam number fin
+-- @return A selection of the iterable
 local nth
 nth = function(iterable, begin, fin)
   assert(type(begin) == "number" and math.ceil(begin) == begin, "nth needs a valid range number.")
@@ -196,6 +225,10 @@ nth = function(iterable, begin, fin)
   end
 end
 
+--- Clones an object & its metatable
+-- @function clone
+-- @param o An object
+-- @return A copy of the object
 local clone
 clone = function(o)
   if type(o) == "function" then
@@ -252,6 +285,12 @@ prettyprint = function(val, outstring)
   end
 end
 
+--- A functional else-if construct
+-- @function elif
+-- @tparam boolean predicate
+-- @param a Returned if predicate is true
+-- @param b Returned if predicate is false
+-- @return Either a or b
 local elif
 elif = function(predicate, a, b)
   assert(type(predicate) == "boolean", "elif expects predicate to be boolean, but received " .. type(predicate))
@@ -262,6 +301,11 @@ elif = function(predicate, a, b)
   end
 end
 
+--- A list-creation tool
+-- @function cons
+-- @param val Any value
+-- @tparam[opt] table tbl The list to join to. If one doesn't exist, it will be created.
+-- @treturn table The list that is generated.
 local cons
 cons = function(val, tbl)
   if tbl == nil then
@@ -272,6 +316,10 @@ cons = function(val, tbl)
   return tbl
 end
 
+--- Access the first value of an array.
+-- @function car
+-- @tparam table tbl The list to be accessed
+-- @return The first element of the list.
 local car
 car = function(tbl)
   assert(type(tbl) == "table", "car expects tbl to be a table, but received a " .. type(tbl))
@@ -285,19 +333,31 @@ car = function(tbl)
   end
 end
 
+--- Access the "tail" of a list
+-- @function cdr
+-- @tparam table tbl The list to be accessed
+-- @treturn table Returns all but the first element in the list.
 local cdr
 cdr = function(tbl)
   assert(type(tbl) == "table", "cdr expects tbl to be a table, but received a " .. type(tbl))
   return { unpack(tbl, 2) }
 end
 
--- String Lambda!
+--- String Lambda!
 -- e.g. f.fn("(x, y) print(x, y)")(2, 3)
+-- @function fn
+-- @tparam string s A string starting with parentheses as shown in the example.
+-- @treturn function
 local fn
 fn = function(s)
   return assert(load("return function " .. tostring(s) .. " end"), "fn was unable to build a valid function from: " .. tostring(s))()
 end
 
+--- A localised value binding function
+-- @function let
+-- @tparam table values An array of pairs of values, with the name on the left, and value on the right.
+-- @tparam function functor The function to call, with the new value bindings.
+-- @return Returns the return of the functor.
 local let
 let = function(values, functor)
   assert(type(functor) == "function")
@@ -325,6 +385,10 @@ let = function(values, functor)
   return unpack(ret)
 end
 
+--- A better chained else-if function.
+-- @function cond
+-- @param condlist A condlist is a table, containing other tables. The inner tables are pairs, where the key is a boolean. If it is true, then it's value is returned.
+-- @return Returns a value where the key is true.
 local cond
 cond = function(condlist)
   assert(type(condlist) == "table", "cond expects condlist to be a table, but received a " .. type(condlist))
@@ -343,6 +407,11 @@ cond = function(condlist)
   return nil
 end
 
+--- Apply a function recursively to a list.
+-- @function apply
+-- @param functor The function to recursively call against the list
+-- @tparam table args The list of arguments to be recursively called.
+-- @return Returns a single value created by the recursive call.
 local apply
 apply = function(functor, args)
   assert(type(args) == "table", "apply expects args to be a table, but received " .. type(args))
@@ -350,6 +419,11 @@ apply = function(functor, args)
   return functor(unpack(args))
 end
 
+--- Create a list by recursively calling a function against a list
+-- @function map
+-- @tparam function functor The function to be called against
+-- @tparam table args The arguments to call against the function
+-- @treturn table Returns a list
 local map
 map = function(functor, args)
   assert(type(args) == "table", "map expects args to be a table, but received a " .. type(args))
@@ -361,6 +435,11 @@ map = function(functor, args)
   return ret
 end
 
+--- Filter a list
+-- @function filter
+-- @tparam function functor A function that should return a boolean when given a value from the args list. If true, the value is added to the return list, if not, it gets dropped.
+-- @tparam table args The list to filter
+-- @treturn table Returns the filtered list
 local filter
 filter = function(functor, args)
   assert(type(args) == "table", "filter expects args to be a table, but received a " .. type(args))
@@ -374,6 +453,11 @@ filter = function(functor, args)
   return ret
 end
 
+--- A currying function
+-- @function curry
+-- @tparam function a
+-- @tparam function b
+-- @treturn function A function that merges a around b, returning a new function. e.g. curry(print, string.format) is a kind of printf.
 local curry
 curry = function(a, b)
   assert(type(a) == "function", "curry expects a to be a function, but received a " .. type(a))
@@ -383,6 +467,11 @@ curry = function(a, b)
   end
 end
 
+--- Test equivalence
+-- @function eq
+-- @param a
+-- @param b
+-- @treturn boolean Returns true if the two given values are equivalent, even if they are different tables.
 local eq
 eq = function(a, b)
   if type(a) == "table" and type(b) == "table" then
@@ -405,11 +494,20 @@ eq = function(a, b)
   end
 end
 
+--- A tail-call elimination safe way of calling the calling function.
+-- e.g. "function() recur()() end" is a infinitely recursive function.
+-- @function recur
+-- @treturn function Returns the containing function.
 local recur
 recur = function()
   return debug.getinfo(2, "f").func
 end
 
+--- Autoclosing files and threads
+-- @function with
+-- @param entry Filenme string or thread object
+-- @tparam string permissions
+-- @tparam function functor
 local with
 with = function(entry, permissions, functor)
   assert(type(entry) == "string" or type(entry) == "thread")
@@ -465,54 +563,108 @@ end
 
 -- Predicates
 
+--- Predicate to test string type
+-- @function isstring
+-- @param x The object to test if is a string
+-- @treturn boolean
 local isstring
 isstring = function(x)
   return type(x) == "string"
 end
 
+--- Predicate to test number type
+-- @function isnumber
+-- @param x The object to test if is a number
+-- @treturn boolean
 local isnumber
 isnumber = function(x)
   return type(x) == "number"
 end
 
+--- Predicate to test function type
+-- @function isfunction
+-- @param x The object to test if is a function
+-- @treturn boolean
 local isfunction
 isfunction = function(x)
   return type(x) == "function"
 end
 
+--- Predicate to test boolean type
+-- @function isboolean
+-- @param x The object to test if is a boolean
+-- @treturn boolean
 local isboolean
 isboolean = function(x)
   return type(x) == "boolean"
 end
 
+--- Predicate to test nil type
+-- @function isnil
+-- @param x The object to test if is a nil
+-- @treturn boolean
 local isnil
 isnil = function(x)
   return x == nil
 end
 
+--- Predicate to test table type
+-- @function istable
+-- @param x The object to test if is a table
+-- @treturn boolean
 local istable
 istable = function(x)
   return type(x) == "table"
 end
 
+--- Predicate to test thread type
+-- @function isthread
+-- @param x The object to test if is a thread
+-- @treturn boolean
 local isthread
 isthread = function(x)
   return type(x) == "thread"
 end
 
+--- Predicate to test userdata type
+-- @function isuserdata
+-- @param x The object to test if is a userdata
+-- @treturn boolean
 local isuserdata
 isuserdata = function(x)
   return type(x) == "userdata"
 end
 
+--- Predicate to test file type
+-- @function isfile
+-- @param x The object to test if is a file
+-- @treturn boolean
 local isfile
 isfile = function(x)
   return io.type(x) == "file"
 end
 
 -- Operators
+
+--- Addition operator
+-- @function add
+-- @tparam number a
+-- @tparam number b
+-- @treturn number Return a + b
 local add = function(a,b) return a + b end
+
+--- Subtraction operator
+-- @function sub
+-- @tparam number a
+-- @tparam number b
+-- @treturn number Return a - b
 local sub = function(a, b) return a - b end
+
+--- Multiplication operator
+-- @function mul
+-- @tparam number a
+-- @tparam number b
+-- @treturn number Return a * b
 local mul = function(a, b) return a * b end
 
 -- We want div(a, b) and div.int(a, b) for integer division.
@@ -521,6 +673,18 @@ setmetatable(div,
     {
       __call = function(self, a, b) return a / b end
     })
+
+--- Divsion operator
+-- @function div
+-- @tparam number a
+-- @tparam number b
+-- @treturn number Returns a / b
+
+--- Integer division operator
+-- @function div.int
+-- @tparam number a
+-- @tparam number b
+-- @treturn number Returns math.floor(a/b)
 div.int = function(a, b) return math.floor(a/b) end
 
 local gt = function(a,b) return a > b end

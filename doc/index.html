@@ -1,0 +1,1158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><strong>f.lua</strong></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>f.lua</code></h1>
+<p>f.lua aims to be the most complete functional extension library for Lua, whilst remaining fundamentally Lua.</p>
+<p>
+ It's fast, safe, unsurprising and fully-featured, with let statements, string lambdas, and currying. Whether you miss LISP or Haskell whilst working with Lua, this should scratch your itch, without making Lua's VM come to a screeching halt.</p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#add">add (a, b)</a></td>
+	<td class="summary">Addition operator</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#apply">apply (functor, args)</a></td>
+	<td class="summary">Apply a function recursively to a list.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#car">car (tbl)</a></td>
+	<td class="summary">Access the first value of an array.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#cdr">cdr (tbl)</a></td>
+	<td class="summary">Access the "tail" of a list</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#clone">clone (o)</a></td>
+	<td class="summary">Clones an object & its metatable</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#cond">cond (condlist)</a></td>
+	<td class="summary">A better chained else-if function.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#cons">cons (val[, tbl])</a></td>
+	<td class="summary">A list-creation tool</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#curry">curry (a, b)</a></td>
+	<td class="summary">A currying function</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#div">div (a, b)</a></td>
+	<td class="summary">Divsion operator</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#div.int">div.int (a, b)</a></td>
+	<td class="summary">Integer division operator</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#elif">elif (predicate, a, b)</a></td>
+	<td class="summary">A functional else-if construct</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#eq">eq (a, b)</a></td>
+	<td class="summary">Test equivalence</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#filter">filter (functor, args)</a></td>
+	<td class="summary">Filter a list</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#fn">fn (s)</a></td>
+	<td class="summary">String Lambda!
+ e.g.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#guard">guard ()</a></td>
+	<td class="summary">A simple type-guard system
+ Takes a series of strings, that should be types, in the order the function being guarded would receive them.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isboolean">isboolean (x)</a></td>
+	<td class="summary">Predicate to test boolean type</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isfile">isfile (x)</a></td>
+	<td class="summary">Predicate to test file type</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isfunction">isfunction (x)</a></td>
+	<td class="summary">Predicate to test function type</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isnil">isnil (x)</a></td>
+	<td class="summary">Predicate to test nil type</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isnumber">isnumber (x)</a></td>
+	<td class="summary">Predicate to test number type</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isstring">isstring (x)</a></td>
+	<td class="summary">Predicate to test string type</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#istable">istable (x)</a></td>
+	<td class="summary">Predicate to test table type</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isthread">isthread (x)</a></td>
+	<td class="summary">Predicate to test thread type</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isuserdata">isuserdata (x)</a></td>
+	<td class="summary">Predicate to test userdata type</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#iter">iter (iter)</a></td>
+	<td class="summary">Converts an iterable into a coroutine</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#let">let (values, functor)</a></td>
+	<td class="summary">A localised value binding function</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#map">map (functor, args)</a></td>
+	<td class="summary">Create a list by recursively calling a function against a list</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#mul">mul (a, b)</a></td>
+	<td class="summary">Multiplication operator</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#nth">nth (iterable, begin, fin)</a></td>
+	<td class="summary">Access a range from an interable</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#recur">recur ()</a></td>
+	<td class="summary">A tail-call elimination safe way of calling the calling function.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#reverse">reverse (obj)</a></td>
+	<td class="summary">Reverses an iterable</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#sub">sub (a, b)</a></td>
+	<td class="summary">Subtraction operator</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#vend">vend (vendor)</a></td>
+	<td class="summary">Add a vendor path to Lua</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#with">with (entry, permissions, functor)</a></td>
+	<td class="summary">Autoclosing files and threads</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "add"></a>
+    <strong>add (a, b)</strong>
+    </dt>
+    <dd>
+    Addition operator
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+        <li><span class="parameter">b</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+        Return a + b
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "apply"></a>
+    <strong>apply (functor, args)</strong>
+    </dt>
+    <dd>
+    Apply a function recursively to a list.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">functor</span>
+         The function to recursively call against the list
+        </li>
+        <li><span class="parameter">args</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+         The list of arguments to be recursively called.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Returns a single value created by the recursive call.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "car"></a>
+    <strong>car (tbl)</strong>
+    </dt>
+    <dd>
+    Access the first value of an array.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">tbl</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+         The list to be accessed
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        The first element of the list.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "cdr"></a>
+    <strong>cdr (tbl)</strong>
+    </dt>
+    <dd>
+    Access the "tail" of a list
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">tbl</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+         The list to be accessed
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+        Returns all but the first element in the list.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "clone"></a>
+    <strong>clone (o)</strong>
+    </dt>
+    <dd>
+    Clones an object & its metatable
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">o</span>
+         An object
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A copy of the object
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "cond"></a>
+    <strong>cond (condlist)</strong>
+    </dt>
+    <dd>
+    A better chained else-if function.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">condlist</span>
+         A condlist is a table, containing other tables. The inner tables are pairs, where the key is a boolean. If it is true, then it's value is returned.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Returns a value where the key is true.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "cons"></a>
+    <strong>cons (val[, tbl])</strong>
+    </dt>
+    <dd>
+    A list-creation tool
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">val</span>
+         Any value
+        </li>
+        <li><span class="parameter">tbl</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+         The list to join to. If one doesn't exist, it will be created.
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+        The list that is generated.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "curry"></a>
+    <strong>curry (a, b)</strong>
+    </dt>
+    <dd>
+    A currying function
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+            <span class="types"><span class="type">function</span></span>
+
+        </li>
+        <li><span class="parameter">b</span>
+            <span class="types"><span class="type">function</span></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">function</span></span>
+        A function that merges a around b, returning a new function. e.g. curry(print, string.format) is a kind of printf.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "div"></a>
+    <strong>div (a, b)</strong>
+    </dt>
+    <dd>
+    Divsion operator
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+        <li><span class="parameter">b</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+        Returns a / b
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "div.int"></a>
+    <strong>div.int (a, b)</strong>
+    </dt>
+    <dd>
+    Integer division operator
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+        <li><span class="parameter">b</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+        Returns math.floor(a/b)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "elif"></a>
+    <strong>elif (predicate, a, b)</strong>
+    </dt>
+    <dd>
+    A functional else-if construct
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">predicate</span>
+            <span class="types"><span class="type">boolean</span></span>
+
+        </li>
+        <li><span class="parameter">a</span>
+         Returned if predicate is true
+        </li>
+        <li><span class="parameter">b</span>
+         Returned if predicate is false
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Either a or b
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "eq"></a>
+    <strong>eq (a, b)</strong>
+    </dt>
+    <dd>
+    Test equivalence
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+
+        </li>
+        <li><span class="parameter">b</span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+        Returns true if the two given values are equivalent, even if they are different tables.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "filter"></a>
+    <strong>filter (functor, args)</strong>
+    </dt>
+    <dd>
+    Filter a list
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">functor</span>
+            <span class="types"><span class="type">function</span></span>
+         A function that should return a boolean when given a value from the args list. If true, the value is added to the return list, if not, it gets dropped.
+        </li>
+        <li><span class="parameter">args</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+         The list to filter
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+        Returns the filtered list
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "fn"></a>
+    <strong>fn (s)</strong>
+    </dt>
+    <dd>
+    String Lambda!
+ e.g.  f.fn("(x, y) print(x, y)")(2, 3)
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">s</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+         A string starting with parentheses as shown in the example.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">function</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "guard"></a>
+    <strong>guard ()</strong>
+    </dt>
+    <dd>
+    A simple type-guard system
+ Takes a series of strings, that should be types, in the order the function being guarded would receive them.
+ Then it optionally takes another string prepended with "->" for the return type.
+ Finally it must receive a function to guard.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">function</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isboolean"></a>
+    <strong>isboolean (x)</strong>
+    </dt>
+    <dd>
+    Predicate to test boolean type
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+         The object to test if is a boolean
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isfile"></a>
+    <strong>isfile (x)</strong>
+    </dt>
+    <dd>
+    Predicate to test file type
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+         The object to test if is a file
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isfunction"></a>
+    <strong>isfunction (x)</strong>
+    </dt>
+    <dd>
+    Predicate to test function type
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+         The object to test if is a function
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isnil"></a>
+    <strong>isnil (x)</strong>
+    </dt>
+    <dd>
+    Predicate to test nil type
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+         The object to test if is a nil
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isnumber"></a>
+    <strong>isnumber (x)</strong>
+    </dt>
+    <dd>
+    Predicate to test number type
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+         The object to test if is a number
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isstring"></a>
+    <strong>isstring (x)</strong>
+    </dt>
+    <dd>
+    Predicate to test string type
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+         The object to test if is a string
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "istable"></a>
+    <strong>istable (x)</strong>
+    </dt>
+    <dd>
+    Predicate to test table type
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+         The object to test if is a table
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isthread"></a>
+    <strong>isthread (x)</strong>
+    </dt>
+    <dd>
+    Predicate to test thread type
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+         The object to test if is a thread
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isuserdata"></a>
+    <strong>isuserdata (x)</strong>
+    </dt>
+    <dd>
+    Predicate to test userdata type
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+         The object to test if is a userdata
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "iter"></a>
+    <strong>iter (iter)</strong>
+    </dt>
+    <dd>
+    Converts an iterable into a coroutine
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">iter</span>
+         string or table iterable
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">thread</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "let"></a>
+    <strong>let (values, functor)</strong>
+    </dt>
+    <dd>
+    A localised value binding function
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">values</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+         An array of pairs of values, with the name on the left, and value on the right.
+        </li>
+        <li><span class="parameter">functor</span>
+            <span class="types"><span class="type">function</span></span>
+         The function to call, with the new value bindings.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Returns the return of the functor.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "map"></a>
+    <strong>map (functor, args)</strong>
+    </dt>
+    <dd>
+    Create a list by recursively calling a function against a list
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">functor</span>
+            <span class="types"><span class="type">function</span></span>
+         The function to be called against
+        </li>
+        <li><span class="parameter">args</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+         The arguments to call against the function
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+        Returns a list
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "mul"></a>
+    <strong>mul (a, b)</strong>
+    </dt>
+    <dd>
+    Multiplication operator
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+        <li><span class="parameter">b</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+        Return a * b
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "nth"></a>
+    <strong>nth (iterable, begin, fin)</strong>
+    </dt>
+    <dd>
+    Access a range from an interable
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">iterable</span>
+         An iterable, such as a string or table.
+        </li>
+        <li><span class="parameter">begin</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+        <li><span class="parameter">fin</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A selection of the iterable
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "recur"></a>
+    <strong>recur ()</strong>
+    </dt>
+    <dd>
+    A tail-call elimination safe way of calling the calling function.
+ e.g. "function() recur()() end" is a infinitely recursive function.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">function</span></span>
+        Returns the containing function.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "reverse"></a>
+    <strong>reverse (obj)</strong>
+    </dt>
+    <dd>
+    Reverses an iterable
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">obj</span>
+         string or table
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        The reverse string or table
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "sub"></a>
+    <strong>sub (a, b)</strong>
+    </dt>
+    <dd>
+    Subtraction operator
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+        <li><span class="parameter">b</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+        Return a - b
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "vend"></a>
+    <strong>vend (vendor)</strong>
+    </dt>
+    <dd>
+    Add a vendor path to Lua
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">vendor</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">nil</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "with"></a>
+    <strong>with (entry, permissions, functor)</strong>
+    </dt>
+    <dd>
+    Autoclosing files and threads
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">entry</span>
+         Filenme string or thread object
+        </li>
+        <li><span class="parameter">permissions</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+        </li>
+        <li><span class="parameter">functor</span>
+            <span class="types"><span class="type">function</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2018-01-02 17:02:43 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
