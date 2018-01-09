@@ -51,7 +51,8 @@ end
 -- @tparam function functor The function to benchmark. It should be pure.
 -- @param ... Arguments to parse to functor
 -- @treturn number Seconds taken on average across 100 runs.
-local timeit = function(functor, ...)
+local timeit
+timeit = function(functor, ...)
   local start = os.clock()
   for i=1, 100 do
     functor(...)
@@ -60,7 +61,8 @@ local timeit = function(functor, ...)
   return (fin - start) / 100
 end
 
-local memoize = function(functor)
+local memoize
+memoize = function(functor)
 end
 
 --- Add a vendor path to Lua
@@ -247,7 +249,8 @@ end
 -- @function shuffle
 -- @tparam table tbl
 -- @treturn table A shuffled table
-local shuffle = function(tbl)
+local shuffle
+shuffle = function(tbl)
   assert(type(tbl) == "table", "shuffle expected a table, but received: " .. type(tbl))
   for i = #tbl, 1, -1 do
     local r = math.random(#tbl)
@@ -517,7 +520,8 @@ end
 -- @function set
 -- @tparam table tbl A simple array e.g. {"Hello", "World", "Hello", "World"}
 -- @treturn table A simple array, with only unique items. e.g. {"Hello", "World"}
-local set = function(tbl)
+local set
+set = function(tbl)
   assert(type(tbl) == "table", "Set only works on tables, but received: " .. type(tbl))
   local tmp = {}
   for _, v in ipairs(tbl) do
@@ -534,7 +538,8 @@ end
 -- @function ktov
 -- @tparam table tbl
 -- @treturn table A key-value swapped table
-local ktov = function(tbl)
+local ktov
+ktov = function(tbl)
   local r = {}
     for k, v in pairs(tbl) do
       r[v] = k
@@ -548,7 +553,9 @@ end
 -- @tparam table tbl The table being processed e.g. {1, 2, 3, 4, 5}
 -- @treturn table The new table, e.g. {4, 5}
 local inarray -- depends on this, which is in the Predicates section
-local exclude = function(ex_tbl, tbl)
+
+local exclude
+exclude = function(ex_tbl, tbl)
   local r = {}
   for _, v in ipairs(tbl) do
     if not inarray(ex_tbl, v) then
@@ -613,7 +620,8 @@ end
 -- @tparam number n
 -- @tparam number y
 -- @treturn number Returns the number in the "middle" after sorting. e.g. clamp(5, 0, 10) == 5
-local clamp = function(x, n, y)
+local clamp
+clamp = function(x, n, y)
   local t = {x, n, y}
   table.sort(t)
   return t[2]
@@ -624,7 +632,8 @@ end
 -- @tparam number num The number to round
 -- @tparam number depth The number of decimal places to round to
 -- @treturn number The rounded number is returned
-local round = function(num, depth)
+local round
+round = function(num, depth)
   depth = depth or 2
   return tonumber(string.format("%." .. tostring(depth) .. "f", num))
 end
@@ -634,21 +643,24 @@ end
 -- @tparam number a
 -- @tparam number b
 -- @treturn number Return a + b
-local add = function(a,b) return a + b end
+local add
+add = function(a,b) return a + b end
 
 --- Subtraction operator
 -- @function sub
 -- @tparam number a
 -- @tparam number b
 -- @treturn number Return a - b
-local sub = function(a, b) return a - b end
+local sub
+sub = function(a, b) return a - b end
 
 --- Multiplication operator
 -- @function mul
 -- @tparam number a
 -- @tparam number b
 -- @treturn number Return a * b
-local mul = function(a, b) return a * b end
+local mul
+mul = function(a, b) return a * b end
 
 -- We want div(a, b) and div.int(a, b) for integer division.
 local div = {}
@@ -678,75 +690,86 @@ div.int = function(a, b) return math.floor(a/b) end
 -- @param a
 -- @param b
 -- @treturn boolean
-local gt = function(a,b) return a > b end
+local gt
+gt = function(a,b) return a > b end
 
 --- Great Than or Equal operator
 -- @function gte
 -- @param a
 -- @param b
 -- @treturn boolean
-local gte = function(a,b) return a >= b end
+local gte
+gte = function(a,b) return a >= b end
 
 --- Less Than operator
 -- @function lt
 -- @param a
 -- @param b
 -- @treturn boolean
-local lt = function(a,b) return a < b end
+local lt
+lt = function(a,b) return a < b end
 
 --- Less Than or Equal operator
 -- @function lte
 -- @param a
 -- @param b
 -- @treturn boolean
-local lte = function(a,b) return a <= b end
+local lte
+lte = function(a,b) return a <= b end
 
 --- Not Equal operator
 -- @function ne
 -- @param a
 -- @param b
 -- @treturn boolean
-local ne = function(a,b) return a ~= b end
+local ne
+ne = function(a,b) return a ~= b end
 
 --- Mod Operator
 -- @function mod
 -- @param a
 -- @param b
 -- @treturn number Returns a % b
-local mod = function(a, b) return a % b end
+local mod
+mod = function(a, b) return a % b end
 
 --- Unary operator
 -- @function unary
 -- @param a
 -- @return Returns -a
-local unary = function(a) return -a end
+local unary
+unary = function(a) return -a end
 
 --- Powerto operator
 -- @function pow
 -- @param a
 -- @param b
 -- @return Returns a^b
-local pow = function(a, b) return a^b end
+local pow
+pow = function(a, b) return a^b end
 
 --- Or operator
 -- @function xor
 -- @param a
 -- @param b
 -- @return Returns a or b
-local xor = function(a, b) return a or b end
+local xor
+xor = function(a, b) return a or b end
 
 --- And operator
 -- @function xnd
 -- @param a
 -- @param b
 -- @return Returns a and b
-local xnd = function(a, b) return a and b end
+local xnd
+xnd = function(a, b) return a and b end
 
 --- Not operator
 -- @function xnt
 -- @param a
 -- @return Returns not a
-local xnt = function(a) return not a end
+local xnt
+xnt = function(a) return not a end
 
 --- Ports
 -- @section ports
@@ -926,7 +949,8 @@ end
 -- @function ispositive
 -- @param x
 -- @treturn boolean
-local ispositive = function(x)
+local ispositive
+ispositive = function(x)
   if isnumber(x) and x > 0 then
     return true
   else
@@ -938,7 +962,8 @@ end
 -- @function isnegative
 -- @param x
 -- @treturn boolean
-local isnegative = function(x)
+local isnegative
+isnegative = function(x)
   if isnumber(x) and x < 0 then
     return true
   else
@@ -950,7 +975,8 @@ end
 -- @function iszero
 -- @param x
 -- @treturn boolean
-local iszero = function(x)
+local iszero
+iszero = function(x)
   if x == 0 then
     return true
   else
