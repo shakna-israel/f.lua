@@ -61,8 +61,47 @@ timeit = function(functor, ...)
   return (fin - start) / 100
 end
 
+--- Return a self-caching version of a function
+-- @function memoize
+-- @tparam function functor The function whose return data should get cached
+-- @treturn function Returns a function that caches data the first time it is called, and just returns that if the arguments are the same the next time around
 local memoize
-memoize = function(functor)
+do
+  local cache = {}
+  memoize = function(functor)
+    cache[functor] = {}
+    return function(...)
+      local cached = false
+      local args = {...}
+
+      local data
+      -- Check if these arguments are cached.
+      for k, v in pairs(cache[functor]) do
+        if not cached then
+          if #k == #args then
+            local same = true
+            for ix, arg in ipairs(args) do
+              if k[ix] ~= arg then
+                same = false
+              end
+            end
+            if same then
+              cached = true
+              data = v
+            end
+          end
+        end
+      end
+
+      if cached then
+        return unpack(data)
+      else
+        local store = {functor(...)}
+        cache[functor][args] = store
+        return unpack(store)
+      end
+    end
+  end
 end
 
 --- Add a vendor path to Lua
@@ -1114,4 +1153,5 @@ return {
   inarray = inarray,
   exclude = exclude,
   timeit = timeit,
+  memoize = memoize,
 }

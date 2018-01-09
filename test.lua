@@ -1,5 +1,9 @@
 f = require "f"
 
+-- f.memoize
+local tmp = function(a, b) return a + b end
+assert(f.memoize(tmp)(1, 2) == 3)
+
 -- f.timeit
 assert(type(f.timeit(function() return true end)) == "number")
 
