@@ -1090,6 +1090,9 @@ end
 -- we seed it upon require.
 math.randomseed(os.time())
 
+--- Use With Caution
+-- @section caution
+
 local returnData
 
 local pollute
