@@ -46,6 +46,64 @@ end
 --- Convenience
 -- @section convenience
 
+--- A benchmarking tool, it is highly not recommended to run impure functions through it.
+-- @function timeit
+-- @tparam function functor The function to benchmark. It should be pure.
+-- @param ... Arguments to parse to functor
+-- @treturn number Seconds taken on average across 100 runs.
+local timeit
+timeit = function(functor, ...)
+  local start = os.clock()
+  for i=1, 100 do
+    functor(...)
+  end
+  local fin = os.clock()
+  return (fin - start) / 100
+end
+
+--- Return a self-caching version of a function
+-- @function memoize
+-- @tparam function functor The function whose return data should get cached
+-- @treturn function Returns a function that caches data the first time it is called, and just returns that if the arguments are the same the next time around
+local memoize
+do
+  local cache = {}
+  memoize = function(functor)
+    cache[functor] = {}
+    return function(...)
+      local cached = false
+      local args = {...}
+
+      local data
+      -- Check if these arguments are cached.
+      for k, v in pairs(cache[functor]) do
+        if not cached then
+          if #k == #args then
+            local same = true
+            for ix, arg in ipairs(args) do
+              if k[ix] ~= arg then
+                same = false
+              end
+            end
+            if same then
+              cached = true
+              data = v
+            end
+          end
+        end
+      end
+
+      if cached then
+        return unpack(data)
+      else
+        local store = {functor(...)}
+        cache[functor][args] = store
+        return unpack(store)
+      end
+    end
+  end
+end
+
 --- Add a vendor path to Lua
 -- @function vend
 -- @tparam string vendor
@@ -216,7 +274,7 @@ co.t = function(thread)
   end
 end
 
---- Check a corutine is running
+--- Check a coroutine is running
 -- @function co.r
 -- @treturn boolean Returns coroutine.running()
 co.r = function()
@@ -225,6 +283,20 @@ end
 
 --- Functional Essentials
 -- @section essentials
+
+--- Shuffles a given table, using Fisher-Yates, a simple swapping algo.
+-- @function shuffle
+-- @tparam table tbl
+-- @treturn table A shuffled table
+local shuffle
+shuffle = function(tbl)
+  assert(type(tbl) == "table", "shuffle expected a table, but received: " .. type(tbl))
+  for i = #tbl, 1, -1 do
+    local r = math.random(#tbl)
+    tbl[i], tbl[r] = tbl[r], tbl[i]
+  end
+  return tbl
+end
 
 --- A tail-call elimination safe way of calling the calling function.
 -- e.g. "function() recur()() end" is a infinitely recursive function.
@@ -483,29 +555,151 @@ foldr = function(functor, tbl, val)
   return val
 end
 
+--- Reduce a table to a set, that is, every item must be unique.
+-- @function set
+-- @tparam table tbl A simple array e.g. {"Hello", "World", "Hello", "World"}
+-- @treturn table A simple array, with only unique items. e.g. {"Hello", "World"}
+local set
+set = function(tbl)
+  assert(type(tbl) == "table", "Set only works on tables, but received: " .. type(tbl))
+  local tmp = {}
+  for _, v in ipairs(tbl) do
+    tmp[v] = true
+  end
+  local ret = {}
+  for k, _ in pairs(tmp) do
+    ret[#ret + 1] = k
+  end
+  return ret
+end
+
+--- Swap key and values in a table.
+-- @function ktov
+-- @tparam table tbl
+-- @treturn table A key-value swapped table
+local ktov
+ktov = function(tbl)
+  local r = {}
+    for k, v in pairs(tbl) do
+      r[v] = k
+    end
+  return r
+end
+
+--- Remove a set of values from a table
+-- @function exclude
+-- @tparam table ex_tbl The values to remove e.g. {1, 2, 3}
+-- @tparam table tbl The table being processed e.g. {1, 2, 3, 4, 5}
+-- @treturn table The new table, e.g. {4, 5}
+local inarray -- depends on this, which is in the Predicates section
+
+local exclude
+exclude = function(ex_tbl, tbl)
+  local r = {}
+  for _, v in ipairs(tbl) do
+    if not inarray(ex_tbl, v) then
+      r[#r + 1] = v
+    end
+  end
+  return r
+end
+
 --- Mathematical Operators
 -- @section maths
+
+--- Wraps math.random, unless x is a table, in which case it gives a
+-- random item from that table.
+-- @function random
+-- @param[opt] x
+-- @param[opt] y
+-- @return object
+local random = {}
+setmetatable(random, {
+  __call = function(self, x, y)
+  if x == nil and y == nil then
+    return math.random()
+  end
+  if type(x) == "table" then
+    if y == nil then
+      return x[math.random(#x)]
+    else
+      return x[math.random(y)]
+    end
+  else
+    if y == nil then
+      return math.random(x)
+    else
+      return math.random(x, y)
+    end
+  end
+end})
+
+--- Given a weighted table, (e.g. {"hello" = 2, "cat" = 1, "dog" = 3}), returns a random item (e.g. "dog"), whilst respecting the weighted chance.
+-- @function random.weighted
+-- @tparam table tbl
+-- @return Returns one key from the table.
+random.weighted = function(tbl)
+  assert(type(tbl) == "table", "random.weighted expected a weighted table. But received a: " .. type(tbl))
+  for k, v in pairs(tbl) do
+    assert(type(v) == "number", "random.weighted expected values in table to be numbers for weight. But received: " .. type(v))
+  end
+  local weighted = {}
+  for k, v in pairs(tbl) do
+    for i=1, v do
+      weighted[#weighted + 1] = k
+    end
+  end
+  local ret = weighted[math.random(#weighted)]
+  return ret
+end
+
+--- Clamp a number between two others
+-- @function clamp
+-- @tparam number x
+-- @tparam number n
+-- @tparam number y
+-- @treturn number Returns the number in the "middle" after sorting. e.g. clamp(5, 0, 10) == 5
+local clamp
+clamp = function(x, n, y)
+  local t = {x, n, y}
+  table.sort(t)
+  return t[2]
+end
+
+--- Round a number to a certain number of places
+-- @function round
+-- @tparam number num The number to round
+-- @tparam number depth The number of decimal places to round to
+-- @treturn number The rounded number is returned
+local round
+round = function(num, depth)
+  depth = depth or 2
+  return tonumber(string.format("%." .. tostring(depth) .. "f", num))
+end
 
 --- Addition operator
 -- @function add
 -- @tparam number a
 -- @tparam number b
 -- @treturn number Return a + b
-local add = function(a,b) return a + b end
+local add
+add = function(a,b) return a + b end
 
 --- Subtraction operator
 -- @function sub
 -- @tparam number a
 -- @tparam number b
 -- @treturn number Return a - b
-local sub = function(a, b) return a - b end
+local sub
+sub = function(a, b) return a - b end
 
 --- Multiplication operator
 -- @function mul
 -- @tparam number a
 -- @tparam number b
 -- @treturn number Return a * b
-local mul = function(a, b) return a * b end
+local mul
+mul = function(a, b) return a * b end
 
 -- We want div(a, b) and div.int(a, b) for integer division.
 local div = {}
@@ -535,75 +729,86 @@ div.int = function(a, b) return math.floor(a/b) end
 -- @param a
 -- @param b
 -- @treturn boolean
-local gt = function(a,b) return a > b end
+local gt
+gt = function(a,b) return a > b end
 
 --- Great Than or Equal operator
 -- @function gte
 -- @param a
 -- @param b
 -- @treturn boolean
-local gte = function(a,b) return a >= b end
+local gte
+gte = function(a,b) return a >= b end
 
 --- Less Than operator
 -- @function lt
 -- @param a
 -- @param b
 -- @treturn boolean
-local lt = function(a,b) return a < b end
+local lt
+lt = function(a,b) return a < b end
 
 --- Less Than or Equal operator
 -- @function lte
 -- @param a
 -- @param b
 -- @treturn boolean
-local lte = function(a,b) return a <= b end
+local lte
+lte = function(a,b) return a <= b end
 
 --- Not Equal operator
 -- @function ne
 -- @param a
 -- @param b
 -- @treturn boolean
-local ne = function(a,b) return a ~= b end
+local ne
+ne = function(a,b) return a ~= b end
 
 --- Mod Operator
 -- @function mod
 -- @param a
 -- @param b
 -- @treturn number Returns a % b
-local mod = function(a, b) return a % b end
+local mod
+mod = function(a, b) return a % b end
 
 --- Unary operator
 -- @function unary
 -- @param a
 -- @return Returns -a
-local unary = function(a) return -a end
+local unary
+unary = function(a) return -a end
 
 --- Powerto operator
 -- @function pow
 -- @param a
 -- @param b
 -- @return Returns a^b
-local pow = function(a, b) return a^b end
+local pow
+pow = function(a, b) return a^b end
 
 --- Or operator
 -- @function xor
 -- @param a
 -- @param b
 -- @return Returns a or b
-local xor = function(a, b) return a or b end
+local xor
+xor = function(a, b) return a or b end
 
 --- And operator
 -- @function xnd
 -- @param a
 -- @param b
 -- @return Returns a and b
-local xnd = function(a, b) return a and b end
+local xnd
+xnd = function(a, b) return a and b end
 
 --- Not operator
 -- @function xnt
 -- @param a
 -- @return Returns not a
-local xnt = function(a) return not a end
+local xnt
+xnt = function(a) return not a end
 
 --- Ports
 -- @section ports
@@ -749,6 +954,18 @@ eq = function(a, b)
   end
 end
 
+--- Check if a value occurs in a list
+-- @function inarray
+-- @tparam table tbl Table to process
+-- @param v Value to check for
+-- @treturn boolean
+inarray = function(tbl, v)
+  for _, val in ipairs(tbl) do
+    if v == val then return true end
+  end
+  return false
+end
+
 --- Predicate to test string type
 -- @function isstring
 -- @param x The object to test if is a string
@@ -765,6 +982,45 @@ end
 local isnumber
 isnumber = function(x)
   return type(x) == "number"
+end
+
+--- Returns true or false, given any object, if it is a positive number
+-- @function ispositive
+-- @param x
+-- @treturn boolean
+local ispositive
+ispositive = function(x)
+  if isnumber(x) and x > 0 then
+    return true
+  else
+    return false
+  end
+end
+
+--- Returns true or false, given any object, if it is a negative number
+-- @function isnegative
+-- @param x
+-- @treturn boolean
+local isnegative
+isnegative = function(x)
+  if isnumber(x) and x < 0 then
+    return true
+  else
+    return false
+  end
+end
+
+--- Returns true or false, given any object, if it is 0
+-- @function iszero
+-- @param x
+-- @treturn boolean
+local iszero
+iszero = function(x)
+  if x == 0 then
+    return true
+  else
+    return false
+  end
 end
 
 --- Predicate to test function type
@@ -830,7 +1086,42 @@ isfile = function(x)
   return io.type(x) == "file"
 end
 
-return {
+-- Because we have so many functions that rely on math.random,
+-- we seed it upon require.
+math.randomseed(os.time())
+
+local returnData
+
+local pollute
+local unpollute
+do
+  local cache = {}
+
+  --- Pollute the global namespace with f.lua's functions.
+  -- @function pollute
+  -- @treturn nil No return value.
+  pollute = function()
+    for k, v in pairs(returnData) do
+      if _G[k] ~= nil then cache[k] = _G[k] end
+      _G[k] = v
+    end
+  end
+
+  --- Undo pollution of the global namespace by f.pollute.
+  -- @function unpollute
+  -- @treturn nil No return value.
+  unpollute = function()
+    for k, v in pairs(returnData) do
+      if cache[k] ~= nil then
+        _G[k] = cache[k]
+      else
+        _G[k] = nil
+      end
+    end
+  end
+end
+
+returnData = {
   mod = mod,
   unary = unary,
   pow = pow,
@@ -881,4 +1172,21 @@ return {
   lte = lte,
   ne = ne,
   port = port,
+  clamp = clamp,
+  round = round,
+  ispositive = ispositive,
+  isnegative = isnegative,
+  iszero = iszero,
+  random = random,
+  shuffle = shuffle,
+  set = set,
+  ktov = ktov,
+  inarray = inarray,
+  exclude = exclude,
+  timeit = timeit,
+  memoize = memoize,
+  pollute = pollute,
+  unpollute = unpollute,
 }
+
+return returnData

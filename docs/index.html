@@ -75,6 +75,14 @@
 	<td class="summary">Converts an iterable into a coroutine</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#memoize">memoize (functor)</a></td>
+	<td class="summary">Return a self-caching version of a function</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#timeit">timeit (functor, ...)</a></td>
+	<td class="summary">A benchmarking tool, it is highly not recommended to run impure functions through it.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#vend">vend (vendor)</a></td>
 	<td class="summary">Add a vendor path to Lua</td>
 	</tr>
@@ -95,7 +103,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#co.r">co.r ()</a></td>
-	<td class="summary">Check a corutine is running</td>
+	<td class="summary">Check a coroutine is running</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#co.t">co.t (functor)</a></td>
@@ -133,12 +141,20 @@
 	<td class="summary">A functional else-if construct</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#exclude">exclude (ex_tbl, tbl)</a></td>
+	<td class="summary">Remove a set of values from a table</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#filter">filter (functor, args)</a></td>
 	<td class="summary">Filter a list</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#foldr">foldr (functor, tbl, val)</a></td>
 	<td class="summary">foldr</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ktov">ktov (tbl)</a></td>
+	<td class="summary">Swap key and values in a table.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#let">let (values, functor)</a></td>
@@ -160,12 +176,24 @@
 	<td class="name" nowrap><a href="#reverse">reverse (obj)</a></td>
 	<td class="summary">Reverses an iterable</td>
 	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#set">set (tbl)</a></td>
+	<td class="summary">Reduce a table to a set, that is, every item must be unique.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#shuffle">shuffle (tbl)</a></td>
+	<td class="summary">Shuffles a given table, using Fisher-Yates, a simple swapping algo.</td>
+	</tr>
 </table>
 <h2><a href="#Mathematical_Operators">Mathematical Operators </a></h2>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#add">add (a, b)</a></td>
 	<td class="summary">Addition operator</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#clamp">clamp (x, n, y)</a></td>
+	<td class="summary">Clamp a number between two others</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#div">div (a, b)</a></td>
@@ -178,6 +206,19 @@
 	<tr>
 	<td class="name" nowrap><a href="#mul">mul (a, b)</a></td>
 	<td class="summary">Multiplication operator</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#random">random ([x[, y]])</a></td>
+	<td class="summary">Wraps math.random, unless x is a table, in which case it gives a
+ random item from that table.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#random.weighted">random.weighted (tbl)</a></td>
+	<td class="summary">Given a weighted table, (e.g.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#round">round (num, depth)</a></td>
+	<td class="summary">Round a number to a certain number of places</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#sub">sub (a, b)</a></td>
@@ -265,6 +306,10 @@
 	<td class="summary">Test equivalence</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#inarray">inarray (tbl, v)</a></td>
+	<td class="summary">Check if a value occurs in a list</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#isboolean">isboolean (x)</a></td>
 	<td class="summary">Predicate to test boolean type</td>
 	</tr>
@@ -277,12 +322,20 @@
 	<td class="summary">Predicate to test function type</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#isnegative">isnegative (x)</a></td>
+	<td class="summary">Returns true or false, given any object, if it is a negative number</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#isnil">isnil (x)</a></td>
 	<td class="summary">Predicate to test nil type</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#isnumber">isnumber (x)</a></td>
 	<td class="summary">Predicate to test number type</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ispositive">ispositive (x)</a></td>
+	<td class="summary">Returns true or false, given any object, if it is a positive number</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#isstring">isstring (x)</a></td>
@@ -299,6 +352,18 @@
 	<tr>
 	<td class="name" nowrap><a href="#isuserdata">isuserdata (x)</a></td>
 	<td class="summary">Predicate to test userdata type</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#iszero">iszero (x)</a></td>
+	<td class="summary">Returns true or false, given any object, if it is 0</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#pollute">pollute ()</a></td>
+	<td class="summary">Pollute the global namespace with f.lua's functions.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#unpollute">unpollute ()</a></td>
+	<td class="summary">Undo pollution of the global namespace by f.pollute.</td>
 	</tr>
 </table>
 
@@ -405,6 +470,63 @@
 
            <span class="types"><span class="type">thread</span></span>
 
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "memoize"></a>
+    <strong>memoize (functor)</strong>
+    </dt>
+    <dd>
+    Return a self-caching version of a function
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">functor</span>
+            <span class="types"><span class="type">function</span></span>
+         The function whose return data should get cached
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">function</span></span>
+        Returns a function that caches data the first time it is called, and just returns that if the arguments are the same the next time around
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "timeit"></a>
+    <strong>timeit (functor, ...)</strong>
+    </dt>
+    <dd>
+    A benchmarking tool, it is highly not recommended to run impure functions through it.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">functor</span>
+            <span class="types"><span class="type">function</span></span>
+         The function to benchmark. It should be pure.
+        </li>
+        <li><span class="parameter">...</span>
+         Arguments to parse to functor
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+        Seconds taken on average across 100 runs.
     </ol>
 
 
@@ -529,7 +651,7 @@
     <strong>co.r ()</strong>
     </dt>
     <dd>
-    Check a corutine is running
+    Check a coroutine is running
 
 
 
@@ -776,6 +898,37 @@
 
 </dd>
     <dt>
+    <a name = "exclude"></a>
+    <strong>exclude (ex_tbl, tbl)</strong>
+    </dt>
+    <dd>
+    Remove a set of values from a table
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">ex_tbl</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+         The values to remove e.g. {1, 2, 3}
+        </li>
+        <li><span class="parameter">tbl</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+         The table being processed e.g. {1, 2, 3, 4, 5}
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+        The new table, e.g. {4, 5}
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "filter"></a>
     <strong>filter (functor, args)</strong>
     </dt>
@@ -833,6 +986,33 @@
     <ol>
 
         The folded value
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ktov"></a>
+    <strong>ktov (tbl)</strong>
+    </dt>
+    <dd>
+    Swap key and values in a table.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">tbl</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+        A key-value swapped table
     </ol>
 
 
@@ -979,6 +1159,60 @@
 
 
 </dd>
+    <dt>
+    <a name = "set"></a>
+    <strong>set (tbl)</strong>
+    </dt>
+    <dd>
+    Reduce a table to a set, that is, every item must be unique.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">tbl</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+         A simple array e.g. {"Hello", "World", "Hello", "World"}
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+        A simple array, with only unique items. e.g. {"Hello", "World"}
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "shuffle"></a>
+    <strong>shuffle (tbl)</strong>
+    </dt>
+    <dd>
+    Shuffles a given table, using Fisher-Yates, a simple swapping algo.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">tbl</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+        A shuffled table
+    </ol>
+
+
+
+
+</dd>
 </dl>
     <h2 class="section-header "><a name="Mathematical_Operators"></a>Mathematical Operators </h2>
 
@@ -1008,6 +1242,41 @@
 
            <span class="types"><span class="type">number</span></span>
         Return a + b
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "clamp"></a>
+    <strong>clamp (x, n, y)</strong>
+    </dt>
+    <dd>
+    Clamp a number between two others
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+        <li><span class="parameter">n</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+        Returns the number in the "middle" after sorting. e.g. clamp(5, 0, 10) == 5
     </ol>
 
 
@@ -1101,6 +1370,94 @@
 
            <span class="types"><span class="type">number</span></span>
         Return a * b
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "random"></a>
+    <strong>random ([x[, y]])</strong>
+    </dt>
+    <dd>
+    Wraps math.random, unless x is a table, in which case it gives a
+ random item from that table.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">y</span>
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        object
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "random.weighted"></a>
+    <strong>random.weighted (tbl)</strong>
+    </dt>
+    <dd>
+    Given a weighted table, (e.g.  {"hello" = 2, "cat" = 1, "dog" = 3}), returns a random item (e.g. "dog"), whilst respecting the weighted chance.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">tbl</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Returns one key from the table.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "round"></a>
+    <strong>round (num, depth)</strong>
+    </dt>
+    <dd>
+    Round a number to a certain number of places
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">num</span>
+            <span class="types"><span class="type">number</span></span>
+         The number to round
+        </li>
+        <li><span class="parameter">depth</span>
+            <span class="types"><span class="type">number</span></span>
+         The number of decimal places to round to
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+        The rounded number is returned
     </ol>
 
 
@@ -1666,6 +2023,36 @@
 
 </dd>
     <dt>
+    <a name = "inarray"></a>
+    <strong>inarray (tbl, v)</strong>
+    </dt>
+    <dd>
+    Check if a value occurs in a list
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">tbl</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+         Table to process
+        </li>
+        <li><span class="parameter">v</span>
+         Value to check for
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "isboolean"></a>
     <strong>isboolean (x)</strong>
     </dt>
@@ -1744,6 +2131,32 @@
 
 </dd>
     <dt>
+    <a name = "isnegative"></a>
+    <strong>isnegative (x)</strong>
+    </dt>
+    <dd>
+    Returns true or false, given any object, if it is a negative number
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "isnil"></a>
     <strong>isnil (x)</strong>
     </dt>
@@ -1781,6 +2194,32 @@
     <ul>
         <li><span class="parameter">x</span>
          The object to test if is a number
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ispositive"></a>
+    <strong>ispositive (x)</strong>
+    </dt>
+    <dd>
+    Returns true or false, given any object, if it is a positive number
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+
         </li>
     </ul>
 
@@ -1899,6 +2338,72 @@
 
 
 </dd>
+    <dt>
+    <a name = "iszero"></a>
+    <strong>iszero (x)</strong>
+    </dt>
+    <dd>
+    Returns true or false, given any object, if it is 0
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "pollute"></a>
+    <strong>pollute ()</strong>
+    </dt>
+    <dd>
+    Pollute the global namespace with f.lua's functions.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">nil</span></span>
+        No return value.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "unpollute"></a>
+    <strong>unpollute ()</strong>
+    </dt>
+    <dd>
+    Undo pollution of the global namespace by f.pollute.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">nil</span></span>
+        No return value.
+    </ol>
+
+
+
+
+</dd>
 </dl>
 
 
@@ -1906,7 +2411,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2018-01-06 14:03:12 </i>
+<i style="float:right;">Last updated 2018-01-10 01:09:06 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

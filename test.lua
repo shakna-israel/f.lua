@@ -1,5 +1,81 @@
 f = require "f"
 
+-- f.pollute && f.unpollute
+f.pollute()
+assert(pollute == f.pollute)
+f.unpollute()
+assert(pollute == nil)
+
+-- f.memoize
+local tmp = function(a, b) return a + b end
+assert(f.memoize(tmp)(1, 2) == 3)
+
+-- f.timeit
+assert(type(f.timeit(function() return true end)) == "number")
+
+-- f.random
+-- Testing randomness is difficult.
+for i=1,1000 do
+  assert(f.random() == 0 or 1)
+  assert(f.random(2) < 3)
+  assert(f.random({"a", "b"}) == "a" or "b")
+end
+
+-- f.random.weighted
+assert(f.random.weighted({hello = 2, dog = 1}) == "hello" or "dog")
+
+-- f.shuffle
+assert(f.shuffle({1, 2})[1] == 1 or 2)
+
+-- f.set
+local tmp = f.set({1, 2, 3, 4, 5, 1, 2, 3, 4, 5})
+assert(#tmp == 5)
+tmp = nil
+
+-- f.ktov
+assert(f.ktov({hello = "world"})["world"] == "hello")
+
+-- f.inarray
+assert(f.inarray({"a", "b"}, "b") == true)
+assert(f.inarray({"a", "b"}, "c") == false)
+
+-- f.exclude
+assert(f.inarray(f.exclude({1, 2}, {1, 2, 3}), 3) == true)
+assert(f.inarray(f.exclude({1, 2}, {1, 2, 3}), 2) == false)
+
+-- f.ispositive
+
+assert(f.ispositive(0) == false)
+assert(f.ispositive(-1) == false)
+assert(f.ispositive("hi") == false)
+assert(f.ispositive({}) == false)
+assert(f.ispositive(1) == true)
+
+-- f.isnegative
+
+assert(f.isnegative(0) == false)
+assert(f.isnegative(-1) == true)
+assert(f.isnegative("hi") == false)
+assert(f.isnegative({}) == false)
+assert(f.isnegative(1) == false)
+
+-- f.iszero
+
+assert(f.iszero(0) == true)
+assert(f.iszero(-1) == false)
+assert(f.iszero("hi") == false)
+assert(f.iszero({}) == false)
+assert(f.iszero(1) == false)
+
+-- f.round
+assert(f.round(10.2222) == 10.22)
+assert(f.round(10.2222, 3) == 10.222)
+
+-- f.clamp
+assert(f.clamp(5, 0, 10) == 5)
+assert(f.clamp(5, 10, 0) == 5)
+assert(f.clamp(0, 10, 5) == 5)
+
 -- f.mod
 assert(f.mod(21, 22) == 21 % 22)
 
