@@ -1090,7 +1090,38 @@ end
 -- we seed it upon require.
 math.randomseed(os.time())
 
-return {
+local returnData
+
+local pollute
+local unpollute
+do
+  local cache = {}
+
+  --- Pollute the global namespace with f.lua's functions.
+  -- @function pollute
+  -- @treturn nil No return value.
+  pollute = function()
+    for k, v in pairs(returnData) do
+      if _G[k] ~= nil then cache[k] = _G[k] end
+      _G[k] = v
+    end
+  end
+
+  --- Undo pollution of the global namespace by f.pollute.
+  -- @function unpollute
+  -- @treturn nil No return value.
+  unpollute = function()
+    for k, v in pairs(returnData) do
+      if cache[k] ~= nil then
+        _G[k] = cache[k]
+      else
+        _G[k] = nil
+      end
+    end
+  end
+end
+
+returnData = {
   mod = mod,
   unary = unary,
   pow = pow,
@@ -1154,4 +1185,8 @@ return {
   exclude = exclude,
   timeit = timeit,
   memoize = memoize,
+  pollute = pollute,
+  unpollute = unpollute,
 }
+
+return returnData

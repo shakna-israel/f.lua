@@ -1,5 +1,11 @@
 f = require "f"
 
+-- f.pollute && f.unpollute
+f.pollute()
+assert(pollute == f.pollute)
+f.unpollute()
+assert(pollute == nil)
+
 -- f.memoize
 local tmp = function(a, b) return a + b end
 assert(f.memoize(tmp)(1, 2) == 3)
