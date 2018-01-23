@@ -1,5 +1,14 @@
 f = require "f"
 
+-- Bit shifts
+assert(f.shift.left(1, 1) == 2)
+assert(f.shift.left(1, 2) == 4)
+assert(f.shift.left(2, 1) == 4)
+
+assert(f.shift.right(1, 1) == 0)
+assert(f.shift.right(1, 2) == 0)
+assert(f.shift.right(2, 1) == 1)
+
 -- f.base64
 assert(f.base64.encode("") == "")
 assert(f.base64.encode("f") == "Zg==")

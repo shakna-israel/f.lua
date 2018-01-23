@@ -607,12 +607,33 @@ end
 --- Maths
 -- @section maths
 
+local shift = {}
+
+--- Bitshift left
+-- @function shift.left
+-- @tparam number val
+-- @tparam number by
+-- @treturn number Left-bitshifted number
+shift.left = function(val, by)
+  return (val*(2^by)) % 256
+end
+
+--- Bitshift right
+-- @function shift.right
+-- @tparam number val
+-- @tparam number by
+-- @treturn number Right-bitshifted number
+shift.right = function(val, by)
+  return math.floor(val/2^by) % 256
+end
+
 local base64 = {}
 do
   local baseChars = {'B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9','-','_'}
-  base64Chars[0] = 'A'
+  baseChars[0] = 'A'
 
   base64.encode = function(str)
+    
   end
 
   base64.decode = function(str)
@@ -1203,6 +1224,7 @@ returnData = {
   pollute = pollute,
   unpollute = unpollute,
   base64 = base64,
+  shift = shift,
 }
 
 return returnData
