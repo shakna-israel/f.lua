@@ -1,5 +1,22 @@
 f = require "f"
 
+-- f.base64
+assert(f.base64.encode("") == "")
+assert(f.base64.encode("f") == "Zg==")
+assert(f.base64.encode("fo") == "Zm8=")
+assert(f.base64.encode("foo") == "Zm9v")
+assert(f.base64.encode("foob") == "Zm9vYg==")
+assert(f.base64.encode("fooba") == "Zm9vYmE=")
+assert(f.base64.encode("foobar") == "Zm9vYmFy")
+
+assert(f.base64.decode(f.base64.encode("")) == "")
+assert(f.base64.decode(f.base64.encode("f")) == "f")
+assert(f.base64.decode(f.base64.encode("fo")) == "fo")
+assert(f.base64.decode(f.base64.encode("foo")) == "foo")
+assert(f.base64.decode(f.base64.encode("foob")) == "foob")
+assert(f.base64.decode(f.base64.encode("fooba")) == "fooba")
+assert(f.base64.decode(f.base64.encode("foobar")) == "foobar")
+
 -- f.pollute && f.unpollute
 f.pollute()
 assert(pollute == f.pollute)
