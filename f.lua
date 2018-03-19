@@ -1040,7 +1040,7 @@ end
 -- @tparam number column
 -- @tparam number row
 -- @return Returns given element from the given matrix. 
-matrix.element = function(mtx, column, row
+matrix.element = function(mtx, column, row)
   assert(type(mtx) == "table")
   assert(type(column) == "number")
   assert(type(row) == "number")
@@ -1472,5 +1472,6 @@ returnData = {
   base64 = base64,
   abs = abs,
   matrix = matrix,
+}
 
 return returnData
