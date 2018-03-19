@@ -628,7 +628,6 @@ do
       local pad = 2 - ((#str-1) % 3)
    str = (str..string.rep('\0', pad)):gsub("...", function(cs)
       local a, b, c = string.byte(cs, 1, 3)
-      -- return baseChars[a>>2] .. baseChars[(a&3)<<4|b>>4] .. baseChars[(b&15)<<2|c>>6] .. baseChars[c&63]
       return baseChars[bit32.rshift(a, 2)] ..
         baseChars[bit32.bor(bit32.lshift(bit32.band(a, 3), 4), bit32.rshift(b, 4))] ..
         baseChars[bit32.bor(bit32.lshift(bit32.band(b, 15), 2), bit32.rshift(c, 6))] ..
@@ -638,10 +637,16 @@ do
     end
   end
 
+  --- Base64 Decode
+  -- TODO
+  -- @function base64.decode
+  -- @tparam string str
+  -- @treturn string Decoded string
   base64.decode = function(str)
     if #str == 0 then
       return ""
     else
+      error("Not Yet Implemented")
     end
   end
 end
@@ -803,14 +808,6 @@ lte = function(a,b) return a <= b end
 local ne
 ne = function(a,b) return a ~= b end
 
---- Mod Operator
--- @function mod
--- @param a
--- @param b
--- @treturn number Returns a % b
-local mod
-mod = function(a, b) return a % b end
-
 --- Unary operator
 -- @function unary
 -- @param a
@@ -848,6 +845,44 @@ xnd = function(a, b) return a and b end
 -- @return Returns not a
 local xnt
 xnt = function(a) return not a end
+
+--- Abs operator
+-- @function abs
+-- @tparam number a
+-- @treturn number Absolute value of a
+local abs = {}
+setmetatable(abs,
+    {
+      __call = function(self, a) return math.abs(a) end
+    })
+
+--- abs.floor operator
+-- @function abs.floor
+-- @tparam number a
+-- @treturn number Absolute value of a, run through math.floor
+abs.floor = function(a)
+  return math.floor(math.abs(a))
+end
+
+--- Mod Operator
+-- @function mod
+-- @param a
+-- @param b
+-- @treturn number Returns a % b
+local mod = {}
+setmetatable(mod,
+    {
+      __call = function(a, b) return a % b end
+    })
+
+--- Mod floor Operator
+-- @function mod
+-- @param a
+-- @param b
+-- @treturn number Returns math.floor(a % b)
+mod.floor = function(a, b)
+  return math.floor(a % b)
+end
 
 --- Ports
 -- @section ports
@@ -1230,6 +1265,7 @@ returnData = {
   pollute = pollute,
   unpollute = unpollute,
   base64 = base64,
+  abs = abs,
 }
 
 return returnData

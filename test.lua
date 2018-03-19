@@ -1,5 +1,11 @@
 f = require "f"
 
+-- mod.floor
+assert(f.mod.floor(2, 3) == 2)
+
+-- abs.floor
+assert(f.abs.floor(12.9) == 12)
+
 -- f.base64
 assert(f.base64.encode("") == "")
 assert(f.base64.encode("f") == "Zg==")
