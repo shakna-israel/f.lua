@@ -578,7 +578,50 @@ f.shift = {}
 
 -- Backported to Lua 5.1, introduced in 5.2, present in 5.3
 -- This library gives us everything we need.
+-- If not available, fall back to a slower Lua-only version
 local bit32 = require "bit32"
+if bit32 == nil then
+  bit32 = {}
+
+  bit32.to_bit = function(x)
+    
+  end
+  
+  bit32.xor = function(a, b)
+    local r = 0
+    for i = 0, 31 do
+      local x = a / 2 + b / 2
+      if x ~= math.floor(x) then
+        r = r + 2^i
+      end
+      a = math.floor(a / 2)
+      b = math.floor(b / 2)
+    end
+    return r
+  end
+  
+  bit32.bor = function(a, b)
+    local p,c=1,0
+    while a+b>0 do
+        local ra,rb=a%2,b%2
+        if ra+rb>0 then c=c+p end
+        a,b,p=(a-ra)/2,(b-rb)/2,p*2
+    end
+    return c
+  end
+  
+  bit32.band = function(a, b)
+    return ((a+b) - bit32.bxor(a,b))/2
+  end
+
+  bit32.rshift = function(a, b)
+    return math.floor(x / 2 ^ by)
+  end
+  
+  bit32.lshift = function(a, b)
+    return x * 2 ^ by
+  end
+end
 
 f.base64 = {}
 do
