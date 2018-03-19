@@ -915,11 +915,125 @@ matrix.new = function(column, row, default)
   return ret
 end
 
--- matrix.add
--- matrix.sub
--- matrix.mul
--- matrix.div
--- matrix.div.int
+--- matrix.add
+-- @function matrix.add
+-- @tparam table matrix_a
+-- @tparam table matrix_b
+-- @treturn table Return a matrix from adding two matrices of the same size
+matrix.add = function(matrix_a, matrix_b)
+  assert(type(matrix_a) == "table")
+  assert(type(matrix_b) == "table")
+  assert(#matrix_a == #matrix_b, "Matrixes are not of the same size.")
+  for i = 0, #matrix_a do
+    assert(#matrix_a[i] == #matrix_b[i], "Matrix rows are not of the same size.")
+  end
+
+  local ret = {}
+  for x = 0, #matrix_a do
+    ret[x] = {}
+    for y = 0, #matrix_a[x] do
+      ret[x][y] = matrix_a[x][y] + matrix_b[x][y]
+    end
+  end
+  return ret
+end
+
+--- matrix.sub
+-- @function matrix.sub
+-- @tparam table matrix_a
+-- @tparam table matrix_b
+-- @treturn table Return a matrix from subtracting two matrices of the same size
+matrix.sub = function(matrix_a, matrix_b)
+  assert(type(matrix_a) == "table")
+  assert(type(matrix_b) == "table")
+  assert(#matrix_a == #matrix_b, "Matrixes are not of the same size.")
+  for i = 0, #matrix_a do
+    assert(#matrix_a[i] == #matrix_b[i], "Matrix rows are not of the same size.")
+  end
+
+  local ret = {}
+  for x = 0, #matrix_a do
+    ret[x] = {}
+    for y = 0, #matrix_a[x] do
+      ret[x][y] = matrix_a[x][y] - matrix_b[x][y]
+    end
+  end
+  return ret
+end
+
+--- matrix.mul
+-- @function matrix.mul
+-- @tparam table matrix_a
+-- @tparam table matrix_b
+-- @treturn table Return a matrix from multiplying two matrices of the same size
+matrix.mul = function(matrix_a, matrix_b)
+  assert(type(matrix_a) == "table")
+  assert(type(matrix_b) == "table")
+  assert(#matrix_a == #matrix_b, "Matrixes are not of the same size.")
+  for i = 0, #matrix_a do
+    assert(#matrix_a[i] == #matrix_b[i], "Matrix rows are not of the same size.")
+  end
+
+  local ret = {}
+  for x = 0, #matrix_a do
+    ret[x] = {}
+    for y = 0, #matrix_a[x] do
+      ret[x][y] = matrix_a[x][y] * matrix_b[x][y]
+    end
+  end
+  return ret
+end
+
+--- matrix.div
+-- @function matrix.div
+-- @tparam table matrix_a
+-- @tparam table matrix_b
+-- @treturn table Return a matrix from dividing two matrices of the same size
+matrix.div = {}
+setmetatable(matrix.div,
+    {
+      __call = function(matrix_a, matrix_b)
+  assert(type(matrix_a) == "table")
+  assert(type(matrix_b) == "table")
+  assert(#matrix_a == #matrix_b, "Matrixes are not of the same size.")
+  for i = 0, #matrix_a do
+    assert(#matrix_a[i] == #matrix_b[i], "Matrix rows are not of the same size.")
+  end
+
+  local ret = {}
+  for x = 0, #matrix_a do
+    ret[x] = {}
+    for y = 0, #matrix_a[x] do
+      ret[x][y] = matrix_a[x][y] / matrix_b[x][y]
+    end
+  end
+  return ret
+end
+    })
+
+--- matrix.div.int
+-- @function matrix.div.int
+-- @tparam table matrix_a
+-- @tparam table matrix_b
+-- @treturn table Return a matrix from dividing and flooring two matrices of the same size
+matrix.div.int = function(matrix_a, matrix_b)
+  assert(type(matrix_a) == "table")
+  assert(type(matrix_b) == "table")
+  assert(#matrix_a == #matrix_b, "Matrixes are not of the same size.")
+  for i = 0, #matrix_a do
+    assert(#matrix_a[i] == #matrix_b[i], "Matrix rows are not of the same size.")
+  end
+
+  local ret = {}
+  for x = 0, #matrix_a do
+    ret[x] = {}
+    for y = 0, #matrix_a[x] do
+      ret[x][y] = math.floor(matrix_a[x][y] / matrix_b[x][y])
+    end
+  end
+  return ret
+end
+
 -- matrix.det
 -- matrix.invert
 -- matrix.sqrt

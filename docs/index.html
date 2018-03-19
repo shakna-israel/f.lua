@@ -298,8 +298,28 @@
 <h2><a href="#Matrix">Matrix </a></h2>
 <table class="function_list">
 	<tr>
+	<td class="name" nowrap><a href="#matrix.add">matrix.add (matrix_a, matrix_b)</a></td>
+	<td class="summary">matrix.add</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#matrix.div">matrix.div (matrix_a, matrix_b)</a></td>
+	<td class="summary">matrix.div</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#matrix.div.int">matrix.div.int (matrix_a, matrix_b)</a></td>
+	<td class="summary">matrix.div.int</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#matrix.mul">matrix.mul (matrix_a, matrix_b)</a></td>
+	<td class="summary">matrix.mul</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#matrix.new">matrix.new (column, row[, default])</a></td>
 	<td class="summary">matrix.new</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#matrix.sub">matrix.sub (matrix_a, matrix_b)</a></td>
+	<td class="summary">matrix.sub</td>
 	</tr>
 </table>
 <h2><a href="#Ports">Ports </a></h2>
@@ -1983,6 +2003,130 @@
 
     <dl class="function">
     <dt>
+    <a name = "matrix.add"></a>
+    <strong>matrix.add (matrix_a, matrix_b)</strong>
+    </dt>
+    <dd>
+    matrix.add
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">matrix_a</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+        </li>
+        <li><span class="parameter">matrix_b</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+        Return a matrix from adding two matrices of the same size
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "matrix.div"></a>
+    <strong>matrix.div (matrix_a, matrix_b)</strong>
+    </dt>
+    <dd>
+    matrix.div
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">matrix_a</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+        </li>
+        <li><span class="parameter">matrix_b</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+        Return a matrix from dividing two matrices of the same size
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "matrix.div.int"></a>
+    <strong>matrix.div.int (matrix_a, matrix_b)</strong>
+    </dt>
+    <dd>
+    matrix.div.int
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">matrix_a</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+        </li>
+        <li><span class="parameter">matrix_b</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+        Return a matrix from dividing and flooring two matrices of the same size
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "matrix.mul"></a>
+    <strong>matrix.mul (matrix_a, matrix_b)</strong>
+    </dt>
+    <dd>
+    matrix.mul
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">matrix_a</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+        </li>
+        <li><span class="parameter">matrix_b</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+        Return a matrix from multiplying two matrices of the same size
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "matrix.new"></a>
     <strong>matrix.new (column, row[, default])</strong>
     </dt>
@@ -2012,6 +2156,37 @@
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
         A matrix with the given size, filled either with default or 0
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "matrix.sub"></a>
+    <strong>matrix.sub (matrix_a, matrix_b)</strong>
+    </dt>
+    <dd>
+    matrix.sub
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">matrix_a</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+        </li>
+        <li><span class="parameter">matrix_b</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+        Return a matrix from subtracting two matrices of the same size
     </ol>
 
 
@@ -2626,7 +2801,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2018-03-19 15:21:16 </i>
+<i style="float:right;">Last updated 2018-03-19 15:42:53 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
