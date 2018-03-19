@@ -6,8 +6,9 @@
 local load = loadstring or load
 local unpack = unpack or table.unpack
 
-local prettyprint
-prettyprint = function(val, outstring)
+local f = {}
+
+f.prettyprint = function(val, outstring)
   local msg = ""
   if type(val) == "table" then
     msg = msg .. "{"
@@ -51,8 +52,7 @@ end
 -- @tparam function functor The function to benchmark. It should be pure.
 -- @param ... Arguments to parse to functor
 -- @treturn number Seconds taken on average across 100 runs.
-local timeit
-timeit = function(functor, ...)
+f.timeit = function(functor, ...)
   local start = os.clock()
   for i=1, 100 do
     functor(...)
@@ -65,10 +65,9 @@ end
 -- @function memoize
 -- @tparam function functor The function whose return data should get cached
 -- @treturn function Returns a function that caches data the first time it is called, and just returns that if the arguments are the same the next time around
-local memoize
 do
   local cache = {}
-  memoize = function(functor)
+  f.memoize = function(functor)
     cache[functor] = {}
     return function(...)
       local cached = false
@@ -104,17 +103,7 @@ do
   end
 end
 
---- Add a vendor path to Lua
--- @function vend
--- @tparam string vendor
--- @treturn nil
-local vend
-vend = function(vendor)
-  local vendor = vendor or "vendor"
-  local version = _VERSION:match("%d+%.%d+")
-  package.path = vendor .. '/share/lua/' .. version .. '/?.lua;' .. vendor .. '/share/lua/' .. version .. '/?/init.lua;' .. package.path
-  package.cpath = vendor .. '/lib/lua/' .. version .. '/?.so;' .. package.cpath
-end
+
 
 --- A simple type-guard system
 -- Takes a series of strings, that should be types, in the order the function being guarded would receive them.
@@ -122,8 +111,7 @@ end
 -- Finally it must receive a function to guard.
 -- @function guard
 -- @treturn function
-local guard
-guard = function(...)
+f.guard = function(...)
   local args = {...}
   local functor = table.remove(args)
   local ret = nil
@@ -156,8 +144,7 @@ end
 -- @function iter
 -- @param iter string or table iterable
 -- @treturn thread
-local iter
-iter = function(obj)
+f.iter = function(obj)
   assert(type(obj) == "table" or type(obj) == "string")
   if type(obj) == "table" then
     return coroutine.create(function()
@@ -178,8 +165,7 @@ end
 -- @function clone
 -- @param o An object
 -- @return A copy of the object
-local clone
-clone = function(o)
+f.clone = function(o)
   if type(o) == "function" then
     return load(string.dump(o))
   elseif type(o) == "table" then
@@ -202,8 +188,7 @@ end
 -- @function fn
 -- @tparam string s A string starting with parentheses as shown in the example.
 -- @treturn function
-local fn
-fn = function(s)
+f.fn = function(s)
   return assert(load("return function " .. tostring(s) .. " end"), "fn was unable to build a valid function from: " .. tostring(s))()
 end
 
@@ -212,8 +197,7 @@ end
 -- @param entry Filenme string or thread object
 -- @tparam string permissions
 -- @tparam function functor
-local with
-with = function(entry, permissions, functor)
+f.with = function(entry, permissions, functor)
   assert(type(entry) == "string" or type(entry) == "thread")
   assert(type(permissions) == "string")
   assert(type(functor) == "function")
@@ -246,8 +230,8 @@ end
 -- @function co
 -- @tparam function functor
 -- @treturn thread Returns coroutine.wrap(functor)
-local co = {}
-setmetatable(co, {
+f.co = {}
+setmetatable(f.co, {
   __call = function(functor)
     return coroutine.wrap(functor)
   end
@@ -257,7 +241,7 @@ setmetatable(co, {
 -- @function co.c
 -- @tparam function functor
 -- @treturn thread Returns coroutine.create(functor)
-co.c = function(functor)
+f.co.c = function(functor)
   return coroutine.create(functor)
 end
 
@@ -265,7 +249,7 @@ end
 -- @function co.t
 -- @tparam thread functor
 -- @return Either returns the coroutine.resume of functor, or nil if the thread is dead.
-co.t = function(thread)
+f.co.t = function(thread)
   assert(type(thread) == "thread", "co.t expects a thread, but received a " .. type(thread))
   if coroutine.status(thread) == "suspended" then
     return coroutine.resume(thread)
@@ -277,7 +261,7 @@ end
 --- Check a coroutine is running
 -- @function co.r
 -- @treturn boolean Returns coroutine.running()
-co.r = function()
+f.co.r = function()
   return coroutine.running()
 end
 
@@ -288,8 +272,7 @@ end
 -- @function shuffle
 -- @tparam table tbl
 -- @treturn table A shuffled table
-local shuffle
-shuffle = function(tbl)
+f.shuffle = function(tbl)
   assert(type(tbl) == "table", "shuffle expected a table, but received: " .. type(tbl))
   for i = #tbl, 1, -1 do
     local r = math.random(#tbl)
@@ -302,8 +285,7 @@ end
 -- e.g. "function() recur()() end" is a infinitely recursive function.
 -- @function recur
 -- @treturn function Returns the containing function.
-local recur
-recur = function()
+f.recur = function()
   return debug.getinfo(2, "f").func
 end
 
@@ -312,8 +294,7 @@ end
 -- @tparam function a
 -- @tparam function b
 -- @treturn function A function that merges a around b, returning a new function. e.g. curry(print, string.format) is a kind of printf.
-local curry
-curry = function(a, b)
+f.curry = function(a, b)
   assert(type(a) == "function", "curry expects a to be a function, but received a " .. type(a))
   assert(type(b) == "function", "curry expects b to be a function, but received a " .. type(b))
   return function(...)
@@ -326,17 +307,16 @@ end
 -- @tparam table values An array of pairs of values, with the name on the left, and value on the right.
 -- @tparam function functor The function to call, with the new value bindings.
 -- @return Returns the return of the functor.
-local let
-let = function(values, functor)
+f.let = function(values, functor)
   assert(type(functor) == "function")
   -- Preperations
   backups = {}
   for k, v in pairs(values) do
     if _G[k] ~= nil then
       backups[k] = _G[k]
-      _G[k] = clone(v)
+      _G[k] = f.clone(v)
     else
-      _G[k] = clone(v)
+      _G[k] = f.clone(v)
     end
   end
 
@@ -357,8 +337,7 @@ end
 -- @function cond
 -- @param condlist A condlist is a table, containing other tables. The inner tables are pairs, where the key is a boolean. If it is true, then it's value is returned.
 -- @return Returns a value where the key is true.
-local cond
-cond = function(condlist)
+f.cond = function(condlist)
   assert(type(condlist) == "table", "cond expects condlist to be a table, but received a " .. type(condlist))
   assert(condlist[1])
   for k, v in pairs(condlist) do
@@ -380,8 +359,7 @@ end
 -- @param functor The function to recursively call against the list
 -- @tparam table args The list of arguments to be recursively called.
 -- @return Returns a single value created by the recursive call.
-local apply
-apply = function(functor, args)
+f.apply = function(functor, args)
   assert(type(args) == "table", "apply expects args to be a table, but received " .. type(args))
   assert(type(functor) == "function" or type(getmetatable(functor).__call) == "function", "apply expects functor to be a function")
   return functor(unpack(args))
@@ -392,8 +370,7 @@ end
 -- @tparam function functor The function to be called against
 -- @tparam table args The arguments to call against the function
 -- @treturn table Returns a list
-local map
-map = function(functor, args)
+f.map = function(functor, args)
   assert(type(args) == "table", "map expects args to be a table, but received a " .. type(args))
   assert(type(functor) == "function" or type(getmetatable(functor).__call) == "function", "map expects functor to be a function")
   ret = {}
@@ -408,8 +385,7 @@ end
 -- @tparam function functor A function that should return a boolean when given a value from the args list. If true, the value is added to the return list, if not, it gets dropped.
 -- @tparam table args The list to filter
 -- @treturn table Returns the filtered list
-local filter
-filter = function(functor, args)
+f.filter = function(functor, args)
   assert(type(args) == "table", "filter expects args to be a table, but received a " .. type(args))
   assert(type(functor) == "function", "filter expects functor to be a function")
   ret = {}
@@ -427,8 +403,7 @@ end
 -- @param a Returned if predicate is true
 -- @param b Returned if predicate is false
 -- @return Either a or b
-local elif
-elif = function(predicate, a, b)
+f.elif = function(predicate, a, b)
   assert(type(predicate) == "boolean", "elif expects predicate to be boolean, but received " .. type(predicate))
   if predicate then
     return a
@@ -442,8 +417,7 @@ end
 -- @param val Any value
 -- @tparam[opt] table tbl The list to join to. If one doesn't exist, it will be created.
 -- @treturn table The list that is generated.
-local cons
-cons = function(val, tbl)
+f.cons = function(val, tbl)
   if tbl == nil then
     tbl = {}
   end
@@ -456,8 +430,7 @@ end
 -- @function car
 -- @tparam table tbl The list to be accessed
 -- @return The first element of the list.
-local car
-car = function(tbl)
+f.car = function(tbl)
   assert(type(tbl) == "table", "car expects tbl to be a table, but received a " .. type(tbl))
   local ix, v = next(tbl)
   if ix == 0 or ix == 1 then
@@ -468,23 +441,23 @@ car = function(tbl)
     return ix, v
   end
 end
+f.head = f.car
 
 --- Access the "tail" of a list
 -- @function cdr
 -- @tparam table tbl The list to be accessed
 -- @treturn table Returns all but the first element in the list.
-local cdr
-cdr = function(tbl)
+f.cdr = function(tbl)
   assert(type(tbl) == "table", "cdr expects tbl to be a table, but received a " .. type(tbl))
   return { unpack(tbl, 2) }
 end
+f.rest = f.cdr
 
 --- Reverses an iterable
 -- @function reverse
 -- @param obj string or table
 -- @return The reverse string or table
-local reverse
-reverse = function(obj)
+f.reverse = function(obj)
   assert(type(obj) == "string" or type(obj) == "table", "Can only reverse strings or tables.")
   if type(obj) == "string" then
     return obj:reverse()
@@ -503,8 +476,7 @@ end
 -- @tparam number begin
 -- @tparam number fin
 -- @return A selection of the iterable
-local nth
-nth = function(iterable, begin, fin)
+f.nth = function(iterable, begin, fin)
   assert(type(begin) == "number" and math.ceil(begin) == begin, "nth needs a valid range number.")
   if fin ~= nil then
     assert(type(fin) == "number" and math.ceil(fin) == fin, "nth needs a valid range number.")
@@ -545,8 +517,7 @@ end
 -- @tparam table tbl
 -- @param val The seed value
 -- @return The folded value
-local foldr
-foldr = function(functor, tbl, val)
+f.foldr = function(functor, tbl, val)
   assert(type(functor) == "function", "Functor must be a function.")
   assert(type(tbl) == "table", "foldr expects a table.")
   for k, v in pairs(tbl) do
@@ -559,8 +530,7 @@ end
 -- @function set
 -- @tparam table tbl A simple array e.g. {"Hello", "World", "Hello", "World"}
 -- @treturn table A simple array, with only unique items. e.g. {"Hello", "World"}
-local set
-set = function(tbl)
+f.set = function(tbl)
   assert(type(tbl) == "table", "Set only works on tables, but received: " .. type(tbl))
   local tmp = {}
   for _, v in ipairs(tbl) do
@@ -577,8 +547,7 @@ end
 -- @function ktov
 -- @tparam table tbl
 -- @treturn table A key-value swapped table
-local ktov
-ktov = function(tbl)
+f.ktov = function(tbl)
   local r = {}
     for k, v in pairs(tbl) do
       r[v] = k
@@ -591,13 +560,11 @@ end
 -- @tparam table ex_tbl The values to remove e.g. {1, 2, 3}
 -- @tparam table tbl The table being processed e.g. {1, 2, 3, 4, 5}
 -- @treturn table The new table, e.g. {4, 5}
-local inarray -- depends on this, which is in the Predicates section
 
-local exclude
-exclude = function(ex_tbl, tbl)
+f.exclude = function(ex_tbl, tbl)
   local r = {}
   for _, v in ipairs(tbl) do
-    if not inarray(ex_tbl, v) then
+    if not f.inarray(ex_tbl, v) then
       r[#r + 1] = v
     end
   end
@@ -607,13 +574,13 @@ end
 --- Maths
 -- @section maths
 
-local shift = {}
+f.shift = {}
 
 -- Backported to Lua 5.1, introduced in 5.2, present in 5.3
 -- This library gives us everything we need.
 local bit32 = require "bit32"
 
-local base64 = {}
+f.base64 = {}
 do
   local baseChars = {[0] = 'A', 'B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9','-','_'}
 
@@ -621,7 +588,7 @@ do
   -- @function base64.encode
   -- @tparam string str
   -- @treturn string Base64 encoded string
-  base64.encode = function(str)
+  f.base64.encode = function(str)
     if #str == 0 then
       return ""
     else
@@ -642,7 +609,7 @@ do
   -- @function base64.decode
   -- @tparam string str
   -- @treturn string Decoded string
-  base64.decode = function(str)
+  f.base64.decode = function(str)
     if #str == 0 then
       return ""
     else
@@ -657,8 +624,8 @@ end
 -- @param[opt] x
 -- @param[opt] y
 -- @return object
-local random = {}
-setmetatable(random, {
+f.random = {}
+setmetatable(f.random, {
   __call = function(self, x, y)
   if x == nil and y == nil then
     return math.random()
@@ -682,7 +649,7 @@ end})
 -- @function random.weighted
 -- @tparam table tbl
 -- @return Returns one key from the table.
-random.weighted = function(tbl)
+f.random.weighted = function(tbl)
   assert(type(tbl) == "table", "random.weighted expected a weighted table. But received a: " .. type(tbl))
   for k, v in pairs(tbl) do
     assert(type(v) == "number", "random.weighted expected values in table to be numbers for weight. But received: " .. type(v))
@@ -703,8 +670,7 @@ end
 -- @tparam number n
 -- @tparam number y
 -- @treturn number Returns the number in the "middle" after sorting. e.g. clamp(5, 0, 10) == 5
-local clamp
-clamp = function(x, n, y)
+f.clamp = function(x, n, y)
   local t = {x, n, y}
   table.sort(t)
   return t[2]
@@ -715,8 +681,7 @@ end
 -- @tparam number num The number to round
 -- @tparam number depth The number of decimal places to round to
 -- @treturn number The rounded number is returned
-local round
-round = function(num, depth)
+f.round = function(num, depth)
   depth = depth or 2
   return tonumber(string.format("%." .. tostring(depth) .. "f", num))
 end
@@ -726,28 +691,25 @@ end
 -- @tparam number a
 -- @tparam number b
 -- @treturn number Return a + b
-local add
-add = function(a,b) return a + b end
+f.add = function(a,b) return a + b end
 
 --- Subtraction operator
 -- @function sub
 -- @tparam number a
 -- @tparam number b
 -- @treturn number Return a - b
-local sub
-sub = function(a, b) return a - b end
+f.sub = function(a, b) return a - b end
 
 --- Multiplication operator
 -- @function mul
 -- @tparam number a
 -- @tparam number b
 -- @treturn number Return a * b
-local mul
-mul = function(a, b) return a * b end
+f.mul = function(a, b) return a * b end
 
 -- We want div(a, b) and div.int(a, b) for integer division.
-local div = {}
-setmetatable(div,
+f.div = {}
+setmetatable(f.div,
     {
       __call = function(self, a, b) return a / b end
     })
@@ -763,7 +725,7 @@ setmetatable(div,
 -- @tparam number a
 -- @tparam number b
 -- @treturn number Returns math.floor(a/b)
-div.int = function(a, b) return math.floor(a/b) end
+f.div.int = function(a, b) return math.floor(a/b) end
 
 --- Operators
 -- @section operators
@@ -773,85 +735,75 @@ div.int = function(a, b) return math.floor(a/b) end
 -- @param a
 -- @param b
 -- @treturn boolean
-local gt
-gt = function(a,b) return a > b end
+f.gt = function(a,b) return a > b end
 
 --- Great Than or Equal operator
 -- @function gte
 -- @param a
 -- @param b
 -- @treturn boolean
-local gte
-gte = function(a,b) return a >= b end
+f.gte = function(a,b) return a >= b end
 
 --- Less Than operator
 -- @function lt
 -- @param a
 -- @param b
 -- @treturn boolean
-local lt
-lt = function(a,b) return a < b end
+f.lt = function(a,b) return a < b end
 
 --- Less Than or Equal operator
 -- @function lte
 -- @param a
 -- @param b
 -- @treturn boolean
-local lte
-lte = function(a,b) return a <= b end
+f.lte = function(a,b) return a <= b end
 
 --- Not Equal operator
 -- @function ne
 -- @param a
 -- @param b
 -- @treturn boolean
-local ne
-ne = function(a,b) return a ~= b end
+f.ne = function(a,b) return a ~= b end
 
 --- Unary operator
 -- @function unary
 -- @param a
 -- @return Returns -a
-local unary
-unary = function(a) return -a end
+f.unary = function(a) return -a end
 
 --- Powerto operator
 -- @function pow
 -- @param a
 -- @param b
 -- @return Returns a^b
-local pow
-pow = function(a, b) return a^b end
+f.pow = function(a, b) return a^b end
 
 --- Or operator
 -- @function xor
 -- @param a
 -- @param b
 -- @return Returns a or b
-local xor
-xor = function(a, b) return a or b end
+f.xor = function(a, b) return a or b end
 
 --- And operator
 -- @function xnd
 -- @param a
 -- @param b
 -- @return Returns a and b
-local xnd
-xnd = function(a, b) return a and b end
+f.xnd = function(a, b) return a and b end
 
 --- Not operator
 -- @function xnt
 -- @param a
 -- @return Returns not a
-local xnt
-xnt = function(a) return not a end
+f.xnt = function(a) return not a end
 
 --- Abs operator
 -- @function abs
 -- @tparam number a
 -- @treturn number Absolute value of a
-local abs = {}
-setmetatable(abs,
+f.abs = {}
+setmetatable(f.abs,
     {
       __call = function(self, a) return math.abs(a) end
     })
@@ -860,7 +812,7 @@ setmetatable(abs,
 -- @function abs.floor
 -- @tparam number a
 -- @treturn number Absolute value of a, run through math.floor
-abs.floor = function(a)
+f.abs.floor = function(a)
   return math.floor(math.abs(a))
 end
 
@@ -869,10 +821,10 @@ end
 -- @param a
 -- @param b
 -- @treturn number Returns a % b
-local mod = {}
-setmetatable(mod,
+f.mod = {}
+setmetatable(f.mod,
     {
-      __call = function(a, b) return a % b end
+      __call = function(self, a, b) return a % b end
     })
 
 --- Mod floor Operator
@@ -880,7 +832,7 @@ setmetatable(mod,
 -- @param a
 -- @param b
 -- @treturn number Returns math.floor(a % b)
-mod.floor = function(a, b)
+f.mod.floor = function(a, b)
   return math.floor(a % b)
 end
 
@@ -889,7 +841,7 @@ end
 -- @section matrix
 
 -- TODO
-local matrix = {}
+f.matrix = {}
 
 --- matrix.new
 -- @function matrix.new
@@ -897,7 +849,7 @@ local matrix = {}
 -- @tparam number row
 -- @tparam[opt] number default
 -- @treturn table A matrix with the given size, filled either with default or 0
-matrix.new = function(column, row, default)
+f.matrix.new = function(column, row, default)
   assert(type(column) == "number")
   assert(type(row) == "number")
   if default == nil then default = 0 end
@@ -920,7 +872,7 @@ end
 -- @tparam table matrix_a
 -- @tparam table matrix_b
 -- @treturn table Return a matrix from adding two matrices of the same size
-matrix.add = function(matrix_a, matrix_b)
+f.matrix.add = function(matrix_a, matrix_b)
   assert(type(matrix_a) == "table")
   assert(type(matrix_b) == "table")
   assert(#matrix_a == #matrix_b, "Matrixes are not of the same size.")
@@ -943,7 +895,7 @@ end
 -- @tparam table matrix_a
 -- @tparam table matrix_b
 -- @treturn table Return a matrix from subtracting two matrices of the same size
-matrix.sub = function(matrix_a, matrix_b)
+f.matrix.sub = function(matrix_a, matrix_b)
   assert(type(matrix_a) == "table")
   assert(type(matrix_b) == "table")
   assert(#matrix_a == #matrix_b, "Matrixes are not of the same size.")
@@ -966,7 +918,7 @@ end
 -- @tparam table matrix_a
 -- @tparam table matrix_b
 -- @treturn table Return a matrix from multiplying two matrices of the same size
-matrix.mul = function(matrix_a, matrix_b)
+f.matrix.mul = function(matrix_a, matrix_b)
   assert(type(matrix_a) == "table")
   assert(type(matrix_b) == "table")
   assert(#matrix_a == #matrix_b, "Matrixes are not of the same size.")
@@ -989,8 +941,8 @@ end
 -- @tparam table matrix_a
 -- @tparam table matrix_b
 -- @treturn table Return a matrix from dividing two matrices of the same size
-matrix.div = {}
-setmetatable(matrix.div,
+f.matrix.div = {}
+setmetatable(f.matrix.div,
     {
       __call = function(matrix_a, matrix_b)
   assert(type(matrix_a) == "table")
@@ -1016,7 +968,7 @@ end
 -- @tparam table matrix_a
 -- @tparam table matrix_b
 -- @treturn table Return a matrix from dividing and flooring two matrices of the same size
-matrix.div.int = function(matrix_a, matrix_b)
+f.matrix.div.int = function(matrix_a, matrix_b)
   assert(type(matrix_a) == "table")
   assert(type(matrix_b) == "table")
   assert(#matrix_a == #matrix_b, "Matrixes are not of the same size.")
@@ -1040,7 +992,7 @@ end
 -- @tparam number column
 -- @tparam number row
 -- @return Returns given element from the given matrix. 
-matrix.element = function(mtx, column, row)
+f.matrix.element = function(mtx, column, row)
   assert(type(mtx) == "table")
   assert(type(column) == "number")
   assert(type(row) == "number")
@@ -1052,7 +1004,7 @@ end
 -- @tparam table mtx
 -- @tparam number row
 -- @treturn table Returns a row from the given matrix
-matrix.row = function(mtx, row)
+f.matrix.row = function(mtx, row)
   assert(type(mtx) == "table")
   assert(type(row) == "number")
   return mtx[row]
@@ -1063,7 +1015,7 @@ end
 -- @tparam table mtx
 -- @tparam number row
 -- @treturn table Returns a column from the given matrix
-matrix.column = function(mtx, column)
+f.matrix.column = function(mtx, column)
   assert(type(mtx) == "table")
   assert(type(column) == "number")
   local ret = {}
@@ -1092,14 +1044,14 @@ end
 --- Ports
 -- @section ports
 
-local port = {}
+f.port = {}
 
 --- Override print and io.write with port:write for a given port
 -- @function port.with_output
 -- @param port A port-like object
 -- @tparam function functor
 -- @return Returns functor's return value.
-port.with_output = function(port, functor)
+f.port.with_output = function(port, functor)
   local printer = function(nl, sep, ...)
     msg = port:read() or ""
     local args = {...}
@@ -1136,7 +1088,7 @@ end
 -- @param port A port-like object
 -- @tparam function functor
 -- @return Returns functor's return value.
-port.with_input = function(port, functor)
+f.port.with_input = function(port, functor)
   local ginput = io.read
   io.read = function(...)
     return port:read(...)
@@ -1152,7 +1104,7 @@ end
 -- @tparam function read_func
 -- @tparam function close_func
 -- @return Returns port-like object for reading
-port.make_input = function(read_func, close_func)
+f.port.make_input = function(read_func, close_func)
   local port = {}
   port.read = read_func
   port.close = close_func
@@ -1165,7 +1117,7 @@ end
 -- @tparam function read_func
 -- @tparam function close_func
 -- @return Retuns port-like object for writing and reading
-port.make_output = function(write_func, read_func, close_func)
+f.port.make_output = function(write_func, read_func, close_func)
   local port = {}
   port.write = write_func
   port.read = read_func
@@ -1178,7 +1130,7 @@ end
 -- @tparam string str
 -- @tparam function functor
 -- @return Returns the output of functor
-port.from_string = function(str, functor)
+f.port.from_string = function(str, functor)
   local ginput = io.read
   io.read = function()
     return str
@@ -1193,7 +1145,7 @@ end
 -- @param port A port-like object
 -- @param n Position of iteration
 -- @param data Where the data is stored in the port-like object
-port.iter = function(port, n, data)
+f.port.iter = function(port, n, data)
   if data == nil then data = "data" end
   if n == nil then n = 1 end
   if n <= #port[data] then
@@ -1211,8 +1163,7 @@ end
 -- @param a
 -- @param b
 -- @treturn boolean Returns true if the two given values are equivalent, even if they are different tables.
-local eq
-eq = function(a, b)
+f.eq = function(a, b)
   if type(a) == "table" and type(b) == "table" then
     if #a == #b then
       for key_a, val_a in pairs(a) do
@@ -1238,7 +1189,7 @@ end
 -- @tparam table tbl Table to process
 -- @param v Value to check for
 -- @treturn boolean
-inarray = function(tbl, v)
+f.inarray = function(tbl, v)
   for _, val in ipairs(tbl) do
     if v == val then return true end
   end
@@ -1249,8 +1200,7 @@ end
 -- @function isstring
 -- @param x The object to test if is a string
 -- @treturn boolean
-local isstring
-isstring = function(x)
+f.isstring = function(x)
   return type(x) == "string"
 end
 
@@ -1258,8 +1208,7 @@ end
 -- @function isnumber
 -- @param x The object to test if is a number
 -- @treturn boolean
-local isnumber
-isnumber = function(x)
+f.isnumber = function(x)
   return type(x) == "number"
 end
 
@@ -1267,9 +1216,8 @@ end
 -- @function ispositive
 -- @param x
 -- @treturn boolean
-local ispositive
-ispositive = function(x)
-  if isnumber(x) and x > 0 then
+f.ispositive = function(x)
+  if f.isnumber(x) and x > 0 then
     return true
   else
     return false
@@ -1280,9 +1228,8 @@ end
 -- @function isnegative
 -- @param x
 -- @treturn boolean
-local isnegative
-isnegative = function(x)
-  if isnumber(x) and x < 0 then
+f.isnegative = function(x)
+  if f.isnumber(x) and x < 0 then
     return true
   else
     return false
@@ -1293,8 +1240,7 @@ end
 -- @function iszero
 -- @param x
 -- @treturn boolean
-local iszero
-iszero = function(x)
+f.iszero = function(x)
   if x == 0 then
     return true
   else
@@ -1306,8 +1252,7 @@ end
 -- @function isfunction
 -- @param x The object to test if is a function
 -- @treturn boolean
-local isfunction
-isfunction = function(x)
+f.isfunction = function(x)
   return type(x) == "function"
 end
 
@@ -1315,8 +1260,7 @@ end
 -- @function isboolean
 -- @param x The object to test if is a boolean
 -- @treturn boolean
-local isboolean
-isboolean = function(x)
+f.isboolean = function(x)
   return type(x) == "boolean"
 end
 
@@ -1324,8 +1268,7 @@ end
 -- @function isnil
 -- @param x The object to test if is a nil
 -- @treturn boolean
-local isnil
-isnil = function(x)
+f.isnil = function(x)
   return x == nil
 end
 
@@ -1333,8 +1276,7 @@ end
 -- @function istable
 -- @param x The object to test if is a table
 -- @treturn boolean
-local istable
-istable = function(x)
+f.istable = function(x)
   return type(x) == "table"
 end
 
@@ -1342,8 +1284,7 @@ end
 -- @function isthread
 -- @param x The object to test if is a thread
 -- @treturn boolean
-local isthread
-isthread = function(x)
+f.isthread = function(x)
   return type(x) == "thread"
 end
 
@@ -1351,8 +1292,7 @@ end
 -- @function isuserdata
 -- @param x The object to test if is a userdata
 -- @treturn boolean
-local isuserdata
-isuserdata = function(x)
+f.isuserdata = function(x)
   return type(x) == "userdata"
 end
 
@@ -1360,8 +1300,7 @@ end
 -- @function isfile
 -- @param x The object to test if is a file
 -- @treturn boolean
-local isfile
-isfile = function(x)
+f.isfile = function(x)
   return io.type(x) == "file"
 end
 
@@ -1372,18 +1311,14 @@ math.randomseed(os.time())
 --- Use With Caution
 -- @section caution
 
-local returnData
-
-local pollute
-local unpollute
 do
   local cache = {}
 
   --- Pollute the global namespace with f.lua's functions.
   -- @function pollute
   -- @treturn nil No return value.
-  pollute = function()
-    for k, v in pairs(returnData) do
+  f.pollute = function()
+    for k, v in pairs(f) do
       if _G[k] ~= nil then cache[k] = _G[k] end
       _G[k] = v
     end
@@ -1392,8 +1327,8 @@ do
   --- Undo pollution of the global namespace by f.pollute.
   -- @function unpollute
   -- @treturn nil No return value.
-  unpollute = function()
-    for k, v in pairs(returnData) do
+  f.unpollute = function()
+    for k, v in pairs(f) do
       if cache[k] ~= nil then
         _G[k] = cache[k]
       else
@@ -1403,75 +1338,15 @@ do
   end
 end
 
-returnData = {
-  mod = mod,
-  unary = unary,
-  pow = pow,
-  xor = xor,
-  xnd = xnd,
-  xnt = xnt,
-  vend = vend,
-  guard = guard,
-  iter = iter,
-  foldr = foldr,
-  reverse = reverse,
-  nth = nth,
-  clone = clone,
-  prettyprint = prettyprint,
-  elif = elif,
-  cons = cons,
-  car = car,
-  head = car,
-  cdr = cdr,
-  rest = cdr,
-  fn = fn,
-  let = let,
-  cond = cond,
-  apply = apply,
-  map = map,
-  filter = filter,
-  reduce = filter,
-  curry = curry,
-  eq = eq,
-  recur = recur,
-  with = with,
-  co = co,
-  isstring = isstring,
-  isnumber = isnumber,
-  isfunction = isfunction,
-  isboolean = isboolean,
-  isnil = isnil,
-  istable = istable,
-  isuserdata = isuserdata,
-  isfile = isfile,
-  add = add,
-  sub = sub,
-  mul = mul,
-  div = div,
-  gt = gt,
-  gte = gte,
-  lt = lt,
-  lte = lte,
-  ne = ne,
-  port = port,
-  clamp = clamp,
-  round = round,
-  ispositive = ispositive,
-  isnegative = isnegative,
-  iszero = iszero,
-  random = random,
-  shuffle = shuffle,
-  set = set,
-  ktov = ktov,
-  inarray = inarray,
-  exclude = exclude,
-  timeit = timeit,
-  memoize = memoize,
-  pollute = pollute,
-  unpollute = unpollute,
-  base64 = base64,
-  abs = abs,
-  matrix = matrix,
-}
+--- Add a vendor path to Lua
+-- @function vend
+-- @tparam string vendor
+-- @treturn nil
+f.vend = function(vendor)
+  local vendor = vendor or "vendor"
+  local version = _VERSION:match("%d+%.%d+")
+  package.path = vendor .. '/share/lua/' .. version .. '/?.lua;' .. vendor .. '/share/lua/' .. version .. '/?/init.lua;' .. package.path
+  package.cpath = vendor .. '/lib/lua/' .. version .. '/?.so;' .. package.cpath
+end
 
-return returnData
+return f
