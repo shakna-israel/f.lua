@@ -579,8 +579,7 @@ f.shift = {}
 -- Backported to Lua 5.1, introduced in 5.2, present in 5.3
 -- This library gives us everything we need.
 -- If not available, fall back to a slower Lua-only version
-local bit32 = require "bit32"
-if bit32 == nil then
+if _VERSION ~= "Lua 5.2" and _VERSION ~= "Lua 5.3" then
   bit32 = {}
 
   bit32.to_bit = function(x)
@@ -621,6 +620,8 @@ if bit32 == nil then
   bit32.lshift = function(a, b)
     return x * 2 ^ by
   end
+else
+  bit32 = require "bit32"
 end
 
 f.base64 = {}
