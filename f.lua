@@ -610,7 +610,7 @@ if _VERSION ~= "Lua 5.2" and _VERSION ~= "Lua 5.3" then
   end
   
   bit32.band = function(a, b)
-    return ((a+b) - bit32.bxor(a,b))/2
+    return ((a+b) - bit32.xor(a,b))/2
   end
 
   bit32.rshift = function(a, b)
