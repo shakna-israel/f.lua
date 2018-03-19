@@ -34,6 +34,7 @@
 <li><a href="#Functional_Essentials">Functional Essentials </a></li>
 <li><a href="#Maths">Maths </a></li>
 <li><a href="#Operators">Operators </a></li>
+<li><a href="#Matrix">Matrix </a></li>
 <li><a href="#Ports">Ports </a></li>
 <li><a href="#Predicates">Predicates </a></li>
 <li><a href="#Use_With_Caution">Use With Caution </a></li>
@@ -193,6 +194,15 @@
 	<td class="summary">Addition operator</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#base64.decode">base64.decode (str)</a></td>
+	<td class="summary">Base64 Decode
+ TODO</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#base64.encode">base64.encode (str)</a></td>
+	<td class="summary">Base64 Encode</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#clamp">clamp (x, n, y)</a></td>
 	<td class="summary">Clamp a number between two others</td>
 	</tr>
@@ -222,20 +232,20 @@
 	<td class="summary">Round a number to a certain number of places</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#shift.left">shift.left (val, by)</a></td>
-	<td class="summary">Bitshift left</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#shift.right">shift.right (val, by)</a></td>
-	<td class="summary">Bitshift right</td>
-	</tr>
-	<tr>
 	<td class="name" nowrap><a href="#sub">sub (a, b)</a></td>
 	<td class="summary">Subtraction operator</td>
 	</tr>
 </table>
 <h2><a href="#Operators">Operators </a></h2>
 <table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#abs">abs (a)</a></td>
+	<td class="summary">Abs operator</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#abs.floor">abs.floor (a)</a></td>
+	<td class="summary">abs.floor operator</td>
+	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#gt">gt (a, b)</a></td>
 	<td class="summary">Greater Than operator</td>
@@ -255,6 +265,10 @@
 	<tr>
 	<td class="name" nowrap><a href="#mod">mod (a, b)</a></td>
 	<td class="summary">Mod Operator</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#mod">mod (a, b)</a></td>
+	<td class="summary">Mod floor Operator</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#ne">ne (a, b)</a></td>
@@ -279,6 +293,13 @@
 	<tr>
 	<td class="name" nowrap><a href="#xor">xor (a, b)</a></td>
 	<td class="summary">Or operator</td>
+	</tr>
+</table>
+<h2><a href="#Matrix">Matrix </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#matrix.new">matrix.new (column, row[, default])</a></td>
+	<td class="summary">matrix.new</td>
 	</tr>
 </table>
 <h2><a href="#Ports">Ports </a></h2>
@@ -1261,6 +1282,61 @@
 
 </dd>
     <dt>
+    <a name = "base64.decode"></a>
+    <strong>base64.decode (str)</strong>
+    </dt>
+    <dd>
+    Base64 Decode
+ TODO
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">str</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+        Decoded string
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "base64.encode"></a>
+    <strong>base64.encode (str)</strong>
+    </dt>
+    <dd>
+    Base64 Encode
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">str</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+        Base64 encoded string
+    </ol>
+
+
+
+
+</dd>
+    <dt>
     <a name = "clamp"></a>
     <strong>clamp (x, n, y)</strong>
     </dt>
@@ -1477,68 +1553,6 @@
 
 </dd>
     <dt>
-    <a name = "shift.left"></a>
-    <strong>shift.left (val, by)</strong>
-    </dt>
-    <dd>
-    Bitshift left
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">val</span>
-            <span class="types"><span class="type">number</span></span>
-
-        </li>
-        <li><span class="parameter">by</span>
-            <span class="types"><span class="type">number</span></span>
-
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">number</span></span>
-        Left-bitshifted number
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "shift.right"></a>
-    <strong>shift.right (val, by)</strong>
-    </dt>
-    <dd>
-    Bitshift right
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">val</span>
-            <span class="types"><span class="type">number</span></span>
-
-        </li>
-        <li><span class="parameter">by</span>
-            <span class="types"><span class="type">number</span></span>
-
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">number</span></span>
-        Right-bitshifted number
-    </ol>
-
-
-
-
-</dd>
-    <dt>
     <a name = "sub"></a>
     <strong>sub (a, b)</strong>
     </dt>
@@ -1573,6 +1587,60 @@
     <h2 class="section-header "><a name="Operators"></a>Operators </h2>
 
     <dl class="function">
+    <dt>
+    <a name = "abs"></a>
+    <strong>abs (a)</strong>
+    </dt>
+    <dd>
+    Abs operator
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+        Absolute value of a
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "abs.floor"></a>
+    <strong>abs.floor (a)</strong>
+    </dt>
+    <dd>
+    abs.floor operator
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+        Absolute value of a, run through math.floor
+    </ol>
+
+
+
+
+</dd>
     <dt>
     <a name = "gt"></a>
     <strong>gt (a, b)</strong>
@@ -1712,6 +1780,35 @@
 
            <span class="types"><span class="type">number</span></span>
         Returns a % b
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "mod"></a>
+    <strong>mod (a, b)</strong>
+    </dt>
+    <dd>
+    Mod floor Operator
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+
+        </li>
+        <li><span class="parameter">b</span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+        Returns math.floor(a % b)
     </ol>
 
 
@@ -1875,6 +1972,46 @@
     <ol>
 
         Returns a or b
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Matrix"></a>Matrix </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "matrix.new"></a>
+    <strong>matrix.new (column, row[, default])</strong>
+    </dt>
+    <dd>
+    matrix.new
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">column</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+        <li><span class="parameter">row</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+        <li><span class="parameter">default</span>
+            <span class="types"><span class="type">number</span></span>
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.6">table</a></span>
+        A matrix with the given size, filled either with default or 0
     </ol>
 
 
@@ -2489,7 +2626,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2018-01-24 00:56:33 </i>
+<i style="float:right;">Last updated 2018-03-19 15:21:16 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

@@ -884,6 +884,61 @@ mod.floor = function(a, b)
   return math.floor(a % b)
 end
 
+
+--- Matrix
+-- @section matrix
+
+-- TODO
+local matrix = {}
+
+--- matrix.new
+-- @function matrix.new
+-- @tparam number column
+-- @tparam number row
+-- @tparam[opt] number default
+-- @treturn table A matrix with the given size, filled either with default or 0
+matrix.new = function(column, row, default)
+  assert(type(column) == "number")
+  assert(type(row) == "number")
+  if default == nil then default = 0 end
+
+  local ret = {}
+
+  -- Build the matrix
+  for x = 0, row do
+    ret[x] = {}
+    for y = 0, column do
+      ret[x][y] = default
+    end
+  end
+
+  return ret
+end
+
+-- matrix.add
+-- matrix.sub
+-- matrix.mul
+-- matrix.div
+-- matrix.div.int
+-- matrix.det
+-- matrix.invert
+-- matrix.sqrt
+-- matrix.avg
+-- matrix.root
+-- matrix.random
+-- matrix.type
+-- matrix.transpose
+-- matrix.range
+-- matrix.concat
+-- matrix.rotl
+-- matrix.rotr
+-- matrix.tostring
+-- matrix.print
+-- matrix.row
+-- matrix.column
+-- matrix.iter
+-- matrix.element
+
 --- Ports
 -- @section ports
 
@@ -1266,6 +1321,6 @@ returnData = {
   unpollute = unpollute,
   base64 = base64,
   abs = abs,
-}
+  matrix = matrix,
 
 return returnData
