@@ -609,34 +609,40 @@ end
 
 local shift = {}
 
---- Bitshift left
--- @function shift.left
--- @tparam number val
--- @tparam number by
--- @treturn number Left-bitshifted number
-shift.left = function(val, by)
-  return (val*(2^by)) % 256
-end
-
---- Bitshift right
--- @function shift.right
--- @tparam number val
--- @tparam number by
--- @treturn number Right-bitshifted number
-shift.right = function(val, by)
-  return math.floor(val/2^by) % 256
-end
+-- Backported to Lua 5.1, introduced in 5.2, present in 5.3
+-- This library gives us everything we need.
+local bit32 = require "bit32"
 
 local base64 = {}
 do
-  local baseChars = {'B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9','-','_'}
-  baseChars[0] = 'A'
+  local baseChars = {[0] = 'A', 'B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9','-','_'}
 
+  --- Base64 Encode
+  -- @function base64.encode
+  -- @tparam string str
+  -- @treturn string Base64 encoded string
   base64.encode = function(str)
-    
+    if #str == 0 then
+      return ""
+    else
+      local pad = 2 - ((#str-1) % 3)
+   str = (str..string.rep('\0', pad)):gsub("...", function(cs)
+      local a, b, c = string.byte(cs, 1, 3)
+      -- return baseChars[a>>2] .. baseChars[(a&3)<<4|b>>4] .. baseChars[(b&15)<<2|c>>6] .. baseChars[c&63]
+      return baseChars[bit32.rshift(a, 2)] ..
+        baseChars[bit32.bor(bit32.lshift(bit32.band(a, 3), 4), bit32.rshift(b, 4))] ..
+        baseChars[bit32.bor(bit32.lshift(bit32.band(b, 15), 2), bit32.rshift(c, 6))] ..
+        baseChars[bit32.band(c, 63)]
+   end)
+   return str:sub(1, #str-pad) .. string.rep('=', pad)
+    end
   end
 
   base64.decode = function(str)
+    if #str == 0 then
+      return ""
+    else
+    end
   end
 end
 
@@ -1224,7 +1230,6 @@ returnData = {
   pollute = pollute,
   unpollute = unpollute,
   base64 = base64,
-  shift = shift,
 }
 
 return returnData
