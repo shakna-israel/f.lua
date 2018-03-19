@@ -614,11 +614,11 @@ if _VERSION ~= "Lua 5.2" and _VERSION ~= "Lua 5.3" then
   end
 
   bit32.rshift = function(a, b)
-    return math.floor(x / 2 ^ by)
+    return math.floor(a / 2 ^ b)
   end
   
   bit32.lshift = function(a, b)
-    return x * 2 ^ by
+    return a * 2 ^ b
   end
 else
   bit32 = require "bit32"
