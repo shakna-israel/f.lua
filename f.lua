@@ -1034,6 +1034,45 @@ matrix.div.int = function(matrix_a, matrix_b)
   return ret
 end
 
+--- matrix.element
+-- @function matrix.element
+-- @tparam table mtx
+-- @tparam number column
+-- @tparam number row
+-- @return Returns given element from the given matrix. 
+matrix.element = function(mtx, column, row
+  assert(type(mtx) == "table")
+  assert(type(column) == "number")
+  assert(type(row) == "number")
+  return mtx[row][column]
+end
+
+--- matrix.row
+-- @function matrix.row
+-- @tparam table mtx
+-- @tparam number row
+-- @treturn table Returns a row from the given matrix
+matrix.row = function(mtx, row)
+  assert(type(mtx) == "table")
+  assert(type(row) == "number")
+  return mtx[row]
+end
+
+--- matrix.column
+-- @function matrix.column
+-- @tparam table mtx
+-- @tparam number row
+-- @treturn table Returns a column from the given matrix
+matrix.column = function(mtx, column)
+  assert(type(mtx) == "table")
+  assert(type(column) == "number")
+  local ret = {}
+  for x = 0, #mtx do
+    ret[#ret + 1] = mtx[x][column]
+  end
+  return ret
+end
+
 -- matrix.det
 -- matrix.invert
 -- matrix.sqrt
@@ -1048,10 +1087,7 @@ end
 -- matrix.rotr
 -- matrix.tostring
 -- matrix.print
--- matrix.row
--- matrix.column
 -- matrix.iter
--- matrix.element
 
 --- Ports
 -- @section ports
