@@ -13,3 +13,6 @@ script:
   - lua5.1 -lluacov test.lua
   - lua5.2 test.lua
   - luajit test.lua
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
