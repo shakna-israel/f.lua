@@ -6,9 +6,10 @@ branches:
 
 before_install:
 - sudo apt-get update -qq
-- sudo apt-get install -qq lua5.1 lua5.2 luajit
+- sudo apt-get install -qq lua5.1 lua5.2 luajit luarocks
+- luarocks install cluacov
 
 script:
-  - lua5.1 test.lua
+  - lua5.1 --luacov test.lua
   - lua5.2 test.lua
   - luajit test.lua
