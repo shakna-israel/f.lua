@@ -2,6 +2,48 @@ f = require "f"
 
 -- matrix tests
 
+-- matrix new
+local tmp = f.matrix.new(1, 1)
+assert(tmp[1][1] == 0)
+
+-- matrix add
+local tmp = f.matrix.add(f.matrix.new(1, 1, 1), f.matrix.new(1, 1, 1))
+assert(tmp[1][1] == 2)
+
+-- matrix sub
+local tmp = f.matrix.sub(f.matrix.new(1, 1, 1), f.matrix.new(1, 1, 1))
+assert(tmp[1][1] == 0)
+
+-- matrix mul
+local tmp = f.matrix.mul(f.matrix.new(1, 1, 2), f.matrix.new(1, 1, 2))
+assert(tmp[1][1] == 4)
+
+-- matrix mul
+local tmp = f.matrix.mul(f.matrix.new(1, 1, 2), f.matrix.new(1, 1, 2))
+assert(tmp[1][1] == 4)
+
+-- matrix div
+local tmp = f.matrix.div(f.matrix.new(1, 1, 2), f.matrix.new(1, 1, 2))
+assert(tmp[1][1] == 1)
+
+-- matrix div.int
+local tmp = f.matrix.div(f.matrix.new(1, 1, 2.5), f.matrix.new(1, 1, 2.5))
+assert(tmp[1][1] == 1)
+
+-- matrix element
+local tmp = f.matrix.new(1, 1, 4)
+assert(f.matrix.element(tmp, 1, 1) == 4)
+
+-- matrix row
+local tmp = f.matrix.new(1, 1, 8)
+assert(#f.matrix.row(tmp, 1) == 1)
+
+-- matrix column
+local tmp = f.matrix.new(2, 2, 8)
+assert(#f.matrix.column(tmp, 1) == 3)
+
+-- End Matrix Tests
+
 -- mod.floor
 assert(f.mod.floor(2, 3) == 2)
 
@@ -33,6 +75,8 @@ assert(pollute == nil)
 
 -- f.memoize
 local tmp = function(a, b) return a + b end
+assert(f.memoize(tmp)(1, 2) == 3)
+assert(f.memoize(tmp)(1, 2) == 3)
 assert(f.memoize(tmp)(1, 2) == 3)
 
 -- f.timeit

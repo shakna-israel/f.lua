@@ -989,23 +989,23 @@ end
 f.matrix.div = {}
 setmetatable(f.matrix.div,
     {
-      __call = function(matrix_a, matrix_b)
-  assert(type(matrix_a) == "table")
-  assert(type(matrix_b) == "table")
-  assert(#matrix_a == #matrix_b, "Matrixes are not of the same size.")
-  for i = 0, #matrix_a do
-    assert(#matrix_a[i] == #matrix_b[i], "Matrix rows are not of the same size.")
-  end
+      __call = function(self, matrix_a, matrix_b)
+        assert(type(matrix_a) == "table")
+        assert(type(matrix_b) == "table")
+        assert(#matrix_a == #matrix_b, "Matrixes are not of the same size: " .. tostring(#matrix_a) .. ":" .. tostring(#matrix_b))
+        for i = 0, #matrix_a do
+          assert(#matrix_a[i] == #matrix_b[i], "Matrix rows are not of the same size.")
+        end
 
-  local ret = {}
-  for x = 0, #matrix_a do
-    ret[x] = {}
-    for y = 0, #matrix_a[x] do
-      ret[x][y] = matrix_a[x][y] / matrix_b[x][y]
-    end
-  end
-  return ret
-end
+        local ret = {}
+        for x = 0, #matrix_a do
+          ret[x] = {}
+          for y = 0, #matrix_a[x] do
+            ret[x][y] = matrix_a[x][y] / matrix_b[x][y]
+          end
+        end
+        return ret
+      end
     })
 
 --- matrix.div.int
