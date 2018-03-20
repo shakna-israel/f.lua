@@ -10,6 +10,6 @@ before_install:
 - sudo luarocks install cluacov
 
 script:
-  - lua5.1 --luacov test.lua
+  - lua5.1 -lluacov test.lua
   - lua5.2 test.lua
   - luajit test.lua
